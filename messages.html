@@ -1,99 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Qeja.com | Find Rentals, Rooms, Plots and Homes</title>
-  <meta name="description" content="Qeja.com connects tenants, landlords, caretakers, agents and real estate companies across Kenya." />
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages - Qeja</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <a href="index.html" class="logo">Qeja<span>.com</span></a>
-      <div class="nav-links">
-        <a href="property.html">Properties</a>
-        <a href="reels.html">Reels</a>
-        <a href="admin-login.html">Admin</a>
-        <a href="login.html">Login</a>
-        <a href="signup.html" class="btn btn-primary">Join</a>
-      </div>
-    </div>
-  </nav>
 
-  <header class="hero">
-    <div class="container hero-grid">
-      <div>
-        <span class="badge">Kenya's social real estate platform</span>
-        <h1>Find your next <span>Qeja</span> faster.</h1>
-        <p>Browse rentals, rooms, apartments, plots and houses. Watch short property reels, contact landlords directly and save your favorite spaces.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="property.html">Explore Properties</a>
-          <a class="btn btn-light" href="reels.html">Watch Qeja Reels</a>
+<nav class="navbar">
+    <div class="logo">QEJA</div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="property.html">Properties</a></li>
+        <li><a href="reels.html">Reels</a></li>
+        <li><a href="messages.html">Messages</a></li>
+        <li><a href="profile.html">Profile</a></li>
+    </ul>
+
+    <a href="login.html" class="login-btn">Login</a>
+</nav>
+
+<section style="padding:120px 7% 60px;">
+    <h2>Messages</h2>
+
+    <div class="property-card" style="margin-top:30px;">
+        <div class="property-info">
+            <h3>John Kamau</h3>
+            <p>Hi, is the apartment in Kilimani still available?</p>
+            <small>10 mins ago</small>
         </div>
-
-        <form class="search-box" onsubmit="searchProperties(event)">
-          <input class="input" id="searchLocation" placeholder="Location e.g. Roysambu" />
-          <select class="input" id="searchType">
-            <option value="">Property Type</option>
-            <option>Bedsitter</option>
-            <option>Apartment</option>
-            <option>Plot</option>
-          </select>
-          <input class="input" id="searchBudget" placeholder="Max Budget" />
-          <button class="btn btn-primary" type="submit">Search</button>
-        </form>
-      </div>
-
-      <div class="hero-card">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Modern home">
-        <div class="card-body"><strong>Featured:</strong> verified listings, reels, WhatsApp inquiry and AI safety flags.</div>
-      </div>
     </div>
-  </header>
 
-  <section class="section" id="properties">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <div class="section-label">Featured Properties</div>
-          <h2 class="section-title">Fresh spaces near you</h2>
-          <p class="section-text">Live listings from landlords, caretakers and agents.</p>
+    <div class="property-card">
+        <div class="property-info">
+            <h3>Mary Wanjiku</h3>
+            <p>Can I schedule a viewing for the house in Kasarani?</p>
+            <small>1 hour ago</small>
         </div>
-        <a href="property.html" class="btn btn-light">View All</a>
-      </div>
-
-      <div class="grid-3">
-        <article class="card">
-          <div class="property-img"><img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80" alt="Modern Bedsitter"><span class="badge tag">Available</span></div>
-          <div class="card-body"><h3 class="card-title">Modern Bedsitter in Roysambu ✓</h3><div class="price">KES 9,500</div><div class="meta"><span>📍 Roysambu</span><span>🏠 Bedsitter</span><span>🛏 1</span></div><div class="actions"><a class="btn btn-primary" target="_blank" href="https://wa.me/254700000000?text=Hello%20Qeja,%20I%20am%20interested%20in%20the%20Modern%20Bedsitter%20in%20Roysambu.">WhatsApp</a><a class="btn btn-light" href="property.html">View Details</a></div></div>
-        </article>
-        <article class="card">
-          <div class="property-img"><img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80" alt="Spacious Apartment"><span class="badge tag">Available</span></div>
-          <div class="card-body"><h3 class="card-title">Spacious 1 Bedroom Apartment</h3><div class="price">KES 18,000</div><div class="meta"><span>📍 Kahawa Wendani</span><span>🏠 1 Bedroom</span><span>🛏 1</span></div><div class="actions"><a class="btn btn-primary" target="_blank" href="https://wa.me/254700000000?text=Hello%20Qeja,%20I%20am%20interested%20in%20the%20Spacious%201%20Bedroom%20Apartment.">WhatsApp</a><a class="btn btn-light" href="property.html">View Details</a></div></div>
-        </article>
-        <article class="card">
-          <div class="property-img"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80" alt="Residential Plot"><span class="badge tag">For Sale</span></div>
-          <div class="card-body"><h3 class="card-title">Residential Plot in Kitengela ✓</h3><div class="price">KES 850,000</div><div class="meta"><span>📍 Kitengela</span><span>🏠 Plot</span><span>📐 50x100</span></div><div class="actions"><a class="btn btn-primary" target="_blank" href="https://wa.me/254700000000?text=Hello%20Qeja,%20I%20am%20interested%20in%20the%20Residential%20Plot%20in%20Kitengela.">WhatsApp</a><a class="btn btn-light" href="property.html">View Details</a></div></div>
-        </article>
-      </div>
     </div>
-  </section>
 
-  <section class="section" id="reels">
-    <div class="container">
-      <div class="section-head"><div><div class="section-label">Qeja Reels</div><h2 class="section-title">Room tours and property clips</h2></div><a href="reels.html" class="btn btn-primary">Open Reels</a></div>
-      <div class="grid-4">
-        <article class="reel-card"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"><div class="reel-actions"><button class="circle-btn" onclick="likePost(this)">♥</button><button class="circle-btn" onclick="alert('Comments feature coming soon')">💬</button><button class="circle-btn" onclick="sharePost()">↗</button></div><div class="reel-overlay"><strong>Quick room tour in Kasarani</strong><p>@qeja_agent</p></div></article>
-        <article class="reel-card"><img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80"><div class="reel-actions"><button class="circle-btn" onclick="likePost(this)">♥</button><button class="circle-btn" onclick="alert('Comments feature coming soon')">💬</button><button class="circle-btn" onclick="sharePost()">↗</button></div><div class="reel-overlay"><strong>Deposit checklist before paying</strong><p>@qeja_tips</p></div></article>
-        <article class="reel-card"><img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80"><div class="reel-actions"><button class="circle-btn" onclick="likePost(this)">♥</button><button class="circle-btn" onclick="alert('Comments feature coming soon')">💬</button><button class="circle-btn" onclick="sharePost()">↗</button></div><div class="reel-overlay"><strong>Plot visit around Ruiru</strong><p>@landplug</p></div></article>
-        <article class="reel-card"><img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80"><div class="reel-actions"><button class="circle-btn" onclick="likePost(this)">♥</button><button class="circle-btn" onclick="alert('Comments feature coming soon')">💬</button><button class="circle-btn" onclick="sharePost()">↗</button></div><div class="reel-overlay"><strong>Apartment showcase in Kilimani</strong><p>@homeskenya</p></div></article>
-      </div>
+    <div class="property-card">
+        <div class="property-info">
+            <h3>Kevin Otieno</h3>
+            <p>I'm interested in the Kitengela plot. Please share details.</p>
+            <small>Yesterday</small>
+        </div>
     </div>
-  </section>
 
-  <section class="section" id="admin"><div class="container grid-3"><div class="card feature"><h3>Owner Control</h3><p class="section-text">Verify users, promote listings, suspend accounts and review reports.</p></div><div class="card feature"><h3>AI Safety</h3><p class="section-text">Flag scam listings, duplicate posts, abusive comments and suspicious activity.</p></div><div class="card feature"><h3>Monetization</h3><p class="section-text">Featured listings, boosted reels, premium landlord accounts and payment tracking.</p></div></div></section>
-  <footer class="footer"><div class="container footer-grid"><div><h2>Qeja.com</h2><p>Rooms. Rentals. Real Estate. Reels.</p></div><div><h3>Platform</h3><a href="property.html">Properties</a><a href="reels.html">Reels</a></div><div><h3>Company</h3><a href="#">About</a><a href="#">Terms</a></div><div><h3>Contact</h3><p>Nairobi, Kenya</p><p>hello@qeja.com</p></div></div></footer>
-  <script src="js/app.js"></script>
+    <div style="margin-top:30px;">
+        <textarea
+            placeholder="Type your message..."
+            style="width:100%;height:120px;padding:15px;border-radius:10px;border:none;">
+        </textarea>
+
+        <button style="
+            margin-top:15px;
+            background:#ff7a18;
+            color:white;
+            border:none;
+            padding:12px 25px;
+            border-radius:30px;
+            cursor:pointer;">
+            Send Message
+        </button>
+    </div>
+
+</section>
+
+<footer>
+    <p>&copy; 2026 Qeja.com. All rights reserved.</p>
+</footer>
+
 </body>
 </html>
