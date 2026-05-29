@@ -1,6 +1,77 @@
-{
-  "hosting": {
-    "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qeja.com</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">QEJA</div>
+
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Properties</a></li>
+        <li><a href="#">Reels</a></li>
+        <li><a href="#">Messages</a></li>
+        <li><a href="#">Profile</a></li>
+    </ul>
+
+    <a href="login.html" class="btn">Login</a>
+</nav>
+
+<section class="hero">
+    <h1>Find Your Next Home</h1>
+    <p>Rentals, Plots, Apartments, Houses and More</p>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search location...">
+        <button>Search</button>
+    </div>
+</section>
+
+<section class="properties">
+
+<h2>Featured Properties</h2>
+
+<div class="property-grid">
+
+<div class="card">
+<img src="https://picsum.photos/400/250?1">
+<h3>2 Bedroom Apartment</h3>
+<p>Nairobi</p>
+<h4>KES 25,000 / Month</h4>
+<button>View Property</button>
+</div>
+
+<div class="card">
+<img src="https://picsum.photos/400/250?2">
+<h3>Bedsitter</h3>
+<p>Rongai</p>
+<h4>KES 8,500 / Month</h4>
+<button>View Property</button>
+</div>
+
+<div class="card">
+<img src="https://picsum.photos/400/250?3">
+<h3>Plot For Sale</h3>
+<p>Kitengela</p>
+<h4>KES 650,000</h4>
+<button>View Property</button>
+</div>
+
+</div>
+
+</section>
+
+<footer>
+<p>© 2026 Qeja.com</p>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
