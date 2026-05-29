@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up - Qeja</title>
+<title>Login - Qeja</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,29 +17,25 @@
         <li><a href="messages.html">Messages</a></li>
         <li><a href="profile.html">Profile</a></li>
     </ul>
-    <a href="login.html" class="login-btn">Login</a>
+    <a href="signup.html" class="login-btn">Sign Up</a>
 </nav>
 
 <section style="padding:130px 7% 70px; min-height:80vh;">
-    <div class="property-card" style="max-width:480px;margin:auto;">
+    <div class="property-card" style="max-width:450px;margin:auto;">
         <div class="property-info">
+            <h2 style="text-align:center;margin-bottom:20px;">Login</h2>
 
-            <h2 style="text-align:center;margin-bottom:20px;">Create Account</h2>
-
-            <input id="fullName" type="text" placeholder="Full name" style="width:100%;padding:14px;margin-bottom:15px;border-radius:8px;border:1px solid #ddd;">
             <input id="email" type="email" placeholder="Email address" style="width:100%;padding:14px;margin-bottom:15px;border-radius:8px;border:1px solid #ddd;">
-            <input id="phone" type="tel" placeholder="Phone number" style="width:100%;padding:14px;margin-bottom:15px;border-radius:8px;border:1px solid #ddd;">
             <input id="password" type="password" placeholder="Password" style="width:100%;padding:14px;margin-bottom:20px;border-radius:8px;border:1px solid #ddd;">
 
-            <button id="signupBtn" style="width:100%;background:#ff7a18;color:white;border:none;padding:14px;border-radius:30px;cursor:pointer;">
-                Sign Up
+            <button id="loginBtn" style="width:100%;background:#ff7a18;color:white;border:none;padding:14px;border-radius:30px;cursor:pointer;">
+                Login
             </button>
 
             <p style="text-align:center;margin-top:20px;">
-                Already have an account?
-                <a href="login.html" style="color:#ff7a18;">Login</a>
+                Don't have an account?
+                <a href="signup.html" style="color:#ff7a18;">Create one</a>
             </p>
-
         </div>
     </div>
 </section>
@@ -49,36 +45,22 @@
 </footer>
 
 <script type="module">
-import { auth, database } from "./firebase.js";
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { ref, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { auth } from "./firebase.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
-document.getElementById("signupBtn").addEventListener("click", async () => {
-    const fullName = document.getElementById("fullName").value;
-    const email = document.getElementById("email").value;
-    const phone = document.getElementById("phone").value;
+document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    if (!fullName || !email || !phone || !password) {
-        alert("Please fill in all fields");
+    if (!email || !password) {
+        alert("Please enter email and password");
         return;
     }
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        await set(ref(database, "users/" + user.uid), {
-            fullName: fullName,
-            email: email,
-            phone: phone,
-            role: "user",
-            createdAt: new Date().toISOString()
-        });
-
-        alert("Account created successfully!");
-        window.location.href = "login.html";
-
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login successful!");
+        window.location.href = "profile.html";
     } catch (error) {
         alert(error.message);
     }
