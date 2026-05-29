@@ -23,7 +23,6 @@
 <section style="padding:130px 7% 70px; min-height:80vh;">
     <div class="property-card" style="max-width:480px;margin:auto;">
         <div class="property-info">
-
             <h2 style="text-align:center;margin-bottom:20px;">Create Account</h2>
 
             <input id="fullName" type="text" placeholder="Full name" style="width:100%;padding:14px;margin-bottom:15px;border-radius:8px;border:1px solid #ddd;">
@@ -39,7 +38,6 @@
                 Already have an account?
                 <a href="login.html" style="color:#ff7a18;">Login</a>
             </p>
-
         </div>
     </div>
 </section>
@@ -54,9 +52,9 @@ import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebase
 import { ref, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 document.getElementById("signupBtn").addEventListener("click", async () => {
-    const fullName = document.getElementById("fullName").value;
-    const email = document.getElementById("email").value;
-    const phone = document.getElementById("phone").value;
+    const fullName = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
     const password = document.getElementById("password").value;
 
     if (!fullName || !email || !phone || !password) {
@@ -69,16 +67,15 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
         const user = userCredential.user;
 
         await set(ref(database, "users/" + user.uid), {
-            fullName: fullName,
-            email: email,
-            phone: phone,
+            fullName,
+            email,
+            phone,
             role: "user",
             createdAt: new Date().toISOString()
         });
 
         alert("Account created successfully!");
         window.location.href = "login.html";
-
     } catch (error) {
         alert(error.message);
     }
