@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - Qeja</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">QEJA</div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="property.html">Properties</a></li>
+        <li><a href="reels.html">Reels</a></li>
+        <li><a href="messages.html">Messages</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="settings.html">Settings</a></li>
+    </ul>
+
+    <button id="logoutBtn" class="login-btn" style="border:none;cursor:pointer;">Logout</button>
+</nav>
+
+<section style="padding:120px 7% 60px;">
+    <h2 style="margin-bottom:30px;">Account Settings</h2>
+
+    <div class="property-grid">
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>Edit Profile</h3>
+
+                <input id="fullName" type="text" placeholder="Full Name" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+
+                <input id="phone" type="tel" placeholder="Phone Number" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+
+                <input id="location" type="text" placeholder="Location" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+
+                <input id="photoURL" type="text" placeholder="Profile Picture URL" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
+
+                <button id="saveProfileBtn" style="background:#ff7a18;color:white;border:none;padding:12px 25px;border-radius:30px;cursor:pointer;margin-top:10px;">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>Account Information</h3>
+                <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+                <p><strong>Role:</strong> <span id="userRole">Loading...</span></p>
+            </div>
+        </div>
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>Privacy & Security</h3>
+                <p>Password reset and security options will be added here later.</p>
+            </div>
+        </div>
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>Customer Support</h3>
+                <p>Email: support@qeja.com</p>
+                <p>Phone: +254 700 000 000</p>
+            </div>
+        </div>
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>Terms & Conditions</h3>
+                <p>Qeja helps users discover properties. Users should verify listings before making payments.</p>
+            </div>
+        </div>
+
+        <div class="property-card">
+            <div class="property-info">
+                <h3>About Qeja</h3>
+                <p>Qeja is a property platform for rentals, houses, apartments, plots and real estate listings in Kenya.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Qeja.com. All rights reserved.</p>
+</footer>
+
+<script type="module">
+import { auth, database } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { ref, get, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+let currentUser = null;
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    currentUser = user;
+
+    const userRef = ref(database, "users/" + user.uid);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+
+        document.getElementById("fullName").value = data.fullName || "";
+        document.getElementById("phone").value = data.phone || "";
+        document.getElementById("location").value = data.location || "";
+        document.getElementById("photoURL").value = data.photoURL || "";
+        document.getElementById("userEmail").textContent = data.email || user.email;
+        document.getElementById("userRole").textContent = data.role || "user";
+    }
+});
+
+document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+    if (!currentUser) return;
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const photoURL = document.getElementById("photoURL").value.trim();
+
+    await update(ref(database, "users/" + currentUser.uid), {
+        fullName,
+        phone,
+        location,
+        photoURL
+    });
+
+    alert("Profile updated successfully!");
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "login.html";
+});
+</script>
+
+</body>
+</html>
