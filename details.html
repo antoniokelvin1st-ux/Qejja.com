@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Property Details - Qeja</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{padding-bottom:80px;background:#f4f4f4;}
+.top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{font-size:30px;font-weight:900;color:#ff7a18;}
+.details-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
+.details-card{background:white;border-radius:22px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.details-card img{width:100%;height:420px;object-fit:cover;background:#eee;}
+.details-info{padding:22px;}
+.price{color:#ff7a18;font-weight:900;font-size:24px;margin:10px 0;}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;}
+.action-row a,.action-row button{border:none;text-decoration:none;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
+.orange{background:#ff7a18;color:white;}
+.dark{background:#111;color:white;}
+.green{background:#25D366;color:white;}
+.blue{background:#0077cc;color:white;}
+.owner-box{background:#f4f4f4;border-radius:16px;padding:16px;margin-top:18px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
+.bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:23px;}
+.post-plus{background:#111;color:white!important;width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-top:-28px;border:4px solid #ff7a18;}
+.post-plus span{font-size:34px;}
+</style>
+</head>
+
+<body>
+
+<header class="top-appbar">
+    <div class="logo">QEJA</div>
+    <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
+</header>
+
+<main class="details-wrap">
+    <div id="detailsContainer">Loading property...</div>
+</main>
+
+<nav class="bottom-nav">
+    <a href="index.html"><span>🏠</span>Home</a>
+    <a href="explore.html"><span>🔍</span>Explore</a>
+    <a href="post.html" class="post-plus"><span>+</span></a>
+    <a href="inbox.html"><span>💬</span>Inbox</a>
+    <a href="profile.html"><span>👤</span>Profile</a>
+</nav>
+
+<script type="module">
+import { auth, database } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { ref, get, push, set, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+let currentUser = null;
+let currentUserData = null;
+
+const params = new URLSearchParams(window.location.search);
+const postId = params.get("id");
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    currentUser = user;
+
+    const userSnap = await get(ref(database, "users/" + user.uid));
+    currentUserData = userSnap.exists() ? userSnap.val() : {
+        fullName: "Qeja User",
+        email: user.email
+    };
+
+    loadDetails();
+});
+
+function cleanPhone(phone) {
+    if (!phone) return "";
+    let cleaned = phone.replace(/\D/g, "");
+
+    if (cleaned.startsWith("0")) {
+        cleaned = "254" + cleaned.substring(1);
+    }
+
+    if (!cleaned.startsWith("254")) {
+        cleaned = "254" + cleaned;
+    }
+
+    return cleaned;
+}
+
+async function loadDetails() {
+    const container = document.getElementById("detailsContainer");
+
+    if (!postId) {
+        container.innerHTML = "<p>No property selected.</p>";
+        return;
+    }
+
+    const snap = await get(ref(database, "posts/" + postId));
+
+    if (!snap.exists()) {
+        container.innerHTML = "<p>Property not found.</p>";
+        return;
+    }
+
+    const post = snap.val();
+
+    await update(ref(database, "posts/" + postId), {
+        views: (post.views || 0) + 1
+    });
+
+    const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+    const phone = cleanPhone(post.contactPhone || "");
+    const whatsapp = cleanPhone(post.whatsappNumber || post.contactPhone || "");
+    const email = post.contactEmail || post.ownerEmail || "";
+    const locationQuery = encodeURIComponent(post.location || "");
+    const mapsLink = "https://www.google.com/maps/search/?api=1&query=" + locationQuery;
+
+    const whatsappText = encodeURIComponent(`Hello, I saw your property on Qeja: ${post.title}. Is it still available?`);
+    const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}?text=${whatsappText}` : "#";
+
+    container.innerHTML = `
+        <div class="details-card">
+            <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+
+            <div class="details-info">
+                <h1>${post.title || "Property Listing"}</h1>
+                <div class="price">${post.price || ""}</div>
+
+                <p><strong>Location:</strong> ${post.location || "Not added"}</p>
+                <p><strong>Category:</strong> ${post.category || "Property"}</p>
+                <p>${post.description || ""}</p>
+
+                <p>
+                    Views: ${(post.views || 0) + 1} |
+                    Likes: ${post.likesCount || post.likes || 0} |
+                    Inquiries: ${post.inquiries || 0}
+                </p>
+
+                <div class="action-row">
+                    <a class="green" href="${whatsappLink}" target="_blank">WhatsApp</a>
+                    <a class="orange" href="${phone ? "tel:+" + phone : "#"}">Call</a>
+                    <a class="blue" href="${email ? "mailto:" + email : "#"}">Email</a>
+                    <a class="dark" href="${mapsLink}" target="_blank">Open Location</a>
+                    <button class="orange" onclick="sendInquiry('${post.postId}', '${post.ownerId}')">Send Inquiry</button>
+                </div>
+
+                <div class="owner-box">
+                    <h3>Owner / Agent</h3>
+                    <p><strong>${post.contactName || post.ownerName || "Qeja User"}</strong></p>
+                    <p>${post.contactPhone || "Phone not added"}</p>
+                    <p>${email || "Email not added"}</p>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+window.sendInquiry = async function(postId, ownerId) {
+    if (!ownerId) {
+        alert("Owner not found.");
+        return;
+    }
+
+    const leadRef = push(ref(database, "leads/" + ownerId));
+
+    await set(leadRef, {
+        leadId: leadRef.key,
+        postId,
+        interestedUserId: currentUser.uid,
+        interestedUserName: currentUserData.fullName || "Qeja User",
+        interestedUserEmail: currentUser.email,
+        createdAt: new Date().toISOString(),
+        status: "new"
+    });
+
+    const postSnap = await get(ref(database, "posts/" + postId));
+    if (postSnap.exists()) {
+        const post = postSnap.val();
+        await update(ref(database, "posts/" + postId), {
+            inquiries: (post.inquiries || 0) + 1
+        });
+    }
+
+    alert("Inquiry sent successfully.");
+};
+</script>
+
+</body>
+</html>
