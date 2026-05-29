@@ -130,11 +130,8 @@ body{padding-bottom:80px;background:#f4f4f4;}
     </section>
 
     <section id="savedTab" style="display:none;">
-        <div class="profile-header">
-            <h3>Saved Properties</h3>
-            <p>Saved posts will appear here later.</p>
-        </div>
-    </section>
+    <div id="savedGrid" class="grid"></div>
+</section>
 
 </main>
 
@@ -195,6 +192,7 @@ onAuthStateChanged(auth, async (user) => {
 
     await loadProfile();
     loadUserPosts();
+    loadSavedProperties();
 });
 
 async function loadProfile() {
@@ -428,6 +426,40 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
     await signOut(auth);
     window.location.href = "login.html";
 });
+    function loadSavedProperties() {
+    const savedGrid = document.getElementById("savedGrid");
+
+    onValue(ref(database, "savedProperties/" + currentUser.uid), (snapshot) => {
+        savedGrid.innerHTML = "";
+
+        if (!snapshot.exists()) {
+            savedGrid.innerHTML = "<p style='padding:20px;'>No saved properties yet.</p>";
+            return;
+        }
+
+        snapshot.forEach(child => {
+            const post = child.val();
+            const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+
+            const card = document.createElement("div");
+            card.className = "grid-card";
+
+            card.innerHTML = `
+                <a href="details.html?id=${post.postId}">
+                    <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+                </a>
+
+                <div class="grid-info">
+                    <h4>${post.title || "Property"}</h4>
+                    <p>${post.price || ""}</p>
+                    <p>${post.location || ""}</p>
+                </div>
+            `;
+
+            savedGrid.appendChild(card);
+        });
+    });
+}
 </script>
 
 </body>
