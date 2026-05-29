@@ -157,7 +157,9 @@ function loadPosts() {
 </a>
 
                 <div class="post-body">
-                    <strong>@${post.ownerName || "Qeja User"}</strong>
+                    <a href="user.html?id=${post.ownerId}" style="text-decoration:none;color:#111;font-weight:bold;">
+    @${post.ownerName || "Qeja User"}
+</a>
                     <a href="details.html?id=${post.postId}" style="text-decoration:none;color:inherit;">
     <div class="post-title">${post.title || "Property Listing"}</div>
 </a>
