@@ -1,1 +1,4 @@
-function searchProperties(event){event.preventDefault();const location=document.getElementById('searchLocation')?.value||'';const type=document.getElementById('searchType')?.value||'';const budget=document.getElementById('searchBudget')?.value||'';const params=new URLSearchParams({location,type,budget});window.location.href='property.html?'+params.toString()}function likePost(btn){let likes=Number(btn.dataset.likes||0);likes++;btn.dataset.likes=likes;btn.textContent='♥ '+likes}function sharePost(){if(navigator.share){navigator.share({title:'Qeja.com',text:'Check this Qeja property reel',url:window.location.href})}else{alert('Copy this link: '+window.location.href)}}
+// Firebase connection file
+// We will paste your real Firebase config here later
+
+console.log("Firebase file connected successfully");
