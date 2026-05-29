@@ -1,87 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qeja.com</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qeja - Home</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+    padding-bottom: 80px;
+}
+
+.top-appbar {
+    background: #111;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.top-appbar .logo {
+    font-size: 30px;
+    font-weight: 900;
+    color: #ff7a18;
+}
+
+.feed-wrap {
+    padding: 30px 7%;
+}
+
+.feed-header {
+    margin-bottom: 25px;
+}
+
+.feed-header h1 {
+    font-size: 34px;
+}
+
+.post-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    max-width: 650px;
+}
+
+.post-card img {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    display: block;
+}
+
+.post-body {
+    padding: 20px;
+}
+
+.post-owner {
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 8px;
+}
+
+.post-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.post-price {
+    color: #ff7a18;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.post-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.post-actions button {
+    border: none;
+    padding: 9px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.orange-btn {
+    background: #ff7a18;
+    color: white;
+}
+
+.dark-btn {
+    background: #111;
+    color: white;
+}
+
+.comment-box {
+    display: none;
+    margin-top: 15px;
+}
+
+.comment-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 8px;
+}
+
+.comment-item {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 8px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #ddd;
+    height: 70px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 200;
+}
+
+.bottom-nav a {
+    text-decoration: none;
+    color: #555;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.bottom-nav span {
+    display: block;
+    font-size: 23px;
+}
+
+.post-plus {
+    background: #111;
+    color: white !important;
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -28px;
+    border: 4px solid #ff7a18;
+}
+
+.post-plus span {
+    font-size: 34px;
+    line-height: 1;
+}
+
+@media (min-width: 900px) {
+    .bottom-nav {
+        max-width: 600px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 25px 25px 0 0;
+    }
+
+    .feed-wrap {
+        display: flex;
+        justify-content: center;
+    }
+
+    .feed-inner {
+        width: 650px;
+    }
+}
+</style>
 </head>
 <body>
 
-<nav class="navbar">
+<header class="top-appbar">
     <div class="logo">QEJA</div>
+    <a href="settings.html" style="color:white;text-decoration:none;font-weight:bold;">⚙ Settings</a>
+</header>
 
-    <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="property.html">Properties</a></li>
-        <li><a href="reels.html">Reels</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="profile.html">Profile</a></li>
-    </ul>
+<main class="feed-wrap">
+    <div class="feed-inner">
+        <div class="feed-header">
+            <h1>Home Feed</h1>
+            <p>Discover rentals, apartments, houses, plots and property reels.</p>
+        </div>
 
-    <a href="login.html" class="login-btn">Login</a>
+        <div id="feedContainer">
+            <p>Loading posts...</p>
+        </div>
+    </div>
+</main>
+
+<nav class="bottom-nav">
+    <a href="index.html">
+        <span>🏠</span>
+        Home
+    </a>
+
+    <a href="explore.html">
+        <span>🔍</span>
+        Explore
+    </a>
+
+    <a href="post.html" class="post-plus">
+        <span>+</span>
+    </a>
+
+    <a href="inbox.html">
+        <span>💬</span>
+        Inbox
+    </a>
+
+    <a href="profile.html">
+        <span>👤</span>
+        Profile
+    </a>
 </nav>
 
-<section class="hero">
-    <div class="hero-content">
-        <h1>Find Your Next Home</h1>
-        <p>Rentals, Plots, Apartments, Houses and More</p>
+<script type="module">
+import { auth, database } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { ref, onValue, update, push, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-        <div class="search-box">
-            <input type="text" placeholder="Search location...">
-            <button>Search</button>
-        </div>
-    </div>
-</section>
+let currentUser = null;
+let currentUserData = null;
 
-<section class="featured">
-    <h2>Featured Properties</h2>
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
 
-    <div class="property-grid">
-        <div class="property-card">
-            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6" alt="Modern house">
-            <div class="property-info">
-                <h3>Modern Family House</h3>
-                <p>Kasarani, Nairobi</p>
-                <h4>Ksh 45,000 / month</h4>
-                <a href="property.html">View Details</a>
-            </div>
-        </div>
+    currentUser = user;
 
-        <div class="property-card">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c" alt="Apartment">
-            <div class="property-info">
-                <h3>Luxury Apartment</h3>
-                <p>Kilimani, Nairobi</p>
-                <h4>Ksh 75,000 / month</h4>
-                <a href="property.html">View Details</a>
-            </div>
-        </div>
+    const userSnap = await get(ref(database, "users/" + user.uid));
+    currentUserData = userSnap.exists() ? userSnap.val() : {
+        fullName: "Qeja User",
+        email: user.email
+    };
 
-        <div class="property-card">
-            <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6" alt="House">
-            <div class="property-info">
-                <h3>Spacious Bungalow</h3>
-                <p>Ruiru, Kiambu</p>
-                <h4>Ksh 35,000 / month</h4>
-                <a href="property.html">View Details</a>
-            </div>
-        </div>
-    </div>
-</section>
+    loadPosts();
+});
 
-<section class="about">
-    <h2>Why Choose Qeja?</h2>
-    <p>
-        Qeja helps you discover available rentals, apartments, houses, plots and property listings in different locations.
-        Search easily, connect faster, and find a place that fits your lifestyle and budget.
-    </p>
-</section>
+function loadPosts() {
+    const feedContainer = document.getElementById("feedContainer");
 
-<footer>
-    <p>&copy; 2026 Qeja.com. All rights reserved.</p>
-</footer>
+    onValue(ref(database, "posts"), (snapshot) => {
+        feedContainer.innerHTML = "";
 
-<script src="firebase.js"></script>
+        if (!snapshot.exists()) {
+            feedContainer.innerHTML = `
+                <div class="post-card">
+                    <div class="post-body">
+                        <h3>No posts yet</h3>
+                        <p>Tap the + button to create the first property post.</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        const posts = [];
+        snapshot.forEach((child) => {
+            posts.push(child.val());
+        });
+
+        posts.reverse().forEach((post) => {
+            const card = document.createElement("div");
+            card.className = "post-card";
+
+            card.innerHTML = `
+                <img src="${post.imageURL}" alt="${post.title}">
+                <div class="post-body">
+                    <div class="post-owner">@${post.ownerName || "Qeja User"}</div>
+                    <div class="post-title">${post.title}</div>
+                    <p>${post.location}</p>
+                    <div class="post-price">${post.price}</div>
+                    <p>${post.description}</p>
+
+                    ${post.videoURL ? `<p><a href="${post.videoURL}" target="_blank">🎥 Watch Reel</a></p>` : ""}
+
+                    <p style="margin-top:12px;">
+                        👁 ${post.views || 0} views &nbsp;
+                        ❤️ ${post.likes || 0} likes &nbsp;
+                        💬 comments
+                    </p>
+
+                    <div class="post-actions">
+                        <button class="orange-btn" onclick="likePost('${post.postId}', ${post.likes || 0})">❤️ Like</button>
+                        <button class="dark-btn" onclick="toggleComments('${post.postId}')">💬 Comment</button>
+                        <button class="dark-btn" onclick="saveLead('${post.postId}', '${post.ownerId}')">📩 Inquiry</button>
+                    </div>
+
+                    <div id="comments-${post.postId}" class="comment-box">
+                        <input id="commentInput-${post.postId}" type="text" placeholder="Write a public comment...">
+                        <button class="orange-btn" onclick="addComment('${post.postId}')">Post Comment</button>
+                        <div id="commentList-${post.postId}"></div>
+                    </div>
+                </div>
+            `;
+
+            feedContainer.appendChild(card);
+        });
+    });
+}
+
+window.likePost = async function(postId, currentLikes) {
+    await update(ref(database, "posts/" + postId), {
+        likes: currentLikes + 1
+    });
+};
+
+window.toggleComments = function(postId) {
+    const box = document.getElementById("comments-" + postId);
+    const list = document.getElementById("commentList-" + postId);
+
+    box.style.display = box.style.display === "block" ? "none" : "block";
+
+    onValue(ref(database, "comments/" + postId), (snapshot) => {
+        list.innerHTML = "";
+
+        if (!snapshot.exists()) {
+            list.innerHTML = "<p>No comments yet.</p>";
+            return;
+        }
+
+        snapshot.forEach((child) => {
+            const comment = child.val();
+            const div = document.createElement("div");
+            div.className = "comment-item";
+            div.innerHTML = `
+                <strong>${comment.userName}</strong>
+                <p>${comment.text}</p>
+            `;
+            list.appendChild(div);
+        });
+    });
+};
+
+window.addComment = async function(postId) {
+    const input = document.getElementById("commentInput-" + postId);
+    const text = input.value.trim();
+
+    if (!text) {
+        alert("Write a comment first");
+        return;
+    }
+
+    const commentRef = push(ref(database, "comments/" + postId));
+
+    await set(commentRef, {
+        commentId: commentRef.key,
+        postId,
+        userId: currentUser.uid,
+        userName: currentUserData.fullName || "Qeja User",
+        text,
+        createdAt: new Date().toISOString()
+    });
+
+    input.value = "";
+};
+
+window.saveLead = async function(postId, ownerId) {
+    const leadRef = push(ref(database, "leads/" + ownerId));
+
+    await set(leadRef, {
+        leadId: leadRef.key,
+        postId,
+        interestedUserId: currentUser.uid,
+        interestedUserName: currentUserData.fullName || "Qeja User",
+        interestedUserEmail: currentUser.email,
+        createdAt: new Date().toISOString(),
+        status: "new"
+    });
+
+    alert("Inquiry sent to the property owner.");
+};
+</script>
+
 </body>
 </html>
