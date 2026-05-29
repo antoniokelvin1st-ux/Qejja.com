@@ -22,6 +22,17 @@ body{padding-bottom:80px;background:#f4f4f4;}
 .comment-box{display:none;margin-top:15px;}
 .comment-item{background:#f3f3f3;padding:10px;border-radius:10px;margin-top:10px;}
 .comment-input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:8px 0;}
+.stat-row{display:flex;gap:18px;align-items:center;margin:12px 0;color:#555;font-weight:bold;}
+.icon-heart{color:#e63946;}
+.icon-like{color:#ff7a18;}
+.icon-dislike{color:#444;}
+.icon-eye{color:#333;}
+.heart-pop{animation:popHeart .35s ease;}
+@keyframes popHeart{
+    0%{transform:scale(1);}
+    40%{transform:scale(1.8);}
+    100%{transform:scale(1);}
+}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
 .bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
 .bottom-nav span{display:block;font-size:23px;}
@@ -77,6 +88,36 @@ onAuthStateChanged(auth, async (user) => {
     loadPosts();
 });
 
+function playLikeSound() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(700, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+
+        oscillator.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.12);
+    } catch (e) {}
+}
+
+function popHeart(id) {
+    const heart = document.getElementById(id);
+    if (!heart) return;
+
+    heart.classList.remove("heart-pop");
+    void heart.offsetWidth;
+    heart.classList.add("heart-pop");
+}
+
 function isWithin20Minutes(item) {
     if (!item.createdAt) return false;
     return Date.now() - new Date(item.createdAt).getTime() <= EDIT_LIMIT;
@@ -120,15 +161,23 @@ function loadPosts() {
                     <div class="post-price">${post.price || ""}</div>
                     <p>${post.description || ""}</p>
 
-                    <p>
-                        👁 ${post.views || 0} views &nbsp;
-                        ❤️ ${post.likesCount || post.likes || 0} likes
-                    </p>
+                    <div class="stat-row">
+                        <span><span class="icon-eye">◉</span> ${post.views || 0} views</span>
+                        <span><span id="postHeart-${post.postId}" class="icon-heart">♥</span> ${post.likesCount || post.likes || 0} likes</span>
+                    </div>
 
                     <div class="post-actions">
-                        <button class="orange-btn" onclick="togglePostLike('${post.postId}')">❤️ Like</button>
-                        <button class="dark-btn" onclick="openComments('${post.postId}', '${post.ownerId}')">💬 Comment</button>
-                        <button class="dark-btn" onclick="sendInquiry('${post.postId}', '${post.ownerId}')">📩 Inquiry</button>
+                        <button class="orange-btn" onclick="togglePostLike('${post.postId}')">
+                            <span class="icon-heart">♥</span> Like
+                        </button>
+
+                        <button class="dark-btn" onclick="openComments('${post.postId}', '${post.ownerId}')">
+                            Comment
+                        </button>
+
+                        <button class="dark-btn" onclick="sendInquiry('${post.postId}', '${post.ownerId}')">
+                            Inquiry
+                        </button>
                     </div>
 
                     <div id="comments-${post.postId}" class="comment-box">
@@ -164,11 +213,20 @@ window.togglePostLike = async function(postId) {
             likesCount: currentLikes + 1,
             likes: currentLikes + 1
         });
+
+        playLikeSound();
+        popHeart("postHeart-" + postId);
     }
 };
 
 window.openComments = function(postId, postOwnerId) {
     const box = document.getElementById("comments-" + postId);
+
+    if (!box) {
+        alert("Comment box not found. Refresh and try again.");
+        return;
+    }
+
     box.style.display = box.style.display === "block" ? "none" : "block";
     loadNestedComments(postId, postOwnerId);
 };
@@ -247,13 +305,14 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
         <p>${comment.text}</p>
 
         <small>
-            ❤️ ${comment.likesCount || 0}
-            &nbsp; 👎 ${comment.dislikesCount || 0}
+            <span class="icon-like">▲</span> ${comment.likesCount || 0}
+            &nbsp;
+            <span class="icon-dislike">▼</span> ${comment.dislikesCount || 0}
         </small><br>
 
-        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${comment.id}', 'like')">Like</button>
-        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${comment.id}', 'dislike')">Dislike</button>
-        <button class="small-btn dark-btn" onclick="showReplyInput('${comment.id}')">Reply</button>
+        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${comment.id}', 'like')">▲ Like</button>
+        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${comment.id}', 'dislike')">▼ Dislike</button>
+        <button class="small-btn dark-btn" onclick="showReplyInput('${postId}', '${comment.id}')">Reply</button>
 
         ${userCanEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${comment.id}')">Edit</button>` : ""}
         ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${comment.id}')">Delete</button>` : ""}
@@ -284,13 +343,25 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
     return wrapper;
 }
 
-window.showReplyInput = function(commentId) {
+window.showReplyInput = function(postId, commentId) {
     const box = document.getElementById("replyBox-" + commentId);
+
+    if (!box) {
+        alert("Reply box not found. Refresh and try again.");
+        return;
+    }
+
     box.style.display = box.style.display === "block" ? "none" : "block";
 };
 
 window.addNestedReply = async function(postId, parentId) {
     const input = document.getElementById("replyInput-" + parentId);
+
+    if (!input) {
+        alert("Reply input not found. Refresh and try again.");
+        return;
+    }
+
     const text = input.value.trim();
 
     if (!text) {
@@ -378,7 +449,7 @@ async function deleteCommentAndChildren(postId, commentId) {
 
     await remove(ref(database, `comments/${postId}/${commentId}`));
     await remove(ref(database, `commentReactions/${postId}/${commentId}`));
-};
+}
 
 window.reactToComment = async function(postId, commentId, type) {
     const reactionRef = ref(database, `commentReactions/${postId}/${commentId}/${currentUser.uid}`);
