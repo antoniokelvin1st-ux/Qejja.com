@@ -16,7 +16,7 @@
         <li><a href="property.html">Properties</a></li>
         <li><a href="reels.html">Reels</a></li>
         <li><a href="messages.html">Messages</a></li>
-        <li><a href="profile.html">Profile</a></li>
+        <li><a href="settings.html">Settings</a></li>
     </ul>
 
     <button id="logoutBtn" class="login-btn" style="border:none;cursor:pointer;">Logout</button>
@@ -27,21 +27,25 @@
     <div class="property-card" style="max-width:800px;margin:auto;">
         <div class="property-info" style="text-align:center;">
 
-            <img src="https://i.pravatar.cc/200"
+            <img id="profileImage"
+                 src="https://i.pravatar.cc/200"
                  alt="Profile"
-                 style="width:150px;height:150px;border-radius:50%;margin-bottom:20px;">
+                 style="width:150px;height:150px;border-radius:50%;margin-bottom:20px;object-fit:cover;">
 
-            <h2>Welcome to Qeja</h2>
-            <p>Manage your listings, saved properties and account details.</p>
+            <h2 id="profileName">Loading...</h2>
+            <p id="profileLocation">Loading location...</p>
 
             <hr style="margin:30px 0;">
 
             <h3>Account Information</h3>
 
-            <p><strong>Name:</strong> <span id="userName">Loading...</span></p>
             <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
             <p><strong>Phone:</strong> <span id="userPhone">Loading...</span></p>
             <p><strong>Role:</strong> <span id="userRole">Loading...</span></p>
+
+            <a href="settings.html" class="login-btn" style="display:inline-block;margin-top:25px;">
+                Edit Profile / Settings
+            </a>
 
         </div>
     </div>
@@ -58,31 +62,30 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { ref, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const userRef = ref(database, "users/" + user.uid);
-        const snapshot = await get(userRef);
-
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-
-            document.getElementById("userName").textContent = data.fullName || "Not provided";
-            document.getElementById("userEmail").textContent = data.email || user.email;
-            document.getElementById("userPhone").textContent = data.phone || "Not provided";
-            document.getElementById("userRole").textContent = data.role || "user";
-        } else {
-            document.getElementById("userName").textContent = "Not found";
-            document.getElementById("userEmail").textContent = user.email;
-            document.getElementById("userPhone").textContent = "Not found";
-            document.getElementById("userRole").textContent = "user";
-        }
-    } else {
+    if (!user) {
         window.location.href = "login.html";
+        return;
+    }
+
+    const snapshot = await get(ref(database, "users/" + user.uid));
+
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+
+        document.getElementById("profileName").textContent = data.fullName || "Qeja User";
+        document.getElementById("profileLocation").textContent = data.location || "Location not added";
+        document.getElementById("userEmail").textContent = data.email || user.email;
+        document.getElementById("userPhone").textContent = data.phone || "Not provided";
+        document.getElementById("userRole").textContent = data.role || "user";
+
+        if (data.photoURL) {
+            document.getElementById("profileImage").src = data.photoURL;
+        }
     }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", async () => {
     await signOut(auth);
-    alert("Logged out successfully");
     window.location.href = "login.html";
 });
 </script>
