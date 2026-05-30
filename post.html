@@ -70,7 +70,16 @@ body{padding-bottom:80px;background:#f4f4f4;}
             <input id="postPrice" type="text" placeholder="Price e.g Ksh 20,000 / month">
         </div>
 
-        <input id="postImage" type="text" placeholder="Main image URL">
+        <div class="fgroup">
+        <label>Product Photos *</label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="img-input" accept="image/*" multiple onchange="handleFiles(this.files)"/>
+          <div class="drop-icon">🖼️</div>
+          <div class="drop-hint">Drop photos here or <span>browse</span></div>
+          <div class="drop-note">JPG · PNG · WEBP — max 5MB each · images hosted on Cloudinary</div>
+        </div>
+        <div class="preview-grid" id="preview-grid"></div>
+      </div>
         <input id="postVideo" type="text" placeholder="Video/Reel URL optional">
 
         <textarea id="postDescription" placeholder="Describe the property, rooms, security, water, nearby roads, rules, etc."></textarea>
