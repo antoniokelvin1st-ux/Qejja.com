@@ -4,10 +4,10 @@ import { getDatabase } from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 
 const firebaseConfig = {
     apiKey: "AIzaSyDp33VJKZSPDYwU5OY_Nzq-fnAck50-bDA",
-    authDomain: "qeja-com.firebaseapp.com",
-    databaseURL: "https://qeja-com-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "qeja-com",
-    storageBucket: "qeja-com.firebasestorage.app",
+    authDomain: "Qejja-com.firebaseapp.com",
+    databaseURL: "https://Qejja-com-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "Qejja-com",
+    storageBucket: "Qejja-com.firebasestorage.app",
     messagingSenderId: "219739142262",
     appId: "1:219739142262:web:52efbfb97bb07c32a94757"
 };
@@ -18,7 +18,7 @@ export const database = getDatabase(app);
 
 // ── Cloudinary Config ────────────────────────────────────────
 export const CLOUDINARY_CLOUD  = "dbyeox0j8";
-export const CLOUDINARY_PRESET = "Qeja-com";
+export const CLOUDINARY_PRESET = "Qejja-com";
 
 export async function uploadToCloudinary(file, resourceType = "image") {
     const formData = new FormData();
