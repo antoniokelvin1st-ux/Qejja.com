@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Post - Qeja</title>
+<title>Create Post - Qejja</title>
 <link rel="stylesheet" href="style.css">
 <style>
 body{padding-bottom:80px;background:#f4f4f4;}
@@ -36,7 +36,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 <body>
 
 <header class="top-appbar">
-    <div class="logo">QEJA</div>
+    <div class="logo">Qejja</div>
     <a href="index.html" class="cancel-link">Cancel</a>
 </header>
 
@@ -132,7 +132,7 @@ onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }
     currentUser = user;
     const snap = await get(ref(database, "users/" + user.uid));
-    currentUserData = snap.exists() ? snap.val() : { fullName: "Qeja User", email: user.email };
+    currentUserData = snap.exists() ? snap.val() : { fullName: "Qejja User", email: user.email };
     document.getElementById("contactName").value = currentUserData.fullName || "";
     document.getElementById("contactEmail").value = currentUser.email || "";
     document.getElementById("contactPhone").value = currentUserData.phone || "";
@@ -204,7 +204,7 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
         await set(postRef, {
             postId: postRef.key,
             ownerId: currentUser.uid,
-            ownerName: currentUserData.fullName || "Qeja User",
+            ownerName: currentUserData.fullName || "Qejja User",
             ownerEmail: currentUser.email,
             ownerPhoto: currentUserData.photoURL || "",
             title, category, type, location, price,
