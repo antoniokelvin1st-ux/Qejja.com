@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Property Details - Qejja</title>
+<title>Property Details - qeja</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -33,7 +33,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 <body>
 
 <header class="top-appbar">
-    <div class="logo">Qejja</div>
+    <div class="logo">qeja</div>
     <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
 </header>
 
@@ -70,7 +70,7 @@ onAuthStateChanged(auth, async (user) => {
 
     const userSnap = await get(ref(database, "users/" + user.uid));
     currentUserData = userSnap.exists() ? userSnap.val() : {
-        fullName: "Qejja User",
+        fullName: "qeja User",
         email: user.email
     };
 
@@ -120,7 +120,7 @@ async function loadDetails() {
     const locationQuery = encodeURIComponent(post.location || "");
     const mapsLink = "https://www.google.com/maps/search/?api=1&query=" + locationQuery;
 
-    const whatsappText = encodeURIComponent(`Hello, I saw your property on Qejja: ${post.title}. Is it still available?`);
+    const whatsappText = encodeURIComponent(`Hello, I saw your property on qeja: ${post.title}. Is it still available?`);
     const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}?text=${whatsappText}` : "#";
 
     container.innerHTML = `
@@ -154,7 +154,7 @@ async function loadDetails() {
                     <h3>Owner / Agent</h3>
                     <p>
     <a href="user.html?id=${post.ownerId}" style="text-decoration:none;color:#111;font-weight:bold;">
-        ${post.contactName || post.ownerName || "Qejja User"}
+        ${post.contactName || post.ownerName || "qeja User"}
     </a>
 </p>
                     <p>${post.contactPhone || "Phone not added"}</p>
@@ -177,7 +177,7 @@ window.sendInquiry = async function(postId, ownerId) {
         leadId: leadRef.key,
         postId,
         interestedUserId: currentUser.uid,
-        interestedUserName: currentUserData.fullName || "Qejja User",
+        interestedUserName: currentUserData.fullName || "qeja User",
         interestedUserEmail: currentUser.email,
         createdAt: new Date().toISOString(),
         status: "new"
