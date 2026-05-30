@@ -68,8 +68,13 @@ body{padding-bottom:80px;background:#f4f4f4;}
 
         <div class="fgroup">
         <label>Product Photos *</label>
-       <input id="postImage" type="text" placeholder="Main image URL">
-       <input id="postVideo" type="text" placeholder="Video/Reel URL optional">
+        <label>Property Photo *</label>
+<input id="postImageFile" type="file" accept="image/*">
+<img id="imagePreview" style="display:none;width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-top:8px;">
+
+<label>Property Video / Reel (optional)</label>
+<input id="postVideoFile" type="file" accept="video/*">
+<video id="videoPreview" style="display:none;width:100%;border-radius:10px;margin-top:8px;" controls></video>
 
         <textarea id="postDescription" placeholder="Describe the property, rooms, security, water, nearby roads, rules, etc."></textarea>
 
@@ -103,12 +108,31 @@ body{padding-bottom:80px;background:#f4f4f4;}
 </nav>
 
 <script type="module">
-import { auth, database } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { ref, push, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { auth, database, storage } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, push, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 let currentUser = null;
 let currentUserData = null;
+
+// Preview image when chosen
+document.getElementById("postImageFile").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById("imagePreview");
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+});
+
+// Preview video when chosen
+document.getElementById("postVideoFile").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById("videoPreview");
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+});
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -135,8 +159,8 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
     const type = document.getElementById("postType").value;
     const location = document.getElementById("postLocation").value.trim();
     const price = document.getElementById("postPrice").value.trim();
-    const imageURL = document.getElementById("postImage").value.trim();
-    const videoURL = document.getElementById("postVideo").value.trim();
+    const imageFile = document.getElementById("postImageFile").files[0];
+    const videoFile = document.getElementById("postVideoFile").files[0];
     const description = document.getElementById("postDescription").value.trim();
     const contactName = document.getElementById("contactName").value.trim();
     const contactPhone = document.getElementById("contactPhone").value.trim();
@@ -144,43 +168,69 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
     const contactEmail = document.getElementById("contactEmail").value.trim();
     const visibility = document.getElementById("visibility").value;
 
-    if (!title || !category || !location || !price || !imageURL || !description || !contactPhone) {
-        alert("Please fill title, category, location, price, image URL, description and phone number.");
+    if (!title || !category || !location || !price || !imageFile || !description || !contactPhone) {
+        alert("Please fill title, category, location, price, image, description and phone number.");
         return;
     }
 
-    const postRef = push(ref(database, "posts"));
+    const publishBtn = document.getElementById("publishBtn");
+    publishBtn.textContent = "Uploading...";
+    publishBtn.disabled = true;
 
-    await set(postRef, {
-        postId: postRef.key,
-        ownerId: currentUser.uid,
-        ownerName: currentUserData.fullName || "Qeja User",
-        ownerEmail: currentUser.email,
-        ownerPhoto: currentUserData.photoURL || "",
-        title,
-        category,
-        type,
-        location,
-        price,
-        imageURL,
-        videoURL,
-        description,
-        contactName,
-        contactPhone,
-        whatsappNumber,
-        contactEmail,
-        visibility,
-        status: visibility === "public" ? "public" : "draft",
-        likes: 0,
-        likesCount: 0,
-        views: 0,
-        saves: 0,
-        inquiries: 0,
-        createdAt: new Date().toISOString()
-    });
+    try {
+        const postRef = push(ref(database, "posts"));
+        const postId = postRef.key;
 
-    alert(visibility === "draft" ? "Draft saved successfully!" : "Listing published successfully!");
-    window.location.href = "profile.html";
+        // Upload image
+        const imgRef = storageRef(storage, `posts/${postId}/image`);
+        await uploadBytes(imgRef, imageFile);
+        const imageURL = await getDownloadURL(imgRef);
+
+        // Upload video if provided
+        let videoURL = "";
+        if (videoFile) {
+            const vidRef = storageRef(storage, `posts/${postId}/video`);
+            await uploadBytes(vidRef, videoFile);
+            videoURL = await getDownloadURL(vidRef);
+        }
+
+        await set(postRef, {
+            postId,
+            ownerId: currentUser.uid,
+            ownerName: currentUserData.fullName || "Qeja User",
+            ownerEmail: currentUser.email,
+            ownerPhoto: currentUserData.photoURL || "",
+            title,
+            category,
+            type,
+            location,
+            price,
+            imageURL,
+            videoURL,
+            description,
+            contactName,
+            contactPhone,
+            whatsappNumber,
+            contactEmail,
+            visibility,
+            status: visibility === "public" ? "public" : "draft",
+            likes: 0,
+            likesCount: 0,
+            views: 0,
+            saves: 0,
+            inquiries: 0,
+            createdAt: new Date().toISOString()
+        });
+
+        alert(visibility === "draft" ? "Draft saved!" : "Listing published!");
+        window.location.href = "profile.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Upload failed: " + err.message);
+        publishBtn.textContent = "Publish Listing";
+        publishBtn.disabled = false;
+    }
 });
 </script>
 
