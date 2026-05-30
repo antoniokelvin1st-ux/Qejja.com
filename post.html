@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Create Post - Qeja</title>
 <link rel="stylesheet" href="style.css">
-
 <style>
 body{padding-bottom:80px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
@@ -17,10 +16,14 @@ body{padding-bottom:80px;background:#f4f4f4;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .fgroup{margin:12px 0;}
 .fgroup label{font-weight:bold;display:block;margin-bottom:5px;}
-.drop-zone{border:2px dashed #ff7a18;background:#fff7f0;padding:20px;border-radius:15px;text-align:center;cursor:pointer;}
+.drop-zone{border:2px dashed #ff7a18;background:#fff7f0;padding:20px;border-radius:15px;text-align:center;cursor:pointer;position:relative;}
+.drop-zone input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
+.drop-zone p{margin:0;color:#ff7a18;font-weight:bold;}
 .preview-box{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;}
 .preview-box img{width:90px;height:90px;object-fit:cover;border-radius:10px;}
-.publish-btn{width:100%;background:#ff7a18;color:white;border:none;padding:15px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:15px;}
+.video-preview{width:100%;border-radius:12px;margin-top:8px;display:none;}
+.publish-btn{width:100%;background:#ff7a18;color:white;border:none;padding:15px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:15px;font-size:16px;}
+.publish-btn:disabled{background:#ccc;cursor:not-allowed;}
 .cancel-link{color:white;text-decoration:none;font-weight:bold;}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
 .bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
@@ -30,7 +33,6 @@ body{padding-bottom:80px;background:#f4f4f4;}
 @media(max-width:700px){.row{grid-template-columns:1fr;}}
 </style>
 </head>
-
 <body>
 
 <header class="top-appbar">
@@ -57,7 +59,6 @@ body{padding-bottom:80px;background:#f4f4f4;}
                 <option value="Airbnb">Airbnb</option>
                 <option value="Office">Office</option>
             </select>
-
             <select id="postType">
                 <option value="Property">Property Post</option>
                 <option value="Reel">Property Reel</option>
@@ -74,14 +75,18 @@ body{padding-bottom:80px;background:#f4f4f4;}
             <label>Property Photos *</label>
             <div class="drop-zone">
                 <input id="postImages" type="file" accept="image/*" multiple>
-                <p>Select property photos from gallery/files</p>
+                <p>📷 Tap to select photos from gallery</p>
             </div>
             <div id="imagePreview" class="preview-box"></div>
         </div>
 
         <div class="fgroup">
-            <label>Property Video / Reel Optional</label>
-            <input id="postVideoFile" type="file" accept="video/*">
+            <label>Property Video / Reel (Optional)</label>
+            <div class="drop-zone">
+                <input id="postVideoFile" type="file" accept="video/*">
+                <p>🎬 Tap to select a video</p>
+            </div>
+            <video id="videoPreview" class="video-preview" controls></video>
         </div>
 
         <textarea id="postDescription" placeholder="Describe the property, rooms, security, water, nearby roads, rules, etc."></textarea>
@@ -116,39 +121,27 @@ body{padding-bottom:80px;background:#f4f4f4;}
 </nav>
 
 <script type="module">
-import { auth, database } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { ref, push, set, get } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-const CLOUD_NAME = "dbyeox0j8";
-const UPLOAD_PRESET = "Qeja-com";
+import { auth, database, uploadToCloudinary } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, push, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
 let currentUserData = null;
 
 onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
-
+    if (!user) { window.location.href = "login.html"; return; }
     currentUser = user;
-
     const snap = await get(ref(database, "users/" + user.uid));
-    currentUserData = snap.exists() ? snap.val() : {
-        fullName: "Qeja User",
-        email: user.email
-    };
-
+    currentUserData = snap.exists() ? snap.val() : { fullName: "Qeja User", email: user.email };
     document.getElementById("contactName").value = currentUserData.fullName || "";
     document.getElementById("contactEmail").value = currentUser.email || "";
     document.getElementById("contactPhone").value = currentUserData.phone || "";
 });
 
-document.getElementById("postImages").addEventListener("change", function(){
+// Image preview
+document.getElementById("postImages").addEventListener("change", function () {
     const preview = document.getElementById("imagePreview");
     preview.innerHTML = "";
-
     Array.from(this.files).forEach(file => {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
@@ -156,73 +149,56 @@ document.getElementById("postImages").addEventListener("change", function(){
     });
 });
 
-async function uploadToCloudinary(file, resourceType = "image") {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, {
-        method: "POST",
-        body: formData
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.error?.message || "Cloudinary upload failed");
+// Video preview
+document.getElementById("postVideoFile").addEventListener("change", function () {
+    const video = document.getElementById("videoPreview");
+    if (this.files[0]) {
+        video.src = URL.createObjectURL(this.files[0]);
+        video.style.display = "block";
     }
-
-    return data.secure_url;
-}
+});
 
 document.getElementById("publishBtn").addEventListener("click", async () => {
-    if (!currentUser) {
-        alert("Please wait, account is still loading.");
-        return;
-    }
+    if (!currentUser) { alert("Please wait, account is still loading."); return; }
 
-    const title = document.getElementById("postTitle").value.trim();
-    const category = document.getElementById("postCategory").value;
-    const type = document.getElementById("postType").value;
-    const location = document.getElementById("postLocation").value.trim();
-    const price = document.getElementById("postPrice").value.trim();
+    const title       = document.getElementById("postTitle").value.trim();
+    const category    = document.getElementById("postCategory").value;
+    const type        = document.getElementById("postType").value;
+    const location    = document.getElementById("postLocation").value.trim();
+    const price       = document.getElementById("postPrice").value.trim();
     const description = document.getElementById("postDescription").value.trim();
     const contactName = document.getElementById("contactName").value.trim();
     const contactPhone = document.getElementById("contactPhone").value.trim();
     const whatsappNumber = document.getElementById("whatsappNumber").value.trim();
     const contactEmail = document.getElementById("contactEmail").value.trim();
-    const visibility = document.getElementById("visibility").value;
-
-    const imageFiles = document.getElementById("postImages").files;
-    const videoFile = document.getElementById("postVideoFile").files[0];
+    const visibility  = document.getElementById("visibility").value;
+    const imageFiles  = document.getElementById("postImages").files;
+    const videoFile   = document.getElementById("postVideoFile").files[0];
 
     if (!title || !category || !location || !price || !description || !contactPhone || imageFiles.length === 0) {
         alert("Please fill title, category, location, price, photos, description and phone number.");
         return;
     }
 
-    const publishBtn = document.getElementById("publishBtn");
+    const btn = document.getElementById("publishBtn");
+    btn.disabled = true;
 
     try {
-        publishBtn.disabled = true;
-        publishBtn.textContent = "Uploading photos...";
-
+        btn.textContent = "Uploading photos...";
         const imageURLs = [];
-
         for (let i = 0; i < imageFiles.length; i++) {
+            btn.textContent = `Uploading photo ${i + 1} of ${imageFiles.length}...`;
             const url = await uploadToCloudinary(imageFiles[i], "image");
             imageURLs.push(url);
         }
 
         let videoURL = "";
-
         if (videoFile) {
-            publishBtn.textContent = "Uploading video...";
+            btn.textContent = "Uploading video...";
             videoURL = await uploadToCloudinary(videoFile, "video");
         }
 
-        publishBtn.textContent = "Publishing...";
-
+        btn.textContent = "Publishing...";
         const postRef = push(ref(database, "posts"));
 
         await set(postRef, {
@@ -231,37 +207,26 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
             ownerName: currentUserData.fullName || "Qeja User",
             ownerEmail: currentUser.email,
             ownerPhoto: currentUserData.photoURL || "",
-            title,
-            category,
-            type,
-            location,
-            price,
+            title, category, type, location, price,
             imageURL: imageURLs[0],
             imageURLs,
             videoURL,
             description,
-            contactName,
-            contactPhone,
-            whatsappNumber,
-            contactEmail,
+            contactName, contactPhone, whatsappNumber, contactEmail,
             visibility,
             status: visibility === "public" ? "public" : "draft",
-            likes: 0,
-            likesCount: 0,
-            views: 0,
-            saves: 0,
-            inquiries: 0,
+            likes: 0, likesCount: 0, views: 0, saves: 0, inquiries: 0,
             createdAt: new Date().toISOString()
         });
 
         alert(visibility === "draft" ? "Draft saved successfully!" : "Listing published successfully!");
         window.location.href = "profile.html";
 
-    } catch (error) {
-        console.error(error);
-        alert("Failed to publish: " + error.message);
-        publishBtn.disabled = false;
-        publishBtn.textContent = "Publish Listing";
+    } catch (err) {
+        console.error(err);
+        alert("Failed to publish: " + err.message);
+        btn.disabled = false;
+        btn.textContent = "Publish Listing";
     }
 });
 </script>
