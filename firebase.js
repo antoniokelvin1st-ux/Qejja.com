@@ -1,4 +1,5 @@
 import { getStorage } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js";
+
 export const storage = getStorage(app);
 
 <!-- Firebase Auth + Firestore (compat — free tier) -->
