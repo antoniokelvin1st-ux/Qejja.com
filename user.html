@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Profile - Qejja</title>
+<title>User Profile - qeja</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -38,7 +38,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 <body>
 
 <header class="top-appbar">
-    <div class="logo">Qejja</div>
+    <div class="logo">qeja</div>
     <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
 </header>
 
@@ -46,7 +46,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
     <section class="user-card">
         <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
         <div id="profileName" class="username">Loading...</div>
-        <div id="profileHandle" class="handle">@Qejja.user</div>
+        <div id="profileHandle" class="handle">@qeja.user</div>
         <p id="profileBio" class="bio">Loading bio...</p>
 
         <button id="followBtn" class="follow-btn">Follow</button>
@@ -130,8 +130,8 @@ async function loadUserProfile() {
 
     targetUserData = snap.val();
 
-    document.getElementById("profileName").textContent = targetUserData.fullName || "Qejja User";
-    document.getElementById("profileHandle").textContent = "@" + (targetUserData.handle || targetUserData.fullName || "Qejja.user").toString().replace(/\s+/g, ".").toLowerCase();
+    document.getElementById("profileName").textContent = targetUserData.fullName || "qeja User";
+    document.getElementById("profileHandle").textContent = "@" + (targetUserData.handle || targetUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
     document.getElementById("profileBio").textContent = targetUserData.bio || "No bio added yet.";
 
     if (targetUserData.photoURL) {
