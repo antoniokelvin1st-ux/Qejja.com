@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feed - Qejja</title>
+<title>Feed - qeja</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="logo">Qejja</div>
+    <div class="logo">qeja</div>
 
     <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
@@ -24,7 +24,7 @@
 </nav>
 
 <section style="padding:120px 7% 60px;">
-    <h2>Qejja Property Feed</h2>
+    <h2>qeja Property Feed</h2>
     <p style="margin-bottom:30px;">Post property images, reels, rentals, plots and houses.</p>
 
     <div class="property-card" style="max-width:700px;margin-bottom:40px;">
@@ -49,7 +49,7 @@
 </section>
 
 <footer>
-    <p>&copy; 2026 Qejja.com. All rights reserved.</p>
+    <p>&copy; 2026 qeja.com. All rights reserved.</p>
 </footer>
 
 <script type="module">
@@ -70,7 +70,7 @@ onAuthStateChanged(auth, async (user) => {
 
     const userSnap = await get(ref(database, "users/" + user.uid));
     currentUserData = userSnap.exists() ? userSnap.val() : {
-        fullName: "Qejja User",
+        fullName: "qeja User",
         email: user.email
     };
 
@@ -97,7 +97,7 @@ document.getElementById("createPostBtn").addEventListener("click", async () => {
     await set(postRef, {
         postId: postRef.key,
         ownerId: currentUser.uid,
-        ownerName: currentUserData.fullName || "Qejja User",
+        ownerName: currentUserData.fullName || "qeja User",
         ownerEmail: currentUser.email,
         title,
         location,
@@ -237,7 +237,7 @@ window.addComment = async function(postId) {
     await set(commentRef, {
         commentId: commentRef.key,
         userId: currentUser.uid,
-        userName: currentUserData.fullName || "Qejja User",
+        userName: currentUserData.fullName || "qeja User",
         text,
         createdAt: new Date().toISOString()
     });
