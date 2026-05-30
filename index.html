@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qejja - Home</title>
+<title>qeja - Home</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -44,7 +44,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 <body>
 
 <header class="top-appbar">
-    <div class="logo">Qejja</div>
+    <div class="logo">qeja</div>
     <a href="settings.html" style="color:white;text-decoration:none;font-weight:bold;">⚙ Settings</a>
 </header>
 
@@ -55,7 +55,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 </main>
 
 <nav class="bottom-nav">
-    <a href="index.html"><span>🏠</span>Qejja</a>
+    <a href="index.html"><span>🏠</span>qeja</a>
     <a href="explore.html"><span>🔍</span>Explore</a>
     <a href="post.html" class="post-plus"><span>+</span></a>
     <a href="inbox.html"><span>💬</span>Inbox</a>
@@ -81,7 +81,7 @@ onAuthStateChanged(auth, async (user) => {
 
     const userSnap = await get(ref(database, "users/" + user.uid));
     currentUserData = userSnap.exists() ? userSnap.val() : {
-        fullName: "Qejja User",
+        fullName: "qeja User",
         email: user.email
     };
 
@@ -158,7 +158,7 @@ function loadPosts() {
 
                 <div class="post-body">
                     <a href="user.html?id=${post.ownerId}" style="text-decoration:none;color:#111;font-weight:bold;">
-    @${post.ownerName || "Qejja User"}
+    @${post.ownerName || "qeja User"}
 </a>
                     <a href="details.html?id=${post.postId}" style="text-decoration:none;color:inherit;">
     <div class="post-title">${post.title || "Property Listing"}</div>
@@ -253,7 +253,7 @@ window.addRootComment = async function(postId) {
         postId,
         parentId: null,
         userId: currentUser.uid,
-        userName: currentUserData.fullName || "Qejja User",
+        userName: currentUserData.fullName || "qeja User",
         text,
         likesCount: 0,
         dislikesCount: 0,
@@ -307,7 +307,7 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
     wrapper.style.marginLeft = `${Math.min(level * 22, 90)}px`;
 
     wrapper.innerHTML = `
-        <strong>${comment.userName || "Qejja User"}</strong>
+        <strong>${comment.userName || "qeja User"}</strong>
         <p>${comment.text}</p>
 
         <small>
@@ -382,7 +382,7 @@ window.addNestedReply = async function(postId, parentId) {
         postId,
         parentId,
         userId: currentUser.uid,
-        userName: currentUserData.fullName || "Qejja User",
+        userName: currentUserData.fullName || "qeja User",
         text,
         likesCount: 0,
         dislikesCount: 0,
@@ -515,7 +515,7 @@ window.sendInquiry = async function(postId, ownerId) {
         leadId: leadRef.key,
         postId,
         interestedUserId: currentUser.uid,
-        interestedUserName: currentUserData.fullName || "Qejja User",
+        interestedUserName: currentUserData.fullName || "qeja User",
         interestedUserEmail: currentUser.email,
         createdAt: new Date().toISOString(),
         status: "new"
