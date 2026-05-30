@@ -38,7 +38,7 @@ window.addRootComment = async function(postId) {
         postId,
         parentId: null,
         userId: user.uid,
-        userName: userData.fullName || "Qejja User",
+        userName: userData.fullName || "qeja User",
         text,
         likesCount: 0,
         dislikesCount: 0,
@@ -92,7 +92,7 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
     const userCanDelete = userCanEdit || isPostOwner(postOwnerId, currentUserId);
 
     wrapper.innerHTML = `
-        <strong>${comment.userName || "Qejja User"}</strong>
+        <strong>${comment.userName || "qeja User"}</strong>
         <p id="text-${comment.id}">${comment.text}</p>
 
         <small>
@@ -157,7 +157,7 @@ window.addNestedReply = async function(postId, parentId) {
         postId,
         parentId,
         userId: user.uid,
-        userName: userData.fullName || "Qejja User",
+        userName: userData.fullName || "qeja User",
         text,
         likesCount: 0,
         dislikesCount: 0,
