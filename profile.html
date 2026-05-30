@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile - Qejja</title>
+<title>Profile - qeja</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -66,7 +66,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
 <body>
 
 <header class="top-appbar">
-    <div class="logo">QEJJA</div>
+    <div class="logo">qeja</div>
 
     <div class="menu-wrap">
         <button class="menu-btn" onclick="toggleMenu()">⋯</button>
@@ -86,9 +86,9 @@ body{padding-bottom:80px;background:#f4f4f4;}
         <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
 
         <div id="profileName" class="username">Loading...</div>
-        <div id="profileHandle" class="handle">@Qejja.user</div>
+        <div id="profileHandle" class="handle">@qeja.user</div>
 
-        <p id="profileBio" class="bio">I love Qejja.com💕.</p>
+        <p id="profileBio" class="bio">I love qeja.com💕.</p>
 
         <button class="edit-btn" onclick="openEditProfile()">Edit Profile</button>
 
@@ -139,7 +139,7 @@ body{padding-bottom:80px;background:#f4f4f4;}
     <h2>Edit Profile</h2>
 
     <input id="editName" type="text" placeholder="Full Name">
-    <input id="editHandle" type="text" placeholder="Username / Handle e.g Qejja.agent">
+    <input id="editHandle" type="text" placeholder="Username / Handle e.g qeja.agent">
     <input id="editPhoto" type="text" placeholder="Profile Image URL">
     <textarea id="editBio" placeholder="Write your bio / description"></textarea>
 
@@ -202,16 +202,16 @@ async function loadProfile() {
         currentUserData = snap.val();
     } else {
         currentUserData = {
-            fullName: "Qejja User",
+            fullName: "qeja User",
             email: currentUser.email,
             bio: "",
-            handle: "Qejja.user",
+            handle: "qeja.user",
             photoURL: ""
         };
     }
 
-    document.getElementById("profileName").textContent = currentUserData.fullName || "Qejja User";
-    document.getElementById("profileHandle").textContent = "@" + (currentUserData.handle || currentUserData.fullName || "Qejja.user").toString().replace(/\s+/g, ".").toLowerCase();
+    document.getElementById("profileName").textContent = currentUserData.fullName || "qeja User";
+    document.getElementById("profileHandle").textContent = "@" + (currentUserData.handle || currentUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
     document.getElementById("profileBio").textContent = currentUserData.bio || "No bio added yet.";
 
     if (currentUserData.photoURL) {
