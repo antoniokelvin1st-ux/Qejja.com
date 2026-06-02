@@ -164,7 +164,7 @@ function loadPosts() {
         posts.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
         posts.forEach(post => {
-            if (post.status && post.status !== "public") return;
+            if (post.status === "draft") return;
 
             const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
             const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (post.ownerId || "qeja");
