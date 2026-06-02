@@ -3,49 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create Post - qeja</title>
+<title>Create - QEJA</title>
 <link rel="stylesheet" href="style.css">
+
 <style>
-body{padding-bottom:80px;background:#f4f4f4;}
+body{padding-bottom:90px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
-.post-wrap{padding:30px 7% 100px;max-width:800px;margin:auto;}
+.post-wrap{padding:30px 7% 100px;max-width:850px;margin:auto;}
+.hero-card{background:#111;color:white;border-radius:24px;padding:24px;margin-bottom:20px;}
+.hero-card h1{font-size:34px;margin-bottom:8px;}
 .post-card{background:white;border-radius:22px;padding:22px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
-.post-card input,.post-card select,.post-card textarea{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;}
-.post-card textarea{height:120px;}
+.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+.choice-btn{border:2px solid #eee;background:#fff;padding:18px;border-radius:20px;font-weight:900;cursor:pointer;text-align:left;}
+.choice-btn.active{border-color:#ff7a18;background:#fff3e8;color:#ff7a18;}
+input,select,textarea{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;}
+textarea{height:120px;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .fgroup{margin:12px 0;}
 .fgroup label{font-weight:bold;display:block;margin-bottom:5px;}
-.drop-zone{border:2px dashed #ff7a18;background:#fff7f0;padding:20px;border-radius:15px;text-align:center;cursor:pointer;position:relative;}
+.drop-zone{border:2px dashed #ff7a18;background:#fff7f0;padding:20px;border-radius:15px;text-align:center;cursor:pointer;position:relative;margin-bottom:10px;}
 .drop-zone input[type="file"]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;}
 .drop-zone p{margin:0;color:#ff7a18;font-weight:bold;}
 .preview-box{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;}
 .preview-box img{width:90px;height:90px;object-fit:cover;border-radius:10px;}
-.video-preview{width:100%;border-radius:12px;margin-top:8px;display:none;}
+.video-preview{width:100%;border-radius:12px;margin-top:8px;display:none;background:#111;}
 .publish-btn{width:100%;background:#ff7a18;color:white;border:none;padding:15px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:15px;font-size:16px;}
 .publish-btn:disabled{background:#ccc;cursor:not-allowed;}
 .cancel-link{color:white;text-decoration:none;font-weight:bold;}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
-.bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
-.bottom-nav span{display:block;font-size:23px;}
-.post-plus{background:#111;color:white!important;width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-top:-28px;border:4px solid #ff7a18;}
+.note{font-size:13px;color:#666;margin-top:5px;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
+.bottom-nav a:hover{color:#ff7a18;}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
-@media(max-width:700px){.row{grid-template-columns:1fr;}}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+@media(max-width:700px){.row,.choice-row{grid-template-columns:1fr;}}
 </style>
 </head>
+
 <body>
 
 <header class="top-appbar">
-    <div class="logo">qeja</div>
+    <div class="logo">QEJA</div>
     <a href="index.html" class="cancel-link">Cancel</a>
 </header>
 
 <main class="post-wrap">
-    <div class="post-card">
-        <h1>Create Listing</h1>
-        <p>Post a rental, apartment, house, plot, hostel, Airbnb, or property reel.</p>
+    <div class="hero-card">
+        <h1>Create</h1>
+        <p>Post a property with photos or upload one short property reel.</p>
+    </div>
 
-        <input id="postTitle" type="text" placeholder="Property title e.g Modern bedsitter near KU">
+    <div class="post-card">
+        <h2>Choose Content Type</h2>
+
+        <div class="choice-row">
+            <button id="propertyChoice" class="choice-btn active" onclick="setContentType('Property')" type="button">
+                📸 Property Post<br>
+                <small>Up to 10 photos. No video.</small>
+            </button>
+
+            <button id="reelChoice" class="choice-btn" onclick="setContentType('Reel')" type="button">
+                🎬 Property Reel<br>
+                <small>1 video only. Max 60 seconds.</small>
+            </button>
+        </div>
+
+        <input id="postTitle" type="text" placeholder="Title e.g Modern bedsitter near KU">
 
         <div class="row">
             <select id="postCategory">
@@ -59,10 +86,10 @@ body{padding-bottom:80px;background:#f4f4f4;}
                 <option value="Airbnb">Airbnb</option>
                 <option value="Office">Office</option>
             </select>
-            <select id="postType">
-                <option value="Property">Property Post</option>
-                <option value="Reel">Property Reel</option>
-                <option value="Featured">Featured Listing</option>
+
+            <select id="featuredOption">
+                <option value="Free">Free Post</option>
+                <option value="Featured">Featured Listing - Payment Required Later</option>
             </select>
         </div>
 
@@ -71,21 +98,37 @@ body{padding-bottom:80px;background:#f4f4f4;}
             <input id="postPrice" type="text" placeholder="Price e.g Ksh 20,000 / month">
         </div>
 
-        <div class="fgroup">
+        <div id="imageSection" class="fgroup">
             <label>Property Photos *</label>
+
             <div class="drop-zone">
                 <input id="postImages" type="file" accept="image/*" multiple>
-                <p>📷 Tap to select photos from gallery</p>
+                <p>📷 Upload photos from gallery, max 10</p>
             </div>
+
+            <div class="drop-zone">
+                <input id="cameraImages" type="file" accept="image/*" capture="environment">
+                <p>📸 Capture photo using camera</p>
+            </div>
+
+            <p class="note">For property posts, you can add up to 10 images only.</p>
             <div id="imagePreview" class="preview-box"></div>
         </div>
 
-        <div class="fgroup">
-            <label>Property Video / Reel (Optional)</label>
+        <div id="videoSection" class="fgroup" style="display:none;">
+            <label>Property Reel *</label>
+
             <div class="drop-zone">
                 <input id="postVideoFile" type="file" accept="video/*">
-                <p>🎬 Tap to select a video</p>
+                <p>🎬 Upload one video, max 60 seconds</p>
             </div>
+
+            <div class="drop-zone">
+                <input id="cameraVideo" type="file" accept="video/*" capture="environment">
+                <p>📹 Record video using camera</p>
+            </div>
+
+            <p class="note">Recommended: 1080p. Actual quality depends on the user’s device/browser.</p>
             <video id="videoPreview" class="video-preview" controls></video>
         </div>
 
@@ -108,16 +151,16 @@ body{padding-bottom:80px;background:#f4f4f4;}
             <option value="draft">Save as Draft</option>
         </select>
 
-        <button id="publishBtn" class="publish-btn" type="button">Publish Listing</button>
+        <button id="publishBtn" class="publish-btn" type="button">Publish</button>
     </div>
 </main>
 
 <nav class="bottom-nav">
-    <a href="index.html"><span>🏠</span>Home</a>
-    <a href="explore.html"><span>🔍</span>Explore</a>
-    <a href="post.html" class="post-plus"><span>+</span></a>
-    <a href="inbox.html"><span>💬</span>Inbox</a>
-    <a href="profile.html"><span>👤</span>Profile</a>
+    <a href="index.html"><span>⌂</span>Home</a>
+    <a href="explore.html"><span>🧭</span>Discover</a>
+    <a href="post.html" class="post-plus"><span>＋</span></a>
+    <a href="inbox.html"><span>🔔</span>Activity</a>
+    <a href="profile.html"><span>◎</span>Profile</a>
 </nav>
 
 <script type="module">
@@ -127,56 +170,158 @@ import { ref, push, set, get } from "https://www.gstatic.com/firebasejs/10.12.2/
 
 let currentUser = null;
 let currentUserData = null;
+let contentType = "Property";
+let selectedImages = [];
+let selectedVideo = null;
 
 onAuthStateChanged(auth, async (user) => {
-    if (!user) { window.location.href = "login.html"; return; }
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
     currentUser = user;
+
     const snap = await get(ref(database, "users/" + user.uid));
-    currentUserData = snap.exists() ? snap.val() : { fullName: "qeja User", email: user.email };
+    currentUserData = snap.exists() ? snap.val() : { fullName: "QEJA User", email: user.email };
+
     document.getElementById("contactName").value = currentUserData.fullName || "";
     document.getElementById("contactEmail").value = currentUser.email || "";
     document.getElementById("contactPhone").value = currentUserData.phone || "";
 });
 
-// Image preview
-document.getElementById("postImages").addEventListener("change", function () {
+window.setContentType = function(type) {
+    contentType = type;
+
+    document.getElementById("propertyChoice").classList.remove("active");
+    document.getElementById("reelChoice").classList.remove("active");
+
+    if (type === "Property") {
+        document.getElementById("propertyChoice").classList.add("active");
+        document.getElementById("imageSection").style.display = "block";
+        document.getElementById("videoSection").style.display = "none";
+        selectedVideo = null;
+        document.getElementById("postVideoFile").value = "";
+        document.getElementById("cameraVideo").value = "";
+        document.getElementById("videoPreview").style.display = "none";
+    } else {
+        document.getElementById("reelChoice").classList.add("active");
+        document.getElementById("imageSection").style.display = "none";
+        document.getElementById("videoSection").style.display = "block";
+        selectedImages = [];
+        document.getElementById("postImages").value = "";
+        document.getElementById("cameraImages").value = "";
+        document.getElementById("imagePreview").innerHTML = "";
+    }
+};
+
+function renderImagePreview() {
     const preview = document.getElementById("imagePreview");
     preview.innerHTML = "";
-    Array.from(this.files).forEach(file => {
+
+    selectedImages.forEach(file => {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
         preview.appendChild(img);
     });
+}
+
+function addImages(files) {
+    const incoming = Array.from(files);
+
+    if (selectedImages.length + incoming.length > 10) {
+        alert("You can only add up to 10 images.");
+        return;
+    }
+
+    selectedImages = selectedImages.concat(incoming);
+    renderImagePreview();
+}
+
+document.getElementById("postImages").addEventListener("change", function () {
+    addImages(this.files);
 });
 
-// Video preview
-document.getElementById("postVideoFile").addEventListener("change", function () {
+document.getElementById("cameraImages").addEventListener("change", function () {
+    addImages(this.files);
+});
+
+async function validateVideo(file) {
+    return new Promise((resolve) => {
+        const video = document.createElement("video");
+        video.preload = "metadata";
+
+        video.onloadedmetadata = function() {
+            URL.revokeObjectURL(video.src);
+
+            if (video.duration > 60) {
+                alert("Reel must be 60 seconds or less.");
+                resolve(false);
+            } else {
+                resolve(true);
+            }
+        };
+
+        video.onerror = function() {
+            alert("Could not read video file.");
+            resolve(false);
+        };
+
+        video.src = URL.createObjectURL(file);
+    });
+}
+
+async function setVideo(file) {
+    if (!file) return;
+
+    const valid = await validateVideo(file);
+    if (!valid) return;
+
+    selectedVideo = file;
+
     const video = document.getElementById("videoPreview");
-    if (this.files[0]) {
-        video.src = URL.createObjectURL(this.files[0]);
-        video.style.display = "block";
-    }
+    video.src = URL.createObjectURL(file);
+    video.style.display = "block";
+}
+
+document.getElementById("postVideoFile").addEventListener("change", function () {
+    setVideo(this.files[0]);
+});
+
+document.getElementById("cameraVideo").addEventListener("change", function () {
+    setVideo(this.files[0]);
 });
 
 document.getElementById("publishBtn").addEventListener("click", async () => {
-    if (!currentUser) { alert("Please wait, account is still loading."); return; }
+    if (!currentUser) {
+        alert("Please wait, account is still loading.");
+        return;
+    }
 
-    const title       = document.getElementById("postTitle").value.trim();
-    const category    = document.getElementById("postCategory").value;
-    const type        = document.getElementById("postType").value;
-    const location    = document.getElementById("postLocation").value.trim();
-    const price       = document.getElementById("postPrice").value.trim();
+    const title = document.getElementById("postTitle").value.trim();
+    const category = document.getElementById("postCategory").value;
+    const featuredOption = document.getElementById("featuredOption").value;
+    const location = document.getElementById("postLocation").value.trim();
+    const price = document.getElementById("postPrice").value.trim();
     const description = document.getElementById("postDescription").value.trim();
     const contactName = document.getElementById("contactName").value.trim();
     const contactPhone = document.getElementById("contactPhone").value.trim();
     const whatsappNumber = document.getElementById("whatsappNumber").value.trim();
     const contactEmail = document.getElementById("contactEmail").value.trim();
-    const visibility  = document.getElementById("visibility").value;
-    const imageFiles  = document.getElementById("postImages").files;
-    const videoFile   = document.getElementById("postVideoFile").files[0];
+    const visibility = document.getElementById("visibility").value;
 
-    if (!title || !category || !location || !price || !description || !contactPhone || imageFiles.length === 0) {
-        alert("Please fill title, category, location, price, photos, description and phone number.");
+    if (!title || !category || !location || !price || !description || !contactPhone) {
+        alert("Please fill title, category, location, price, description and phone number.");
+        return;
+    }
+
+    if (contentType === "Property" && selectedImages.length === 0) {
+        alert("Please add at least one image for a property post.");
+        return;
+    }
+
+    if (contentType === "Reel" && !selectedVideo) {
+        alert("Please add one video for a reel.");
         return;
     }
 
@@ -184,49 +329,70 @@ document.getElementById("publishBtn").addEventListener("click", async () => {
     btn.disabled = true;
 
     try {
-        btn.textContent = "Uploading photos...";
-        const imageURLs = [];
-        for (let i = 0; i < imageFiles.length; i++) {
-            btn.textContent = `Uploading photo ${i + 1} of ${imageFiles.length}...`;
-            const url = await uploadToCloudinary(imageFiles[i], "image");
-            imageURLs.push(url);
+        let imageURLs = [];
+        let videoURL = "";
+
+        if (contentType === "Property") {
+            for (let i = 0; i < selectedImages.length; i++) {
+                btn.textContent = `Uploading photo ${i + 1} of ${selectedImages.length}...`;
+                const url = await uploadToCloudinary(selectedImages[i], "image");
+                imageURLs.push(url);
+            }
         }
 
-        let videoURL = "";
-        if (videoFile) {
-            btn.textContent = "Uploading video...";
-            videoURL = await uploadToCloudinary(videoFile, "video");
+        if (contentType === "Reel") {
+            btn.textContent = "Uploading reel...";
+            videoURL = await uploadToCloudinary(selectedVideo, "video");
         }
 
         btn.textContent = "Publishing...";
+
         const postRef = push(ref(database, "posts"));
 
         await set(postRef, {
             postId: postRef.key,
             ownerId: currentUser.uid,
-            ownerName: currentUserData.fullName || "qeja User",
+            ownerName: currentUserData.fullName || "QEJA User",
             ownerEmail: currentUser.email,
             ownerPhoto: currentUserData.photoURL || "",
-            title, category, type, location, price,
-            imageURL: imageURLs[0],
+            title,
+            category,
+            type: contentType,
+            isFeatured: featuredOption === "Featured",
+            featuredStatus: featuredOption === "Featured" ? "pending_payment" : "none",
+            location,
+            price,
+            imageURL: imageURLs[0] || "",
             imageURLs,
             videoURL,
             description,
-            contactName, contactPhone, whatsappNumber, contactEmail,
+            contactName,
+            contactPhone,
+            whatsappNumber,
+            contactEmail,
             visibility,
             status: visibility === "public" ? "public" : "draft",
-            likes: 0, likesCount: 0, views: 0, saves: 0, inquiries: 0,
+            likes: 0,
+            likesCount: 0,
+            views: 0,
+            saves: 0,
+            inquiries: 0,
             createdAt: new Date().toISOString()
         });
 
-        alert(visibility === "draft" ? "Draft saved successfully!" : "Listing published successfully!");
+        if (featuredOption === "Featured") {
+            alert("Post created. Featured payment system will be connected next.");
+        } else {
+            alert(visibility === "draft" ? "Draft saved successfully!" : "Post published successfully!");
+        }
+
         window.location.href = "profile.html";
 
     } catch (err) {
         console.error(err);
         alert("Failed to publish: " + err.message);
         btn.disabled = false;
-        btn.textContent = "Publish Listing";
+        btn.textContent = "Publish";
     }
 });
 </script>
