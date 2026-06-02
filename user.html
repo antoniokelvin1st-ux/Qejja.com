@@ -2,89 +2,98 @@
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="favicon.png">
-    <title>QEJA - Discover Properties, Rentals, Land & Real Estate</title>
-
-<meta name="description" content="QEJA helps you discover rentals, houses, land, hostels, Airbnb listings and real estate opportunities across Africa.">
-
-<meta name="keywords" content="QEJA, property listings, rentals, houses, land, real estate, apartments, hostels, Kenya">
-
-<meta name="robots" content="index, follow">
-
-<link rel="canonical" href="https://qeja.com.ng/">
-    <meta property="og:title" content="QEJA">
-<meta property="og:description" content="Discover Properties, Rentals & Opportunities">
-<meta property="og:url" content="https://qeja.com.ng/">
-<meta property="og:type" content="website">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile - qeja</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
-body{padding-bottom:90px;background:#f4f4f4;}
+body{padding-bottom:80px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
-.feed-wrap{padding:30px 7%;max-width:760px;margin:auto;}
-.post-card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.08);margin-bottom:30px;}
-.post-main-img{width:100%;height:360px;object-fit:cover;display:block;background:#eee;}
-.post-body{padding:20px;}
-.owner-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#111;font-weight:bold;margin-bottom:8px;}
-.owner-avatar{width:32px!important;height:32px!important;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;display:inline-block!important;}
-.post-title{font-size:24px;font-weight:bold;margin-top:6px;}
-.post-price{color:#ff7a18;font-weight:bold;margin:8px 0;}
-.stat-row{display:flex;gap:18px;align-items:center;margin:12px 0;color:#555;font-weight:bold;flex-wrap:wrap;}
-.post-actions button,.small-btn{border:none;padding:9px 14px;border-radius:22px;cursor:pointer;font-weight:bold;margin:4px;}
-.orange-btn{background:#ff7a18;color:white;}
-.dark-btn{background:#111;color:white;}
-.danger-btn{background:#cc0000;color:white;}
-.comment-box{display:none;margin-top:15px;border-top:1px solid #eee;padding-top:12px;}
-.comment-item{background:#f3f3f3;padding:10px;border-radius:10px;margin-top:10px;}
-.comment-input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:8px 0;box-sizing:border-box;}
-.icon-heart{color:#e63946;}
-.icon-like{color:#ff7a18;}
-.icon-dislike{color:#444;}
-.icon-eye{color:#333;}
-.heart-pop{animation:popHeart .35s ease;}
-@keyframes popHeart{0%{transform:scale(1);}40%{transform:scale(1.8);}100%{transform:scale(1);}}
-
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
-.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
-.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
-.bottom-nav a:hover{color:#ff7a18;}
-.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
+.user-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
+.user-card{text-align:center;background:white;border-radius:22px;padding:28px 18px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.profile-pic{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #ff7a18;background:#eee;}
+.username{font-size:28px;font-weight:900;margin-top:12px;}
+.handle{color:#777;font-weight:bold;margin-top:3px;}
+.bio{max-width:620px;margin:12px auto;color:#333;}
+.follow-btn{background:#ff7a18;color:white;border:none;padding:12px 28px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:12px;}
+.stats{display:flex;justify-content:center;gap:30px;margin-top:22px;flex-wrap:wrap;}
+.stat strong{font-size:22px;display:block;}
+.stat span{color:#777;font-weight:bold;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:25px;}
+.grid-card{background:white;overflow:hidden;}
+.grid-card img{width:100%;height:220px;object-fit:cover;background:#ddd;}
+.grid-info{padding:10px;background:white;}
+.grid-info h4{font-size:14px;margin-bottom:4px;}
+.grid-info p{font-size:13px;color:#555;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
+.bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:23px;}
+.post-plus{background:#111;color:white!important;width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-top:-28px;border:4px solid #ff7a18;}
 .post-plus span{font-size:34px;}
-@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+@media(max-width:700px){.grid-card img{height:150px;}}
 </style>
 </head>
 
 <body>
 
 <header class="top-appbar">
-    <div class="logo">QEJA</div>
-    <a href="settings.html" style="color:white;text-decoration:none;font-weight:bold;">⚙ Settings</a>
+    <div class="logo">qeja</div>
+    <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
 </header>
 
-<main class="feed-wrap">
-    <h1>Home</h1>
-    <p style="margin-bottom:25px;">Featured, near you, and For You property posts.</p>
-    <div id="feedContainer">Loading posts...</div>
+<main class="user-wrap">
+    <section class="user-card">
+        <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
+        <div id="profileName" class="username">Loading...</div>
+        <div id="profileHandle" class="handle">@qeja.user</div>
+        <p id="profileBio" class="bio">Loading bio...</p>
+
+        <button id="followBtn" class="follow-btn">Follow</button>
+
+        <div class="stats">
+            <div class="stat">
+                <strong id="listingsCount">0</strong>
+                <span>Listings</span>
+            </div>
+            <div class="stat">
+                <strong id="followersCount">0</strong>
+                <span>Followers</span>
+            </div>
+            <div class="stat">
+                <strong id="followingCount">0</strong>
+                <span>Following</span>
+            </div>
+            <div class="stat">
+                <strong id="likesCount">0</strong>
+                <span>Likes</span>
+            </div>
+        </div>
+    </section>
+
+    <div id="userPostsGrid" class="grid"></div>
 </main>
 
 <nav class="bottom-nav">
-    <a href="index.html"><span>⌂</span>Home</a>
-    <a href="discover.html"><span>🧭</span>Discover</a>
-    <a href="post.html" class="post-plus"><span>＋</span></a>
-    <a href="inbox.html"><span>🔔</span>Activity</a>
-    <a href="profile.html"><span>◎</span>Profile</a>
+    <a href="index.html"><span>🏠</span>Home</a>
+    <a href="discover.html"><span>🔍</span>discover</a>
+    <a href="post.html" class="post-plus"><span>+</span></a>
+    <a href="inbox.html"><span>💬</span>Inbox</a>
+    <a href="profile.html"><span>👤</span>Profile</a>
 </nav>
 
 <script type="module">
 import { auth, database } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { ref, onValue, update, push, set, get, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { ref, get, set, remove, onValue, push } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 let currentUser = null;
-let currentUserData = null;
-const EDIT_LIMIT = 20 * 60 * 1000;
+let targetUserId = null;
+let targetUserData = null;
+
+const params = new URLSearchParams(window.location.search);
+targetUserId = params.get("id");
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -94,498 +103,85 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    const userSnap = await get(ref(database, "users/" + user.uid));
-    currentUserData = userSnap.exists() ? userSnap.val() : {
-        fullName: "QEJA User",
-        email: user.email
-    };
+    if (!targetUserId) {
+        alert("No user selected.");
+        window.location.href = "index.html";
+        return;
+    }
 
-    loadPosts();
+    if (targetUserId === currentUser.uid) {
+        window.location.href = "profile.html";
+        return;
+    }
+
+    await loadUserProfile();
+    loadFollowStatus();
+    loadFollowerCounts();
+    loadUserPosts();
 });
 
-function safeText(value, fallback = "") {
-    return value ? String(value) : fallback;
+async function loadUserProfile() {
+    const snap = await get(ref(database, "users/" + targetUserId));
+
+    if (!snap.exists()) {
+        alert("User not found.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    targetUserData = snap.val();
+
+    document.getElementById("profileName").textContent = targetUserData.fullName || "qeja User";
+    document.getElementById("profileHandle").textContent = "@" + (targetUserData.handle || targetUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
+    document.getElementById("profileBio").textContent = targetUserData.bio || "No bio added yet.";
+
+    if (targetUserData.photoURL) {
+        document.getElementById("profileImage").src = targetUserData.photoURL;
+    }
 }
 
-function isWithin20Minutes(item) {
-    if (!item.createdAt) return false;
-    return Date.now() - new Date(item.createdAt).getTime() <= EDIT_LIMIT;
-}
+async function loadFollowStatus() {
+    const followSnap = await get(ref(database, `followers/${targetUserId}/${currentUser.uid}`));
 
-function playLikeSound() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
+    const btn = document.getElementById("followBtn");
 
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(700, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
-
-        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-
-        oscillator.connect(gain);
-        gain.connect(audioCtx.destination);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.12);
-    } catch (e) {}
-}
-
-function popHeart(id) {
-    const heart = document.getElementById(id);
-    if (!heart) return;
-    heart.classList.remove("heart-pop");
-    void heart.offsetWidth;
-    heart.classList.add("heart-pop");
-}
-
-function loadPosts() {
-    const feed = document.getElementById("feedContainer") || document.getElementById("homeFeed");
-
-    onValue(ref(database, "posts"), (snapshot) => {
-        feed.innerHTML = "";
-
-        if (!snapshot.exists()) {
-            feed.innerHTML = `
-                <div class="post-card">
-                    <div class="post-body">
-                        <h3>No posts yet</h3>
-                        <p>Tap + to create your first property post.</p>
-                    </div>
-                </div>
-            `;
-            return;
-        }
-
-        const posts = [];
-        snapshot.forEach(child => posts.push(child.val()));
-
-        posts.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-
-        posts.forEach(post => {
-            if (post.status === "draft") return;
-
-            const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-            const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (post.ownerId || "qeja");
-            const ownerId = post.ownerId || "";
-            const postId = post.postId || "";
-
-            const card = document.createElement("div");
-            card.className = "post-card";
-
-            card.innerHTML = `
-                <a href="details.html?id=${postId}">
-                    <img class="post-main-img" src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
-                </a>
-
-                <div class="post-body">
-                    <a href="${post.ownerId ? 'user.html?id=' + post.ownerId : '#'}" class="owner-link">
-                        <img src="${ownerPhoto}" class="owner-avatar" onerror="this.src='https://i.pravatar.cc/100'">
-                        <span>@${safeText(post.ownerName, "QEJA User")}</span>
-                    </a>
-
-                    <a href="details.html?id=${postId}" style="text-decoration:none;color:inherit;">
-                        <div class="post-title">${safeText(post.title, "Property Listing")}</div>
-                    </a>
-
-                    <p>${safeText(post.location, "Location not added")}</p>
-                    <div class="post-price">${safeText(post.price, "")}</div>
-                    <p>${safeText(post.description, "")}</p>
-
-                    <div class="stat-row">
-                        <span><span class="icon-eye">◉</span> ${post.views || 0} views</span>
-                        <span><span id="postHeart-${postId}" class="icon-heart">♥</span> ${post.likesCount || post.likes || 0} likes</span>
-                    </div>
-
-                    <div class="post-actions">
-                        <button class="orange-btn" onclick="togglePostLike('${postId}')">
-                            <span class="icon-heart">♥</span> Like
-                        </button>
-
-                        <button class="dark-btn" onclick="openComments('${postId}', '${ownerId}')">
-                            Comment
-                        </button>
-
-                        <button class="dark-btn" onclick="sendInquiry('${postId}', '${ownerId}')">
-                            Inquiry
-                        </button>
-                    </div>
-
-                    <div id="comments-${postId}" class="comment-box">
-                        <input id="commentInput-${postId}" class="comment-input" placeholder="Write a public comment...">
-                        <button class="orange-btn small-btn" onclick="addRootComment('${postId}')">Post Comment</button>
-                        <div id="commentList-${postId}"></div>
-                    </div>
-                </div>
-            `;
-
-            feed.appendChild(card);
-        });
-
-        if (!feed.innerHTML.trim()) {
-            feed.innerHTML = `
-                <div class="post-card">
-                    <div class="post-body">
-                        <h3>No public posts yet</h3>
-                        <p>Tap + to create your first property post.</p>
-                    </div>
-                </div>
-            `;
-        }
-    });
-}
-
-window.togglePostLike = async function(postId) {
-    if (!postId) return;
-
-    const likeRef = ref(database, `postLikes/${postId}/${currentUser.uid}`);
-    const likeSnap = await get(likeRef);
-    const postRef = ref(database, `posts/${postId}`);
-    const postSnap = await get(postRef);
-
-    if (!postSnap.exists()) return;
-
-    const post = postSnap.val();
-    const currentLikes = post.likesCount || post.likes || 0;
-
-    if (likeSnap.exists()) {
-        await remove(likeRef);
-        await update(postRef, {
-            likesCount: Math.max(0, currentLikes - 1),
-            likes: Math.max(0, currentLikes - 1)
-        });
+    if (followSnap.exists()) {
+        btn.textContent = "Following";
+        btn.style.background = "#111";
     } else {
-        await set(likeRef, true);
-        await update(postRef, {
-            likesCount: currentLikes + 1,
-            likes: currentLikes + 1
-        });
-
-        playLikeSound();
-        popHeart("postHeart-" + postId);
+        btn.textContent = "Follow";
+        btn.style.background = "#ff7a18";
     }
-};
-
-window.openComments = function(postId, postOwnerId) {
-    const box = document.getElementById("comments-" + postId);
-
-    if (!box) {
-        alert("Comment box not found. Refresh and try again.");
-        return;
-    }
-
-    box.style.display = box.style.display === "block" ? "none" : "block";
-    loadNestedComments(postId, postOwnerId);
-};
-
-window.addRootComment = async function(postId) {
-    try {
-        const input = document.getElementById("commentInput-" + postId);
-        if (!input) {
-            alert("Comment input not found. Refresh and try again.");
-            return;
-        }
-
-        const text = input.value.trim();
-
-        if (!text) {
-            alert("Write a comment first.");
-            return;
-        }
-
-        const commentRef = push(ref(database, `comments/${postId}`));
-
-        await set(commentRef, {
-            id: commentRef.key,
-            postId,
-            parentId: "",
-            userId: currentUser.uid,
-            userName: currentUserData.fullName || "QEJA User",
-            text,
-            likesCount: 0,
-            dislikesCount: 0,
-            createdAt: new Date().toISOString()
-        });
-
-        input.value = "";
-    } catch (error) {
-        alert("Failed to add comment: " + error.message);
-    }
-};
-
-function loadNestedComments(postId, postOwnerId) {
-    const list = document.getElementById("commentList-" + postId);
-
-    if (!list) return;
-
-    onValue(ref(database, `comments/${postId}`), (snapshot) => {
-        list.innerHTML = "";
-
-        if (!snapshot.exists()) {
-            list.innerHTML = "<p>No comments yet.</p>";
-            return;
-        }
-
-        const comments = [];
-        snapshot.forEach(child => comments.push(child.val()));
-
-        const roots = comments
-            .filter(c => !c.parentId)
-            .sort((a, b) => {
-                const likesA = a.likesCount || 0;
-                const likesB = b.likesCount || 0;
-                if (likesB !== likesA) return likesB - likesA;
-                return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-            });
-
-        if (roots.length === 0) {
-            list.innerHTML = "<p>No comments yet.</p>";
-            return;
-        }
-
-        roots.forEach(comment => {
-            list.appendChild(renderComment(postId, postOwnerId, comment, comments, 0));
-        });
-    });
 }
 
-function renderComment(postId, postOwnerId, comment, allComments, level) {
-    const isCommentOwner = comment.userId === currentUser.uid;
-    const isOwnerOfPost = postOwnerId === currentUser.uid;
+document.getElementById("followBtn").addEventListener("click", async () => {
+    const followerRef = ref(database, `followers/${targetUserId}/${currentUser.uid}`);
+    const followingRef = ref(database, `following/${currentUser.uid}/${targetUserId}`);
 
-    const userCanEdit = isCommentOwner && isWithin20Minutes(comment);
-    const userCanDeleteOwn = isCommentOwner && isWithin20Minutes(comment);
-    const canDelete = userCanDeleteOwn || isOwnerOfPost;
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "comment-item";
-    wrapper.style.marginLeft = `${Math.min(level * 20, 90)}px`;
-
-    const safeCommentId = comment.id;
-
-    wrapper.innerHTML = `
-        <strong>${safeText(comment.userName, "QEJA User")}</strong>
-        <p>${safeText(comment.text, "")}</p>
-
-        <small>
-            <span class="icon-like">▲</span> ${comment.likesCount || 0}
-            &nbsp;
-            <span class="icon-dislike">▼</span> ${comment.dislikesCount || 0}
-        </small><br>
-
-        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'like')">▲ Like</button>
-        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'dislike')">▼ Dislike</button>
-        <button class="small-btn dark-btn" onclick="showReplyInput('${safeCommentId}')">Reply</button>
-
-        ${userCanEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${safeCommentId}')">Edit</button>` : ""}
-        ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${safeCommentId}')">Delete</button>` : ""}
-
-        <div id="replyBox-${safeCommentId}" style="display:none;margin-top:8px;">
-            <input id="replyInput-${safeCommentId}" class="comment-input" placeholder="Write a reply...">
-            <button class="small-btn orange-btn" onclick="addNestedReply('${postId}', '${safeCommentId}')">Post Reply</button>
-        </div>
-
-        <div id="children-${safeCommentId}"></div>
-    `;
-
-    const children = allComments
-        .filter(c => c.parentId === comment.id)
-        .sort((a, b) => {
-            const likesA = a.likesCount || 0;
-            const likesB = b.likesCount || 0;
-            if (likesB !== likesA) return likesB - likesA;
-            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        });
-
-    const childBox = wrapper.querySelector(`[id="children-${safeCommentId}"]`);
-
-    children.forEach(child => {
-        childBox.appendChild(renderComment(postId, postOwnerId, child, allComments, level + 1));
-    });
-
-    return wrapper;
-}
-
-window.showReplyInput = function(commentId) {
-    const box = document.getElementById("replyBox-" + commentId);
-
-    if (!box) {
-        alert("Reply box not found. Refresh and try again.");
-        return;
-    }
-
-    box.style.display = box.style.display === "block" ? "none" : "block";
-};
-
-window.addNestedReply = async function(postId, parentId) {
-    try {
-        const input = document.getElementById("replyInput-" + parentId);
-
-        if (!input) {
-            alert("Reply input not found. Refresh and try again.");
-            return;
-        }
-
-        const text = input.value.trim();
-
-        if (!text) {
-            alert("Write a reply first.");
-            return;
-        }
-
-        const replyRef = push(ref(database, `comments/${postId}`));
-
-        await set(replyRef, {
-            id: replyRef.key,
-            postId,
-            parentId,
-            userId: currentUser.uid,
-            userName: currentUserData.fullName || "QEJA User",
-            text,
-            likesCount: 0,
-            dislikesCount: 0,
-            createdAt: new Date().toISOString()
-        });
-
-        input.value = "";
-    } catch (error) {
-        alert("Failed to add reply: " + error.message);
-    }
-};
-
-window.editNestedComment = async function(postId, commentId) {
-    const commentRef = ref(database, `comments/${postId}/${commentId}`);
-    const snap = await get(commentRef);
-
-    if (!snap.exists()) return;
-
-    const comment = snap.val();
-
-    if (comment.userId !== currentUser.uid || !isWithin20Minutes(comment)) {
-        alert("You can only edit your own comment/reply within 20 minutes.");
-        return;
-    }
-
-    const newText = prompt("Edit your comment/reply:", comment.text);
-
-    if (!newText || !newText.trim()) return;
-
-    await update(commentRef, {
-        text: newText.trim(),
-        editedAt: new Date().toISOString()
-    });
-};
-
-window.deleteNestedComment = async function(postId, commentId) {
-    const postSnap = await get(ref(database, `posts/${postId}`));
-    const post = postSnap.exists() ? postSnap.val() : {};
-
-    const commentRef = ref(database, `comments/${postId}/${commentId}`);
-    const snap = await get(commentRef);
-
-    if (!snap.exists()) return;
-
-    const comment = snap.val();
-
-    const isOwnCommentWithinTime = comment.userId === currentUser.uid && isWithin20Minutes(comment);
-    const isOwnerOfPost = post.ownerId === currentUser.uid;
-
-    if (!isOwnCommentWithinTime && !isOwnerOfPost) {
-        alert("You cannot delete this comment/reply.");
-        return;
-    }
-
-    if (!confirm("Delete this comment/reply and its replies?")) return;
-
-    await deleteCommentAndChildren(postId, commentId);
-};
-
-async function deleteCommentAndChildren(postId, commentId) {
-    const snap = await get(ref(database, `comments/${postId}`));
+    const snap = await get(followerRef);
 
     if (snap.exists()) {
-        const all = [];
-        snap.forEach(child => all.push(child.val()));
+        await remove(followerRef);
+        await remove(followingRef);
+    } else {
+        await set(followerRef, true);
+        await set(followingRef, true);
 
-        const children = all.filter(c => c.parentId === commentId);
-
-        for (const child of children) {
-            await deleteCommentAndChildren(postId, child.id);
-        }
+        const notificationRef = push(ref(database, `notifications/${targetUserId}`));
+        await set(notificationRef, {
+            notificationId: notificationRef.key,
+            type: "follow",
+            fromUserId: currentUser.uid,
+            message: "started following you",
+            createdAt: new Date().toISOString(),
+            read: false
+        });
     }
 
-    await remove(ref(database, `comments/${postId}/${commentId}`));
-    await remove(ref(database, `commentReactions/${postId}/${commentId}`));
-}
+    loadFollowStatus();
+    loadFollowerCounts();
+});
 
-window.reactToComment = async function(postId, commentId, type) {
-    const reactionRef = ref(database, `commentReactions/${postId}/${commentId}/${currentUser.uid}`);
-    const commentRef = ref(database, `comments/${postId}/${commentId}`);
-
-    const reactionSnap = await get(reactionRef);
-    const commentSnap = await get(commentRef);
-
-    if (!commentSnap.exists()) return;
-
-    const comment = commentSnap.val();
-
-    let likes = comment.likesCount || 0;
-    let dislikes = comment.dislikesCount || 0;
-
-    if (reactionSnap.exists()) {
-        const oldType = reactionSnap.val();
-
-        if (oldType === type) {
-            await remove(reactionRef);
-
-            if (type === "like") likes = Math.max(0, likes - 1);
-            if (type === "dislike") dislikes = Math.max(0, dislikes - 1);
-
-            await update(commentRef, {
-                likesCount: likes,
-                dislikesCount: dislikes
-            });
-
-            return;
-        }
-
-        if (oldType === "like") likes = Math.max(0, likes - 1);
-        if (oldType === "dislike") dislikes = Math.max(0, dislikes - 1);
-    }
-
-    if (type === "like") likes++;
-    if (type === "dislike") dislikes++;
-
-    await set(reactionRef, type);
-
-    await update(commentRef, {
-        likesCount: likes,
-        dislikesCount: dislikes
-    });
-};
-
-window.sendInquiry = async function(postId, ownerId) {
-    if (!ownerId) {
-        alert("Owner not found.");
-        return;
-    }
-
-    const leadRef = push(ref(database, "leads/" + ownerId));
-
-    await set(leadRef, {
-        leadId: leadRef.key,
-        postId,
-        interestedUserId: currentUser.uid,
-        interestedUserName: currentUserData.fullName || "QEJA User",
-        interestedUserEmail: currentUser.email,
-        createdAt: new Date().toISOString(),
-        status: "new"
-    });
-
-    alert("Inquiry sent successfully.");
-};
-</script>
-
-</body>
-</html>
+function loadFollowerCounts() {
+    onValue(ref(database, `followers/${targetUserId}`), (snapshot) => {
+        document.getElementById("followersCount").textContent =
