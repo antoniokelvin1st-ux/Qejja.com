@@ -42,13 +42,15 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .comment-text{cursor:pointer;line-height:1.5;margin-top:6px;}
 .comment-actions{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap;}
 .comment-icon{cursor:pointer;font-weight:bold;border:none;background:transparent;font-size:16px;padding:4px;}
-.reply-text{cursor:pointer;color:#ff7a18;font-weight:bold;font-size:13px;}
+.reply-text,.reply-toggle{cursor:pointer;color:#ff7a18;font-weight:bold;font-size:13px;}
 .comment-menu{display:none;margin-top:8px;gap:8px;flex-wrap:wrap;}
+.children-box{display:none;margin-top:8px;}
 
 .icon-heart{color:#e63946;}
 .icon-like{color:#ff7a18;}
 .icon-dislike{color:#444;}
 .icon-eye{color:#333;}
+.icon-comment{color:#ff7a18;}
 .heart-pop{animation:popHeart .35s ease;}
 @keyframes popHeart{0%{transform:scale(1);}40%{transform:scale(1.8);}100%{transform:scale(1);}}
 
@@ -149,6 +151,7 @@ function fypScore(post) {
     const views = post.views || 0;
     const inquiries = post.inquiries || 0;
     const saves = post.saves || 0;
+    const comments = post.commentsCount || 0;
     const isFeatured = post.isFeatured === true || post.type === "Featured" || post.featuredStatus === "active";
 
     const created = new Date(post.createdAt || 0).getTime();
@@ -158,35 +161,32 @@ function fypScore(post) {
     const randomBoost = Math.random() * 15;
     const featuredBoost = isFeatured ? 80 : 0;
 
-    return featuredBoost + freshness + (likes * 8) + (inquiries * 12) + (saves * 10) + (views * 1.2) + randomBoost;
+    return featuredBoost + freshness + (likes * 8) + (comments * 5) + (inquiries * 12) + (saves * 10) + (views * 1.2) + randomBoost;
 }
 
 function orderForYou(posts) {
     return [...posts].sort((a, b) => fypScore(b) - fypScore(a));
 }
 
+async function getCommentCount(postId) {
+    const snap = await get(ref(database, `comments/${postId}`));
+    let count = 0;
+    if (snap.exists()) snap.forEach(() => count++);
+    return count;
+}
+
 function loadPosts() {
     const feed = document.getElementById("feedContainer");
 
-    if (!feed) {
-        alert("Home feed container not found.");
-        return;
-    }
-
-    onValue(ref(database, "posts"), (snapshot) => {
+    onValue(ref(database, "posts"), async (snapshot) => {
         allFeedPosts = [];
 
         if (!snapshot.exists()) {
-            feed.innerHTML = `
-                <div class="post-card">
-                    <div class="post-body">
-                        <h3>No posts yet</h3>
-                        <p>Tap + to create your first property post.</p>
-                    </div>
-                </div>
-            `;
+            feed.innerHTML = `<div class="post-card"><div class="post-body"><h3>No posts yet</h3><p>Tap + to create your first property post.</p></div></div>`;
             return;
         }
+
+        const promises = [];
 
         snapshot.forEach(child => {
             const post = child.val() || {};
@@ -194,9 +194,15 @@ function loadPosts() {
 
             if (post.status === "draft" || post.visibility === "draft") return;
 
-            allFeedPosts.push(post);
+            promises.push(
+                getCommentCount(post.realPostId).then(count => {
+                    post.commentsCount = count;
+                    allFeedPosts.push(post);
+                })
+            );
         });
 
+        await Promise.all(promises);
         renderFeed(orderForYou(allFeedPosts));
     });
 }
@@ -206,14 +212,7 @@ function renderFeed(posts) {
     feed.innerHTML = "";
 
     if (posts.length === 0) {
-        feed.innerHTML = `
-            <div class="post-card">
-                <div class="post-body">
-                    <h3>No public posts yet</h3>
-                    <p>Tap + to create your first property post.</p>
-                </div>
-            </div>
-        `;
+        feed.innerHTML = `<div class="post-card"><div class="post-body"><h3>No public posts yet</h3><p>Tap + to create your first property post.</p></div></div>`;
         return;
     }
 
@@ -252,6 +251,7 @@ function renderFeed(posts) {
                 <div class="stat-row">
                     <span><span class="icon-eye">◉</span> ${post.views || 0} views</span>
                     <span><span id="postHeart-${postId}" class="icon-heart">♥</span> ${post.likesCount || post.likes || 0} likes</span>
+                    <span><span class="icon-comment">◌</span> ${post.commentsCount || 0} comments</span>
                 </div>
 
                 <div class="post-actions">
@@ -295,8 +295,6 @@ function setupFypRefresh() {
 }
 
 window.togglePostLike = async function(postId) {
-    if (!postId) return;
-
     const likeRef = ref(database, `postLikes/${postId}/${currentUser.uid}`);
     const likeSnap = await get(likeRef);
     const postRef = ref(database, `posts/${postId}`);
@@ -319,7 +317,6 @@ window.togglePostLike = async function(postId) {
             likesCount: currentLikes + 1,
             likes: currentLikes + 1
         });
-
         playLikeSound();
         popHeart("postHeart-" + postId);
     }
@@ -327,11 +324,7 @@ window.togglePostLike = async function(postId) {
 
 window.openComments = function(postId, postOwnerId) {
     const box = document.getElementById("comments-" + postId);
-
-    if (!box) {
-        alert("Comment box not found. Refresh and try again.");
-        return;
-    }
+    if (!box) return;
 
     box.style.display = box.style.display === "block" ? "none" : "block";
     loadNestedComments(postId, postOwnerId);
@@ -342,7 +335,6 @@ window.addRootComment = async function(postId) {
     if (!input) return;
 
     const text = input.value.trim();
-
     if (!text) {
         alert("Write a comment first.");
         return;
@@ -364,7 +356,15 @@ window.addRootComment = async function(postId) {
 
     input.value = "";
     loadNestedComments(postId, "");
+    updatePostCommentCount(postId);
 };
+
+async function updatePostCommentCount(postId) {
+    const count = await getCommentCount(postId);
+    await update(ref(database, `posts/${postId}`), {
+        commentsCount: count
+    });
+}
 
 function loadNestedComments(postId, postOwnerId) {
     const list = document.getElementById("commentList-" + postId);
@@ -389,23 +389,24 @@ function loadNestedComments(postId, postOwnerId) {
             .filter(c => !c.parentId)
             .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
-        if (roots.length === 0) {
-            list.innerHTML = "<p>No comments yet.</p>";
-            return;
-        }
-
         roots.forEach(comment => {
-            list.appendChild(renderComment(postId, postOwnerId, comment, comments, 0));
+            list.appendChild(renderComment(postId, postOwnerId, comment, comments, 0, false));
         });
     });
 }
 
-function renderComment(postId, postOwnerId, comment, allComments, level) {
+function renderComment(postId, postOwnerId, comment, allComments, level, forceShowChildren) {
     const isCommentOwner = comment.userId === currentUser.uid;
     const isOwnerOfPost = postOwnerId === currentUser.uid;
     const canEdit = isCommentOwner;
     const canDelete = isCommentOwner || isOwnerOfPost;
     const safeCommentId = comment.id;
+
+    const children = allComments
+        .filter(c => c.parentId === comment.id)
+        .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+
+    const replyWord = children.length === 1 ? "reply" : "replies";
 
     const wrapper = document.createElement("div");
     wrapper.className = "comment-item";
@@ -435,6 +436,12 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
             </button>
 
             <span class="reply-text" onclick="showReplyInput('${safeCommentId}')">Reply</span>
+
+            ${children.length > 0 ? `
+                <span class="reply-toggle" onclick="toggleReplies('${safeCommentId}')">
+                    See ${children.length} ${replyWord}
+                </span>
+            ` : ""}
         </div>
 
         <div id="commentMenu-${safeCommentId}" class="comment-menu">
@@ -447,31 +454,46 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
             <button class="small-btn orange-btn" onclick="addNestedReply('${postId}', '${safeCommentId}')">Post Reply</button>
         </div>
 
-        <div id="children-${safeCommentId}"></div>
+        <div id="children-${safeCommentId}" class="children-box"></div>
     `;
-
-    const children = allComments
-        .filter(c => c.parentId === comment.id)
-        .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
     const childBox = wrapper.querySelector(`[id="children-${safeCommentId}"]`);
 
     children.forEach(child => {
-        childBox.appendChild(renderComment(postId, postOwnerId, child, allComments, level + 1));
+        childBox.appendChild(renderComment(postId, postOwnerId, child, allComments, level + 1, true));
     });
+
+    if (forceShowChildren) {
+        childBox.style.display = "block";
+    }
 
     return wrapper;
 }
+
+window.toggleReplies = function(commentId) {
+    const box = document.getElementById("children-" + commentId);
+    if (!box) return;
+
+    const toggle = box.parentElement.querySelector(".reply-toggle");
+
+    if (box.style.display === "block") {
+        box.style.display = "none";
+        if (toggle) {
+            const count = box.children.length;
+            toggle.textContent = `See ${count} ${count === 1 ? "reply" : "replies"}`;
+        }
+    } else {
+        box.style.display = "block";
+        if (toggle) toggle.textContent = "Hide replies";
+    }
+};
 
 window.startLongPress = function(commentId) {
     clearTimeout(longPressTimer);
 
     longPressTimer = setTimeout(() => {
         const menu = document.getElementById("commentMenu-" + commentId);
-
-        if (menu) {
-            menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-        }
+        if (menu) menu.style.display = menu.style.display === "flex" ? "none" : "flex";
     }, 2000);
 };
 
@@ -490,7 +512,6 @@ window.addNestedReply = async function(postId, parentId) {
     if (!input) return;
 
     const text = input.value.trim();
-
     if (!text) {
         alert("Write a reply first.");
         return;
@@ -512,6 +533,7 @@ window.addNestedReply = async function(postId, parentId) {
 
     input.value = "";
     loadNestedComments(postId, "");
+    updatePostCommentCount(postId);
 };
 
 window.editNestedComment = async function(postId, commentId) {
@@ -528,7 +550,6 @@ window.editNestedComment = async function(postId, commentId) {
     }
 
     const newText = prompt("Edit your comment/reply:", comment.text);
-
     if (!newText || !newText.trim()) return;
 
     await update(commentRef, {
@@ -559,6 +580,7 @@ window.deleteNestedComment = async function(postId, commentId) {
     if (!confirm("Delete this comment/reply and its replies?")) return;
 
     await deleteCommentAndChildren(postId, commentId);
+    updatePostCommentCount(postId);
 };
 
 async function deleteCommentAndChildren(postId, commentId) {
