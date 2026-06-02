@@ -16,13 +16,21 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .hero-card h1{font-size:34px;margin-bottom:8px;}
 .hero-card p{color:#ddd;}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
-.tab-btn{border:none;padding:14px 12px;border-radius:18px;background:white;font-weight:bold;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.07);position:relative;}
+.tab-btn{border:none;padding:14px 12px;border-radius:18px;background:white;font-weight:bold;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.07);}
 .tab-btn.active{background:#ff7a18;color:white;}
 .badge{background:#111;color:white;padding:3px 9px;border-radius:20px;font-size:12px;margin-left:4px;display:none;}
 .tab-btn.active .badge{background:white;color:#ff7a18;}
 .section-title{margin:18px 0 12px;}
-.activity-card{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;}
+.group-card,.activity-card,.chat-card{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:14px;}
+.group-card{cursor:pointer;}
+.group-head{display:flex;align-items:center;gap:12px;}
 .activity-icon{width:44px;height:44px;border-radius:16px;background:#fff3e8;color:#ff7a18;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;flex-shrink:0;}
+.group-info{flex:1;}
+.group-info h3{font-size:18px;margin-bottom:4px;}
+.group-info p{color:#555;font-size:14px;}
+.group-count{background:#ff7a18;color:white;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;}
+.group-details{display:none;margin-top:14px;border-top:1px solid #eee;padding-top:12px;}
+.activity-card{display:flex;gap:12px;align-items:flex-start;}
 .activity-body{flex:1;}
 .activity-body h3{font-size:17px;margin-bottom:5px;}
 .activity-body p{color:#555;margin-bottom:6px;}
@@ -31,7 +39,7 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .orange-btn{background:#ff7a18;color:white;}
 .dark-btn{background:#111;color:white;}
 .empty{background:white;border-radius:20px;padding:20px;box-shadow:0 8px 20px rgba(0,0,0,.08);color:#555;}
-.chat-card{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.chat-card{display:flex;align-items:center;gap:12px;}
 .chat-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;}
 .chat-info{flex:1;}
 .chat-info h3{font-size:17px;margin-bottom:4px;}
@@ -47,11 +55,7 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
 @keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
-
-@media(max-width:700px){
-    .tabs{grid-template-columns:1fr;}
-    .hero-card h1{font-size:28px;}
-}
+@media(max-width:700px){.tabs{grid-template-columns:1fr;}.hero-card h1{font-size:28px;}}
 </style>
 </head>
 
@@ -65,7 +69,7 @@ body{padding-bottom:90px;background:#f4f4f4;}
 <main class="inbox-wrap">
     <div class="hero-card">
         <h1>Activity</h1>
-        <p>Notifications, direct messages, and property inquiries in one place.</p>
+        <p>Notifications, messages, and property inquiries in one clean place.</p>
     </div>
 
     <div class="tabs">
@@ -189,6 +193,15 @@ function updateActivityNavBadge() {
     }
 }
 
+function notificationGroupInfo(type) {
+    if (type === "follow") return { key:"followers", title:"New Followers", icon:"＋", desc:"People who followed you." };
+    if (type === "like" || type === "comment" || type === "reply") return { key:"engagement", title:"Post Engagement", icon:"♥", desc:"Likes, comments, and replies on your content." };
+    if (type === "support") return { key:"support", title:"Support Updates", icon:"🛟", desc:"Replies and assistance from QEJA support." };
+    if (type === "system") return { key:"system", title:"System Alerts", icon:"🔔", desc:"Important updates from QEJA." };
+    if (type === "featured") return { key:"featured", title:"Featured Listing Alerts", icon:"⭐", desc:"Updates about featured listings." };
+    return { key:"general", title:"General Notifications", icon:"🔔", desc:"Other account notifications." };
+}
+
 function loadNotifications() {
     const container = document.getElementById("notificationsContainer");
 
@@ -203,36 +216,73 @@ function loadNotifications() {
             return;
         }
 
-        const notifications = [];
+        const groups = {};
+
         snapshot.forEach(child => {
             const item = child.val() || {};
             item.notificationId = item.notificationId || child.key;
-            notifications.push(item);
-        });
 
-        notifications.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            if (item.type === "message" || item.type === "inquiry") return;
 
-        notifications.forEach(item => {
             if (!item.read) unreadNotifications++;
 
-            const icon = item.type === "follow" ? "＋" :
-                         item.type === "like" ? "♥" :
-                         item.type === "comment" ? "💬" :
-                         item.type === "message" ? "✉" :
-                         "🔔";
+            const info = notificationGroupInfo(item.type);
+            if (!groups[info.key]) {
+                groups[info.key] = {
+                    ...info,
+                    items: [],
+                    unread: 0
+                };
+            }
+
+            groups[info.key].items.push(item);
+            if (!item.read) groups[info.key].unread++;
+        });
+
+        const groupList = Object.values(groups);
+
+        if (groupList.length === 0) {
+            container.innerHTML = "<div class='empty'>No grouped notifications yet.</div>";
+            setBadge("notificationCount", 0);
+            updateActivityNavBadge();
+            return;
+        }
+
+        groupList.sort((a, b) => {
+            const aTime = Math.max(...a.items.map(i => new Date(i.createdAt || 0).getTime()));
+            const bTime = Math.max(...b.items.map(i => new Date(i.createdAt || 0).getTime()));
+            return bTime - aTime;
+        });
+
+        groupList.forEach(group => {
+            group.items.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
             const card = document.createElement("div");
-            card.className = "activity-card";
+            card.className = "group-card";
 
             card.innerHTML = `
-                <div class="activity-icon">${icon}</div>
-                <div class="activity-body">
-                    <h3>${item.fromUserName || "QEJA"}</h3>
-                    <p>${item.message || "New activity on your account."}</p>
-                    <div class="activity-meta">${formatTime(item.createdAt)}</div>
-                    ${item.fromUserId ? `<button class="small-btn dark-btn" onclick="openUser('${item.fromUserId}')">View Profile</button>` : ""}
-                    ${item.chatId && item.fromUserId ? `<button class="small-btn orange-btn" onclick="openChat('${item.fromUserId}')">Open Chat</button>` : ""}
-                    ${!item.read ? `<button class="small-btn orange-btn" onclick="markNotificationRead('${item.notificationId}')">Mark as Read</button>` : ""}
+                <div class="group-head" onclick="toggleGroup('${group.key}')">
+                    <div class="activity-icon">${group.icon}</div>
+                    <div class="group-info">
+                        <h3>${group.title}</h3>
+                        <p>${group.desc}</p>
+                    </div>
+                    <div class="group-count">${group.items.length}</div>
+                </div>
+
+                <div id="group-${group.key}" class="group-details">
+                    ${group.items.map(item => `
+                        <div class="activity-card">
+                            <div class="activity-icon">${group.icon}</div>
+                            <div class="activity-body">
+                                <h3>${item.fromUserName || "QEJA"}</h3>
+                                <p>${item.message || "New activity on your account."}</p>
+                                <div class="activity-meta">${formatTime(item.createdAt)}</div>
+                                ${item.fromUserId ? `<button class="small-btn dark-btn" onclick="openUser('${item.fromUserId}')">View Profile</button>` : ""}
+                                ${!item.read ? `<button class="small-btn orange-btn" onclick="markNotificationRead('${item.notificationId}')">Mark as Read</button>` : ""}
+                            </div>
+                        </div>
+                    `).join("")}
                 </div>
             `;
 
@@ -244,6 +294,12 @@ function loadNotifications() {
     });
 }
 
+window.toggleGroup = function(key) {
+    const box = document.getElementById("group-" + key);
+    if (!box) return;
+    box.style.display = box.style.display === "block" ? "none" : "block";
+};
+
 function loadMessages() {
     const container = document.getElementById("messagesContainer");
 
@@ -252,7 +308,7 @@ function loadMessages() {
         unreadMessages = 0;
 
         if (!snapshot.exists()) {
-            container.innerHTML = "<div class='empty'>No messages yet. Message property owners from their profile or listing page.</div>";
+            container.innerHTML = "<div class='empty'>No messages yet. Message users from their profile or listing page.</div>";
             setBadge("messageCount", 0);
             updateActivityNavBadge();
             return;
@@ -329,7 +385,7 @@ function loadInquiries() {
             card.innerHTML = `
                 <div class="activity-icon">📩</div>
                 <div class="activity-body">
-                    <h3>New Inquiry</h3>
+                    <h3>Property Inquiry</h3>
                     <p><strong>${lead.interestedUserName || "Someone"}</strong> is interested in: <strong>${postTitle}</strong></p>
                     <p>Email: ${lead.interestedUserEmail || "Not available"}</p>
                     <div class="activity-meta">${formatTime(lead.createdAt)} · Status: ${lead.status || "new"}</div>
@@ -349,18 +405,12 @@ function loadInquiries() {
 
 window.markNotificationRead = async function(notificationId) {
     if (!notificationId) return;
-
-    await update(ref(database, "notifications/" + currentUser.uid + "/" + notificationId), {
-        read: true
-    });
+    await update(ref(database, "notifications/" + currentUser.uid + "/" + notificationId), { read: true });
 };
 
 window.markLeadRead = async function(leadId) {
     if (!leadId) return;
-
-    await update(ref(database, "leads/" + currentUser.uid + "/" + leadId), {
-        status: "read"
-    });
+    await update(ref(database, "leads/" + currentUser.uid + "/" + leadId), { status: "read" });
 };
 
 window.replyByEmail = function(email) {
@@ -368,18 +418,12 @@ window.replyByEmail = function(email) {
         alert("Email not available.");
         return;
     }
-
     window.location.href = "mailto:" + email;
 };
 
 window.openUser = function(userId) {
     if (!userId) return;
-
-    if (userId === currentUser.uid) {
-        window.location.href = "profile.html";
-    } else {
-        window.location.href = "user.html?id=" + userId;
-    }
+    window.location.href = userId === currentUser.uid ? "profile.html" : "user.html?id=" + userId;
 };
 
 window.openChat = async function(userId, chatKey = null) {
@@ -390,20 +434,6 @@ window.openChat = async function(userId, chatKey = null) {
             unread: false,
             unreadCount: 0
         });
-    } else {
-        const snap = await get(ref(database, "userChats/" + currentUser.uid));
-
-        if (snap.exists()) {
-            snap.forEach(async(child) => {
-                const chat = child.val() || {};
-                if (chat.otherUserId === userId) {
-                    await update(ref(database, "userChats/" + currentUser.uid + "/" + child.key), {
-                        unread: false,
-                        unreadCount: 0
-                    });
-                }
-            });
-        }
     }
 
     window.location.href = "chat.html?user=" + userId;
