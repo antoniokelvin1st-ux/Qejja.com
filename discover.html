@@ -31,7 +31,17 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .price{color:#ff7a18;font-weight:900;margin:8px 0;font-size:20px;}
 .meta-row{display:flex;justify-content:space-between;gap:10px;color:#555;font-weight:bold;margin:10px 0;flex-wrap:wrap;}
 .owner-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#111;font-weight:bold;margin-top:10px;}
-.owner-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #ff7a18;background:#eee;}
+.owner-avatar{
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    max-width:34px!important;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #ff7a18;
+    background:#eee;
+    display:inline-block!important;
+}
 .view-link{color:#ff7a18;font-weight:900;text-decoration:none;display:inline-block;margin-top:12px;font-size:17px;}
 .badge{display:inline-block;background:#fff1e8;color:#ff7a18;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:8px;}
 .empty-box{background:white;border-radius:18px;padding:25px;text-align:center;color:#555;}
@@ -234,7 +244,7 @@ function renderResults() {
                 : `<span class='badge'>${safeText(post.category, "Property")}</span>`;
 
         card.innerHTML = `
-            <a href="details.html?id=${postId}">
+            <a href="details.html?id=${post.realPostId}">>
                 <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
             </a>
 
@@ -258,7 +268,7 @@ function renderResults() {
                 </a>
 
                 <br>
-                <a class="view-link" href="details.html?id=${postId}">View Property</a>
+                <a class="view-link" href="details.html?id=${post.realPostId}">View Property</a>
             </div>
         `;
 
