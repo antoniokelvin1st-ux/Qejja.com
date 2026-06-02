@@ -3,99 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings - qeja</title>
+<title>Settings - QEJA</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+body{padding-bottom:90px;background:#f4f4f4;}
+.top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{font-size:30px;font-weight:900;color:#ff7a18;}
+.settings-wrap{padding:30px 7% 100px;max-width:950px;margin:auto;}
+.hero-card{background:#111;color:white;border-radius:24px;padding:24px;margin-bottom:22px;box-shadow:0 10px 25px rgba(0,0,0,.18);}
+.hero-card h1{font-size:34px;margin-bottom:8px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+.card{background:white;border-radius:20px;padding:18px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.card h3{margin-bottom:12px;}
+input,textarea,select{width:100%;padding:13px;margin:7px 0;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;}
+textarea{height:95px;}
+.btn{border:none;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;margin-top:8px;}
+.orange{background:#ff7a18;color:white;}
+.dark{background:#111;color:white;}
+.chat-box{background:#f7f7f7;border-radius:16px;padding:12px;max-height:260px;overflow:auto;margin-bottom:10px;}
+.msg{padding:10px 12px;border-radius:14px;margin:8px 0;max-width:85%;}
+.user-msg{background:#ff7a18;color:white;margin-left:auto;}
+.ai-msg{background:white;color:#111;border:1px solid #eee;}
+.ticket{background:#f7f7f7;border-radius:14px;padding:12px;margin:10px 0;}
+.small{color:#666;font-size:13px;}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
+.bottom-nav a:hover{color:#ff7a18;}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
+.post-plus span{font-size:34px;}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+</style>
 </head>
+
 <body>
 
-<nav class="navbar">
-    <div class="logo">qeja</div>
+<header class="top-appbar">
+    <div class="logo">QEJA</div>
+    <button id="logoutBtn" class="btn orange">Logout</button>
+</header>
 
-    <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="property.html">Properties</a></li>
-        <li><a href="reels.html">Reels</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="profile.html">Profile</a></li>
-        <li><a href="settings.html">Settings</a></li>
-    </ul>
-
-    <button id="logoutBtn" class="login-btn" style="border:none;cursor:pointer;">Logout</button>
-</nav>
-
-<section style="padding:120px 7% 60px;">
-    <h2 style="margin-bottom:30px;">Account Settings</h2>
-
-    <div class="property-grid">
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>Edit Profile</h3>
-
-                <input id="fullName" type="text" placeholder="Full Name" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-
-                <input id="phone" type="tel" placeholder="Phone Number" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-
-                <input id="location" type="text" placeholder="Location" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-
-                <input id="photoURL" type="text" placeholder="Profile Picture URL" style="width:100%;padding:14px;margin:10px 0;border-radius:8px;border:1px solid #ddd;">
-
-                <button id="saveProfileBtn" style="background:#ff7a18;color:white;border:none;padding:12px 25px;border-radius:30px;cursor:pointer;margin-top:10px;">
-                    Save Changes
-                </button>
-            </div>
-        </div>
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>Account Information</h3>
-                <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
-                <p><strong>Role:</strong> <span id="userRole">Loading...</span></p>
-            </div>
-        </div>
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>Privacy & Security</h3>
-                <p>Password reset and security options will be added here later.</p>
-            </div>
-        </div>
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>Customer Support</h3>
-                <p>Email: support@qeja.com</p>
-                <p>Phone: +254 700 000 000</p>
-            </div>
-        </div>
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>Terms & Conditions</h3>
-                <p>qeja helps users discover properties. Users should verify listings before making payments.</p>
-            </div>
-        </div>
-
-        <div class="property-card">
-            <div class="property-info">
-                <h3>About qeja</h3>
-                <p>qeja is a property platform for rentals, houses, apartments, plots and real estate listings in Kenya.</p>
-            </div>
-        </div>
-
+<main class="settings-wrap">
+    <div class="hero-card">
+        <h1>Settings</h1>
+        <p>Manage your account, support requests, privacy and QEJA preferences.</p>
     </div>
-</section>
 
-<footer>
-    <p>&copy; 2026 qeja.com. All rights reserved.</p>
-</footer>
+    <div class="grid">
+        <div class="card">
+            <h3>Account Profile</h3>
+            <input id="fullName" type="text" placeholder="Full Name">
+            <input id="handle" type="text" placeholder="Username / Handle">
+            <input id="phone" type="tel" placeholder="Phone Number">
+            <input id="location" type="text" placeholder="Location">
+            <input id="photoURL" type="text" placeholder="Profile Picture URL">
+            <textarea id="bio" placeholder="Bio / Description"></textarea>
+            <button id="saveProfileBtn" class="btn orange">Save Changes</button>
+        </div>
+
+        <div class="card">
+            <h3>Account Information</h3>
+            <p><strong>Email:</strong> <span id="userEmail">Loading...</span></p>
+            <p><strong>Role:</strong> <span id="userRole">User</span></p>
+            <p class="small">More security settings will be added later.</p>
+        </div>
+
+        <div class="card">
+            <h3>QEJA AI Assistant</h3>
+            <div id="aiChatBox" class="chat-box">
+                <div class="msg ai-msg">Hi 👋 I’m QEJA AI. Ask me about posting, profiles, featured listings, inquiries, or support.</div>
+            </div>
+            <input id="aiInput" type="text" placeholder="Ask QEJA AI...">
+            <button onclick="askQejaAI()" class="btn orange">Ask AI</button>
+        </div>
+
+        <div class="card">
+            <h3>Contact QEJA Support</h3>
+            <input id="ticketSubject" type="text" placeholder="Subject e.g Upload problem">
+            <textarea id="ticketMessage" placeholder="Describe your issue..."></textarea>
+            <button onclick="submitSupportTicket()" class="btn orange">Send Support Ticket</button>
+            <p class="small">A QEJA support person can respond from the admin dashboard later.</p>
+        </div>
+
+        <div class="card">
+            <h3>My Support Tickets</h3>
+            <div id="ticketsContainer">Loading tickets...</div>
+        </div>
+
+        <div class="card">
+            <h3>Privacy & Notifications</h3>
+            <select id="messagePrivacy">
+                <option value="everyone">Everyone can message me</option>
+                <option value="followers">Only followers can message me</option>
+                <option value="none">No direct messages</option>
+            </select>
+            <select id="notificationPreference">
+                <option value="all">All notifications</option>
+                <option value="important">Important only</option>
+                <option value="none">Mute notifications</option>
+            </select>
+            <button onclick="savePreferences()" class="btn dark">Save Preferences</button>
+        </div>
+    </div>
+</main>
+
+<nav class="bottom-nav">
+    <a href="index.html"><span>⌂</span>Home</a>
+    <a href="explore.html"><span>🧭</span>Discover</a>
+    <a href="post.html" class="post-plus"><span>＋</span></a>
+    <a href="inbox.html"><span>🔔</span>Activity</a>
+    <a href="profile.html"><span>◎</span>Profile</a>
+</nav>
 
 <script type="module">
 import { auth, database } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { ref, get, update } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, get, update, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
+let currentUserData = null;
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -104,39 +132,159 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     currentUser = user;
-
-    const userRef = ref(database, "users/" + user.uid);
-    const snapshot = await get(userRef);
-
-    if (snapshot.exists()) {
-        const data = snapshot.val();
-
-        document.getElementById("fullName").value = data.fullName || "";
-        document.getElementById("phone").value = data.phone || "";
-        document.getElementById("location").value = data.location || "";
-        document.getElementById("photoURL").value = data.photoURL || "";
-        document.getElementById("userEmail").textContent = data.email || user.email;
-        document.getElementById("userRole").textContent = data.role || "user";
-    }
+    await loadSettings();
+    loadSupportTickets();
 });
+
+async function loadSettings() {
+    const snap = await get(ref(database, "users/" + currentUser.uid));
+
+    currentUserData = snap.exists() ? snap.val() : {
+        fullName: "QEJA User",
+        email: currentUser.email
+    };
+
+    document.getElementById("fullName").value = currentUserData.fullName || "";
+    document.getElementById("handle").value = currentUserData.handle || "";
+    document.getElementById("phone").value = currentUserData.phone || "";
+    document.getElementById("location").value = currentUserData.location || "";
+    document.getElementById("photoURL").value = currentUserData.photoURL || "";
+    document.getElementById("bio").value = currentUserData.bio || "";
+    document.getElementById("userEmail").textContent = currentUserData.email || currentUser.email;
+    document.getElementById("userRole").textContent = currentUserData.role || "user";
+
+    if (currentUserData.messagePrivacy) {
+        document.getElementById("messagePrivacy").value = currentUserData.messagePrivacy;
+    }
+
+    if (currentUserData.notificationPreference) {
+        document.getElementById("notificationPreference").value = currentUserData.notificationPreference;
+    }
+}
 
 document.getElementById("saveProfileBtn").addEventListener("click", async () => {
-    if (!currentUser) return;
-
-    const fullName = document.getElementById("fullName").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const location = document.getElementById("location").value.trim();
-    const photoURL = document.getElementById("photoURL").value.trim();
-
     await update(ref(database, "users/" + currentUser.uid), {
-        fullName,
-        phone,
-        location,
-        photoURL
+        fullName: document.getElementById("fullName").value.trim(),
+        handle: document.getElementById("handle").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        photoURL: document.getElementById("photoURL").value.trim(),
+        bio: document.getElementById("bio").value.trim(),
+        email: currentUser.email
     });
 
-    alert("Profile updated successfully!");
+    alert("Profile updated successfully.");
 });
+
+window.savePreferences = async function() {
+    await update(ref(database, "users/" + currentUser.uid), {
+        messagePrivacy: document.getElementById("messagePrivacy").value,
+        notificationPreference: document.getElementById("notificationPreference").value
+    });
+
+    alert("Preferences saved.");
+};
+
+window.askQejaAI = function() {
+    const input = document.getElementById("aiInput");
+    const box = document.getElementById("aiChatBox");
+    const question = input.value.trim();
+
+    if (!question) return;
+
+    box.innerHTML += `<div class="msg user-msg">${question}</div>`;
+
+    let answer = "I can help with QEJA basics. For complex issues, send a support ticket and a QEJA support person will assist you.";
+
+    const q = question.toLowerCase();
+
+    if (q.includes("post") || q.includes("listing")) {
+        answer = "To post a property, tap the orange ＋ button, choose your content type, add details, photos or reel, then publish.";
+    } else if (q.includes("featured") || q.includes("pay")) {
+        answer = "Featured listings will allow users to pay for extra visibility. This feature will be connected to payments and admin approval later.";
+    } else if (q.includes("delete")) {
+        answer = "You can delete your own listings from your Profile under Posts. Open Profile, find the listing, then tap Delete.";
+    } else if (q.includes("message") || q.includes("dm")) {
+        answer = "Direct messaging is being prepared. You will message owners from their profile or property details page.";
+    } else if (q.includes("support") || q.includes("help")) {
+        answer = "You can send a support ticket below. QEJA support will respond once the admin dashboard is connected.";
+    }
+
+    setTimeout(() => {
+        box.innerHTML += `<div class="msg ai-msg">${answer}</div>`;
+        box.scrollTop = box.scrollHeight;
+    }, 300);
+
+    input.value = "";
+};
+
+window.submitSupportTicket = async function() {
+    const subject = document.getElementById("ticketSubject").value.trim();
+    const message = document.getElementById("ticketMessage").value.trim();
+
+    if (!subject || !message) {
+        alert("Please enter subject and message.");
+        return;
+    }
+
+    const ticketRef = push(ref(database, "supportTickets"));
+
+    await set(ticketRef, {
+        ticketId: ticketRef.key,
+        userId: currentUser.uid,
+        userName: currentUserData.fullName || "QEJA User",
+        userEmail: currentUser.email,
+        subject,
+        message,
+        status: "open",
+        createdAt: new Date().toISOString(),
+        adminReply: ""
+    });
+
+    document.getElementById("ticketSubject").value = "";
+    document.getElementById("ticketMessage").value = "";
+
+    alert("Support ticket sent successfully.");
+};
+
+function loadSupportTickets() {
+    const container = document.getElementById("ticketsContainer");
+
+    onValue(ref(database, "supportTickets"), (snapshot) => {
+        container.innerHTML = "";
+
+        if (!snapshot.exists()) {
+            container.innerHTML = "<p class='small'>No support tickets yet.</p>";
+            return;
+        }
+
+        let found = false;
+
+        snapshot.forEach(child => {
+            const ticket = child.val();
+
+            if (ticket.userId === currentUser.uid) {
+                found = true;
+
+                const div = document.createElement("div");
+                div.className = "ticket";
+
+                div.innerHTML = `
+                    <strong>${ticket.subject}</strong>
+                    <p>${ticket.message}</p>
+                    <p class="small">Status: ${ticket.status || "open"}</p>
+                    ${ticket.adminReply ? `<p><strong>QEJA Support:</strong> ${ticket.adminReply}</p>` : `<p class="small">Waiting for QEJA support response.</p>`}
+                `;
+
+                container.appendChild(div);
+            }
+        });
+
+        if (!found) {
+            container.innerHTML = "<p class='small'>No support tickets yet.</p>";
+        }
+    });
+}
 
 document.getElementById("logoutBtn").addEventListener("click", async () => {
     await signOut(auth);
