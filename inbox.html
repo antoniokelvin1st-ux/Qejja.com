@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Activity - QEJA</title>
@@ -16,9 +16,9 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .hero-card h1{font-size:34px;margin-bottom:8px;}
 .hero-card p{color:#ddd;}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
-.tab-btn{border:none;padding:14px 12px;border-radius:18px;background:white;font-weight:bold;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.07);}
+.tab-btn{border:none;padding:14px 12px;border-radius:18px;background:white;font-weight:bold;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.07);position:relative;}
 .tab-btn.active{background:#ff7a18;color:white;}
-.badge{background:#111;color:white;padding:3px 9px;border-radius:20px;font-size:12px;margin-left:4px;}
+.badge{background:#111;color:white;padding:3px 9px;border-radius:20px;font-size:12px;margin-left:4px;display:none;}
 .tab-btn.active .badge{background:white;color:#ff7a18;}
 .section-title{margin:18px 0 12px;}
 .activity-card{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;}
@@ -36,56 +36,18 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .chat-info{flex:1;}
 .chat-info h3{font-size:17px;margin-bottom:4px;}
 .chat-info p{color:#555;font-size:14px;}
-.unread-dot{width:11px;height:11px;border-radius:50%;background:#ff7a18;}
+.unread-dot{width:11px;height:11px;border-radius:50%;background:#ff7a18;flex-shrink:0;}
+.nav-activity{position:relative;}
+.activity-nav-badge{position:absolute;top:-6px;right:8px;background:red;color:white;min-width:18px;height:18px;border-radius:50%;font-size:11px;display:none;align-items:center;justify-content:center;padding:2px;font-weight:bold;}
 
-/* QEJA Bottom Navigation */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:#111;
-    border-top:1px solid rgba(255,255,255,.08);
-    height:74px;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    z-index:200;
-    box-shadow:0 -8px 25px rgba(0,0,0,.25);
-}
-.bottom-nav a{
-    text-decoration:none;
-    color:#ddd;
-    font-size:12px;
-    font-weight:bold;
-    text-align:center;
-}
-.bottom-nav span{
-    display:block;
-    font-size:24px;
-    margin-bottom:2px;
-}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;position:relative;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
 .bottom-nav a:hover{color:#ff7a18;}
-.post-plus{
-    background:#ff7a18;
-    color:white!important;
-    width:62px;
-    height:62px;
-    border-radius:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:-34px;
-    border:5px solid #111;
-    box-shadow:0 0 18px rgba(255,122,24,.7);
-    animation:qejaPulse 1.8s infinite;
-}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
-@keyframes qejaPulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.08);}
-    100%{transform:scale(1);}
-}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+
 @media(max-width:700px){
     .tabs{grid-template-columns:1fr;}
     .hero-card h1{font-size:28px;}
@@ -136,9 +98,13 @@ body{padding-bottom:90px;background:#f4f4f4;}
 
 <nav class="bottom-nav">
     <a href="index.html"><span>⌂</span>Home</a>
-    <a href="explore.html"><span>🧭</span>Discover</a>
+    <a href="discover.html"><span>🧭</span>Discover</a>
     <a href="post.html" class="post-plus"><span>＋</span></a>
-    <a href="inbox.html"><span>🔔</span>Activity</a>
+    <a href="inbox.html" class="nav-activity">
+        <span>🔔</span>
+        <small id="activityNavBadge" class="activity-nav-badge">0</small>
+        Activity
+    </a>
     <a href="profile.html"><span>◎</span>Profile</a>
 </nav>
 
@@ -148,6 +114,9 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/f
 import { ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
+let unreadNotifications = 0;
+let unreadMessages = 0;
+let unreadInquiries = 0;
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -188,7 +157,36 @@ window.showTab = function(tab) {
 function formatTime(dateString) {
     if (!dateString) return "";
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
     return date.toLocaleString();
+}
+
+function setBadge(id, count) {
+    const badge = document.getElementById(id);
+    if (!badge) return;
+
+    if (count <= 0) {
+        badge.style.display = "none";
+        badge.textContent = "0";
+    } else {
+        badge.style.display = "inline-block";
+        badge.textContent = count > 99 ? "99+" : count;
+    }
+}
+
+function updateActivityNavBadge() {
+    const total = unreadNotifications + unreadMessages + unreadInquiries;
+    const badge = document.getElementById("activityNavBadge");
+
+    if (!badge) return;
+
+    if (total <= 0) {
+        badge.style.display = "none";
+        badge.textContent = "0";
+    } else {
+        badge.style.display = "flex";
+        badge.textContent = total > 99 ? "99+" : total;
+    }
 }
 
 function loadNotifications() {
@@ -196,21 +194,26 @@ function loadNotifications() {
 
     onValue(ref(database, "notifications/" + currentUser.uid), async (snapshot) => {
         container.innerHTML = "";
-        let count = 0;
+        unreadNotifications = 0;
 
         if (!snapshot.exists()) {
             container.innerHTML = "<div class='empty'>No notifications yet.</div>";
-            document.getElementById("notificationCount").textContent = "0";
+            setBadge("notificationCount", 0);
+            updateActivityNavBadge();
             return;
         }
 
         const notifications = [];
-        snapshot.forEach(child => notifications.push(child.val()));
+        snapshot.forEach(child => {
+            const item = child.val() || {};
+            item.notificationId = item.notificationId || child.key;
+            notifications.push(item);
+        });
 
         notifications.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
-        for (const item of notifications) {
-            if (!item.read) count++;
+        notifications.forEach(item => {
+            if (!item.read) unreadNotifications++;
 
             const icon = item.type === "follow" ? "＋" :
                          item.type === "like" ? "♥" :
@@ -228,14 +231,16 @@ function loadNotifications() {
                     <p>${item.message || "New activity on your account."}</p>
                     <div class="activity-meta">${formatTime(item.createdAt)}</div>
                     ${item.fromUserId ? `<button class="small-btn dark-btn" onclick="openUser('${item.fromUserId}')">View Profile</button>` : ""}
+                    ${item.chatId && item.fromUserId ? `<button class="small-btn orange-btn" onclick="openChat('${item.fromUserId}')">Open Chat</button>` : ""}
                     ${!item.read ? `<button class="small-btn orange-btn" onclick="markNotificationRead('${item.notificationId}')">Mark as Read</button>` : ""}
                 </div>
             `;
 
             container.appendChild(card);
-        }
+        });
 
-        document.getElementById("notificationCount").textContent = count;
+        setBadge("notificationCount", unreadNotifications);
+        updateActivityNavBadge();
     });
 }
 
@@ -244,21 +249,26 @@ function loadMessages() {
 
     onValue(ref(database, "userChats/" + currentUser.uid), async (snapshot) => {
         container.innerHTML = "";
-        let count = 0;
+        unreadMessages = 0;
 
         if (!snapshot.exists()) {
             container.innerHTML = "<div class='empty'>No messages yet. Message property owners from their profile or listing page.</div>";
-            document.getElementById("messageCount").textContent = "0";
+            setBadge("messageCount", 0);
+            updateActivityNavBadge();
             return;
         }
 
         const chats = [];
-        snapshot.forEach(child => chats.push(child.val()));
+        snapshot.forEach(child => {
+            const chat = child.val() || {};
+            chat.chatKey = child.key;
+            chats.push(chat);
+        });
 
         chats.sort((a,b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
 
         chats.forEach(chat => {
-            if (chat.unread) count++;
+            if (chat.unread === true || chat.unreadCount > 0) unreadMessages++;
 
             const card = document.createElement("div");
             card.className = "chat-card";
@@ -269,14 +279,15 @@ function loadMessages() {
                     <h3>${chat.otherUserName || "QEJA User"}</h3>
                     <p>${chat.lastMessage || "Open conversation"}</p>
                 </div>
-                ${chat.unread ? `<div class="unread-dot"></div>` : ""}
-                <button class="small-btn orange-btn" onclick="openChat('${chat.otherUserId}')">Open</button>
+                ${(chat.unread === true || chat.unreadCount > 0) ? `<div class="unread-dot"></div>` : ""}
+                <button class="small-btn orange-btn" onclick="openChat('${chat.otherUserId}', '${chat.chatKey}')">Open</button>
             `;
 
             container.appendChild(card);
         });
 
-        document.getElementById("messageCount").textContent = count;
+        setBadge("messageCount", unreadMessages);
+        updateActivityNavBadge();
     });
 }
 
@@ -285,21 +296,26 @@ function loadInquiries() {
 
     onValue(ref(database, "leads/" + currentUser.uid), async (snapshot) => {
         container.innerHTML = "";
-        let count = 0;
+        unreadInquiries = 0;
 
         if (!snapshot.exists()) {
             container.innerHTML = "<div class='empty'>No property inquiries yet.</div>";
-            document.getElementById("inquiryCount").textContent = "0";
+            setBadge("inquiryCount", 0);
+            updateActivityNavBadge();
             return;
         }
 
         const leads = [];
-        snapshot.forEach(child => leads.push(child.val()));
+        snapshot.forEach(child => {
+            const lead = child.val() || {};
+            lead.leadId = lead.leadId || child.key;
+            leads.push(lead);
+        });
 
         leads.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
         for (const lead of leads) {
-            if (lead.status !== "read") count++;
+            if (lead.status !== "read") unreadInquiries++;
 
             let postTitle = "Property";
             const postSnap = await get(ref(database, "posts/" + lead.postId));
@@ -319,13 +335,15 @@ function loadInquiries() {
                     <div class="activity-meta">${formatTime(lead.createdAt)} · Status: ${lead.status || "new"}</div>
                     <button class="small-btn orange-btn" onclick="markLeadRead('${lead.leadId}')">Mark as Read</button>
                     <button class="small-btn dark-btn" onclick="replyByEmail('${lead.interestedUserEmail}')">Reply by Email</button>
+                    ${lead.interestedUserId ? `<button class="small-btn orange-btn" onclick="openChat('${lead.interestedUserId}')">Message</button>` : ""}
                 </div>
             `;
 
             container.appendChild(card);
         }
 
-        document.getElementById("inquiryCount").textContent = count;
+        setBadge("inquiryCount", unreadInquiries);
+        updateActivityNavBadge();
     });
 }
 
@@ -338,6 +356,8 @@ window.markNotificationRead = async function(notificationId) {
 };
 
 window.markLeadRead = async function(leadId) {
+    if (!leadId) return;
+
     await update(ref(database, "leads/" + currentUser.uid + "/" + leadId), {
         status: "read"
     });
@@ -353,10 +373,39 @@ window.replyByEmail = function(email) {
 };
 
 window.openUser = function(userId) {
-    window.location.href = "user.html?id=" + userId;
+    if (!userId) return;
+
+    if (userId === currentUser.uid) {
+        window.location.href = "profile.html";
+    } else {
+        window.location.href = "user.html?id=" + userId;
+    }
 };
 
-window.openChat = function(userId) {
+window.openChat = async function(userId, chatKey = null) {
+    if (!userId) return;
+
+    if (chatKey) {
+        await update(ref(database, "userChats/" + currentUser.uid + "/" + chatKey), {
+            unread: false,
+            unreadCount: 0
+        });
+    } else {
+        const snap = await get(ref(database, "userChats/" + currentUser.uid));
+
+        if (snap.exists()) {
+            snap.forEach(async(child) => {
+                const chat = child.val() || {};
+                if (chat.otherUserId === userId) {
+                    await update(ref(database, "userChats/" + currentUser.uid + "/" + child.key), {
+                        unread: false,
+                        unreadCount: 0
+                    });
+                }
+            });
+        }
+    }
+
     window.location.href = "chat.html?user=" + userId;
 };
 </script>
