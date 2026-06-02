@@ -42,6 +42,12 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .icon-like{color:#ff7a18;}
 .icon-dislike{color:#444;}
 .icon-eye{color:#333;}
+.comment-text{cursor:pointer;line-height:1.5;margin-top:6px;}
+.comment-actions{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap;}
+.comment-icon{cursor:pointer;font-weight:bold;border:none;background:transparent;font-size:16px;padding:4px;}
+.reply-text{cursor:pointer;color:#ff7a18;font-weight:bold;font-size:13px;}
+.comment-menu{display:none;margin-top:8px;gap:8px;flex-wrap:wrap;}
+.comment-hint{font-size:11px;color:#777;margin-top:4px;}
 .heart-pop{animation:popHeart .35s ease;}
 @keyframes popHeart{0%{transform:scale(1);}40%{transform:scale(1.8);}100%{transform:scale(1);}}
 
@@ -83,7 +89,7 @@ import { ref, onValue, update, push, set, get, remove } from "https://www.gstati
 
 let currentUser = null;
 let currentUserData = null;
-const EDIT_LIMIT = 20 * 60 * 1000;
+let longPressTimer = null;
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -104,11 +110,6 @@ onAuthStateChanged(auth, async (user) => {
 
 function safeText(value, fallback = "") {
     return value ? String(value) : fallback;
-}
-
-function isWithin20Minutes(item) {
-    if (!item.createdAt) return false;
-    return Date.now() - new Date(item.createdAt).getTime() <= EDIT_LIMIT;
 }
 
 function playLikeSound() {
@@ -181,9 +182,10 @@ function loadPosts() {
             const ownerId = post.ownerId || "";
             const image = post.imageURL || (post.imageURLs && post.imageURLs[0]) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
             const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (ownerId || "qeja");
+
             const ownerLink = ownerId
-    ? (ownerId === currentUser.uid ? "profile.html" : `user.html?id=${ownerId}`)
-    : "#";
+                ? (ownerId === currentUser.uid ? "profile.html" : `user.html?id=${ownerId}`)
+                : "#";
 
             const card = document.createElement("div");
             card.className = "post-card";
@@ -339,12 +341,7 @@ function loadNestedComments(postId, postOwnerId) {
 
         const roots = comments
             .filter(c => !c.parentId)
-            .sort((a, b) => {
-                const likesA = a.likesCount || 0;
-                const likesB = b.likesCount || 0;
-                if (likesB !== likesA) return likesB - likesA;
-                return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-            });
+            .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
         if (roots.length === 0) {
             list.innerHTML = "<p>No comments yet.</p>";
@@ -360,33 +357,46 @@ function loadNestedComments(postId, postOwnerId) {
 function renderComment(postId, postOwnerId, comment, allComments, level) {
     const isCommentOwner = comment.userId === currentUser.uid;
     const isOwnerOfPost = postOwnerId === currentUser.uid;
-
-    const userCanEdit = isCommentOwner && isWithin20Minutes(comment);
-    const userCanDeleteOwn = isCommentOwner && isWithin20Minutes(comment);
-    const canDelete = userCanDeleteOwn || isOwnerOfPost;
+    const canEdit = isCommentOwner;
+    const canDelete = isCommentOwner || isOwnerOfPost;
+    const safeCommentId = comment.id;
 
     const wrapper = document.createElement("div");
     wrapper.className = "comment-item";
     wrapper.style.marginLeft = `${Math.min(level * 20, 90)}px`;
 
-    const safeCommentId = comment.id;
-
     wrapper.innerHTML = `
         <strong>${safeText(comment.userName, "QEJA User")}</strong>
-        <p>${safeText(comment.text, "")}</p>
 
-        <small>
-            <span class="icon-like">▲</span> ${comment.likesCount || 0}
-            &nbsp;
-            <span class="icon-dislike">▼</span> ${comment.dislikesCount || 0}
-        </small><br>
+        <p class="comment-text"
+            onclick="showReplyInput('${safeCommentId}')"
+            onmousedown="startLongPress('${safeCommentId}')"
+            onmouseup="cancelLongPress()"
+            onmouseleave="cancelLongPress()"
+            ontouchstart="startLongPress('${safeCommentId}')"
+            ontouchend="cancelLongPress()"
+        >
+            ${safeText(comment.text, "")}
+        </p>
 
-        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'like')">▲ Like</button>
-        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'dislike')">▼ Dislike</button>
-        <button class="small-btn dark-btn" onclick="showReplyInput('${safeCommentId}')">Reply</button>
+        <div class="comment-actions">
+            <button class="comment-icon icon-like" onclick="reactToComment('${postId}', '${safeCommentId}', 'like')">
+                ▲ ${comment.likesCount || 0}
+            </button>
 
-        ${userCanEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${safeCommentId}')">Edit</button>` : ""}
-        ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${safeCommentId}')">Delete</button>` : ""}
+            <button class="comment-icon icon-dislike" onclick="reactToComment('${postId}', '${safeCommentId}', 'dislike')">
+                ▼ ${comment.dislikesCount || 0}
+            </button>
+
+            <span class="reply-text" onclick="showReplyInput('${safeCommentId}')">Reply</span>
+        </div>
+
+        <div class="comment-hint">Tap comment to reply · Long press 2s for options</div>
+
+        <div id="commentMenu-${safeCommentId}" class="comment-menu">
+            ${canEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${safeCommentId}')">Edit</button>` : ""}
+            ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${safeCommentId}')">Delete</button>` : ""}
+        </div>
 
         <div id="replyBox-${safeCommentId}" style="display:none;margin-top:8px;">
             <input id="replyInput-${safeCommentId}" class="comment-input" placeholder="Write a reply...">
@@ -398,12 +408,7 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
 
     const children = allComments
         .filter(c => c.parentId === comment.id)
-        .sort((a, b) => {
-            const likesA = a.likesCount || 0;
-            const likesB = b.likesCount || 0;
-            if (likesB !== likesA) return likesB - likesA;
-            return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        });
+        .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
     const childBox = wrapper.querySelector(`[id="children-${safeCommentId}"]`);
 
@@ -413,6 +418,22 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
 
     return wrapper;
 }
+
+window.startLongPress = function(commentId) {
+    clearTimeout(longPressTimer);
+
+    longPressTimer = setTimeout(() => {
+        const menu = document.getElementById("commentMenu-" + commentId);
+
+        if (menu) {
+            menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+        }
+    }, 2000);
+};
+
+window.cancelLongPress = function() {
+    clearTimeout(longPressTimer);
+};
 
 window.showReplyInput = function(commentId) {
     const box = document.getElementById("replyBox-" + commentId);
@@ -456,8 +477,8 @@ window.editNestedComment = async function(postId, commentId) {
 
     const comment = snap.val();
 
-    if (comment.userId !== currentUser.uid || !isWithin20Minutes(comment)) {
-        alert("You can only edit your own comment/reply within 20 minutes.");
+    if (comment.userId !== currentUser.uid) {
+        alert("You can only edit your own comment/reply.");
         return;
     }
 
@@ -482,10 +503,10 @@ window.deleteNestedComment = async function(postId, commentId) {
 
     const comment = snap.val();
 
-    const isOwnCommentWithinTime = comment.userId === currentUser.uid && isWithin20Minutes(comment);
+    const isCommentOwner = comment.userId === currentUser.uid;
     const isOwnerOfPost = post.ownerId === currentUser.uid;
 
-    if (!isOwnCommentWithinTime && !isOwnerOfPost) {
+    if (!isCommentOwner && !isOwnerOfPost) {
         alert("You cannot delete this comment/reply.");
         return;
     }
