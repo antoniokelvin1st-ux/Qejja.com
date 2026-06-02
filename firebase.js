@@ -13,11 +13,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
 export const database = getDatabase(app);
 
-// ── Cloudinary Config ────────────────────────────────────────
-export const CLOUDINARY_CLOUD  = "dbyeox0j8";
+// Cloudinary Config
+export const CLOUDINARY_CLOUD = "dbyeox0j8";
 export const CLOUDINARY_PRESET = "qeja-com";
 
 export async function uploadToCloudinary(file, resourceType = "image") {
@@ -25,11 +26,19 @@ export async function uploadToCloudinary(file, resourceType = "image") {
     formData.append("file", file);
     formData.append("upload_preset", CLOUDINARY_PRESET);
 
-    const res = await fetch(
+    const response = await fetch(
         `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/${resourceType}/upload`,
-        { method: "POST", body: formData }
+        {
+            method: "POST",
+            body: formData
+        }
     );
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || "Cloudinary upload failed");
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.error?.message || "Cloudinary upload failed");
+    }
+
     return data.secure_url;
 }
