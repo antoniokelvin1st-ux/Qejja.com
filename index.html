@@ -141,7 +141,7 @@ function popHeart(id) {
 }
 
 function loadPosts() {
-    const feed = document.getElementById("feedContainer");
+    const feed = document.getElementById("feedContainer") || document.getElementById("homeFeed");
 
     onValue(ref(database, "posts"), (snapshot) => {
         feed.innerHTML = "";
