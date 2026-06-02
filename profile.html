@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile - qeja</title>
+<title>Profile - QEJA</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
-body{padding-bottom:80px;background:#f4f4f4;}
+body{padding-bottom:90px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:16px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
 .menu-wrap{position:relative;}
@@ -15,7 +15,6 @@ body{padding-bottom:80px;background:#f4f4f4;}
 .menu-popup{display:none;position:absolute;right:0;top:40px;background:white;color:#111;width:230px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.2);overflow:hidden;z-index:300;}
 .menu-popup a,.menu-popup button{display:block;width:100%;padding:14px 18px;background:white;border:none;text-align:left;text-decoration:none;color:#111;font-weight:bold;cursor:pointer;}
 .menu-popup a:hover,.menu-popup button:hover{background:#f4f4f4;}
-
 .profile-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
 .profile-header{text-align:center;background:white;border-radius:22px;padding:28px 18px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
 .profile-pic{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #ff7a18;background:#eee;}
@@ -27,91 +26,65 @@ body{padding-bottom:80px;background:#f4f4f4;}
 .stat{text-align:center;}
 .stat strong{font-size:22px;display:block;}
 .stat span{color:#777;font-weight:bold;}
-
 .profile-tabs{display:flex;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap;}
 .tab-btn{border:none;background:white;padding:10px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
 .tab-btn.active{background:#ff7a18;color:white;}
-
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
 .grid-card{position:relative;background:white;min-height:180px;overflow:hidden;}
 .grid-card img{width:100%;height:220px;object-fit:cover;display:block;background:#ddd;}
 .grid-info{padding:10px;background:white;}
 .grid-info h4{font-size:14px;margin-bottom:4px;}
 .grid-info p{font-size:13px;color:#555;}
-.delete-btn{position:absolute;top:8px;right:8px;background:#cc0000;color:white;border:none;padding:7px 10px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:bold;}
-.edit-post-btn{position:absolute;top:8px;left:8px;background:#111;color:white;border:none;padding:7px 10px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:bold;}
-
+.delete-btn{position:absolute;top:8px;right:8px;background:#cc0000;color:white;border:none;padding:7px 10px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:bold;z-index:5;}
+.edit-post-btn{position:absolute;top:8px;left:8px;background:#111;color:white;border:none;padding:7px 10px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:bold;z-index:5;}
 .modal{display:none;position:fixed;left:0;right:0;bottom:0;background:white;border-radius:28px 28px 0 0;box-shadow:0 -10px 25px rgba(0,0,0,.2);z-index:400;padding:22px;max-height:85vh;overflow:auto;}
 .modal h2{margin-bottom:15px;}
-.modal input,.modal textarea{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ddd;}
+.modal input,.modal textarea{width:100%;padding:14px;margin:8px 0;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;}
 .modal textarea{height:100px;}
 .modal-actions{display:flex;gap:10px;margin-top:12px;}
 .save-btn{background:#ff7a18;color:white;border:none;padding:12px 20px;border-radius:25px;font-weight:bold;cursor:pointer;}
 .cancel-btn{background:#111;color:white;border:none;padding:12px 20px;border-radius:25px;font-weight:bold;cursor:pointer;}
 
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;height:70px;display:flex;justify-content:space-around;align-items:center;z-index:200;}
-.bottom-nav a{text-decoration:none;color:#555;font-size:13px;font-weight:bold;text-align:center;}
-.bottom-nav span{display:block;font-size:23px;}
-.post-plus{background:#111;color:white!important;width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;margin-top:-28px;border:4px solid #ff7a18;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
+.bottom-nav a:hover{color:#ff7a18;}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
-
-@media(max-width:700px){
-    .profile-wrap{padding:18px 4% 95px;}
-    .grid-card img{height:150px;}
-    .stats{gap:20px;}
-}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+@media(max-width:700px){.profile-wrap{padding:18px 4% 95px;}.grid-card img{height:150px;}.stats{gap:20px;}}
 </style>
 </head>
 
 <body>
 
 <header class="top-appbar">
-    <div class="logo">qeja</div>
-
+    <div class="logo">QEJA</div>
     <div class="menu-wrap">
         <button class="menu-btn" onclick="toggleMenu()">⋯</button>
-
         <div id="menuPopup" class="menu-popup">
             <a href="settings.html">Settings</a>
             <a href="post.html">Create Post</a>
-            <a href="inbox.html">Inbox</a>
+            <a href="inbox.html">Activity</a>
             <button id="logoutBtn">Logout</button>
         </div>
     </div>
 </header>
 
 <main class="profile-wrap">
-
     <section class="profile-header">
         <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
-
         <div id="profileName" class="username">Loading...</div>
         <div id="profileHandle" class="handle">@qeja.user</div>
-
-        <p id="profileBio" class="bio">I love qeja.com💕.</p>
-
+        <p id="profileBio" class="bio">Loading bio...</p>
         <button class="edit-btn" onclick="openEditProfile()">Edit Profile</button>
 
         <div class="stats">
-            <div class="stat">
-                <strong id="listingsCount">0</strong>
-                <span>Listings</span>
-            </div>
-
-            <div class="stat">
-                <strong id="totalLikes">0</strong>
-                <span>Likes</span>
-            </div>
-
-            <div class="stat">
-                <strong id="totalViews">0</strong>
-                <span>Views</span>
-            </div>
-
-            <div class="stat">
-                <strong id="followersCount">0</strong>
-                <span>Followers</span>
-            </div>
+            <div class="stat"><strong id="listingsCount">0</strong><span>Listings</span></div>
+            <div class="stat"><strong id="totalLikes">0</strong><span>Likes</span></div>
+            <div class="stat"><strong id="totalViews">0</strong><span>Views</span></div>
+            <div class="stat"><strong id="followersCount">0</strong><span>Followers</span></div>
+            <div class="stat"><strong id="followingCount">0</strong><span>Following</span></div>
         </div>
     </section>
 
@@ -121,28 +94,17 @@ body{padding-bottom:80px;background:#f4f4f4;}
         <button class="tab-btn" onclick="showTab('saved')">Saved</button>
     </div>
 
-    <section id="postsTab">
-        <div id="userPostsGrid" class="grid"></div>
-    </section>
-
-    <section id="reelsTab" style="display:none;">
-        <div id="userReelsGrid" class="grid"></div>
-    </section>
-
-    <section id="savedTab" style="display:none;">
-    <div id="savedGrid" class="grid"></div>
-</section>
-
+    <section id="postsTab"><div id="userPostsGrid" class="grid"></div></section>
+    <section id="reelsTab" style="display:none;"><div id="userReelsGrid" class="grid"></div></section>
+    <section id="savedTab" style="display:none;"><div id="savedGrid" class="grid"></div></section>
 </main>
 
 <div id="editProfileModal" class="modal">
     <h2>Edit Profile</h2>
-
     <input id="editName" type="text" placeholder="Full Name">
     <input id="editHandle" type="text" placeholder="Username / Handle e.g qeja.agent">
     <input id="editPhoto" type="text" placeholder="Profile Image URL">
     <textarea id="editBio" placeholder="Write your bio / description"></textarea>
-
     <div class="modal-actions">
         <button class="save-btn" onclick="saveProfileChanges()">Save</button>
         <button class="cancel-btn" onclick="closeEditProfile()">Cancel</button>
@@ -151,13 +113,11 @@ body{padding-bottom:80px;background:#f4f4f4;}
 
 <div id="editPostModal" class="modal">
     <h2>Edit Listing</h2>
-
     <input id="editPostTitle" type="text" placeholder="Title">
     <input id="editPostLocation" type="text" placeholder="Location">
     <input id="editPostPrice" type="text" placeholder="Price">
     <input id="editPostImage" type="text" placeholder="Image URL">
     <textarea id="editPostDescription" placeholder="Description"></textarea>
-
     <div class="modal-actions">
         <button class="save-btn" onclick="savePostChanges()">Save Listing</button>
         <button class="cancel-btn" onclick="closeEditPost()">Cancel</button>
@@ -165,17 +125,17 @@ body{padding-bottom:80px;background:#f4f4f4;}
 </div>
 
 <nav class="bottom-nav">
-    <a href="index.html"><span>🏠</span>Home</a>
-    <a href="explore.html"><span>🔍</span>Explore</a>
-    <a href="post.html" class="post-plus"><span>+</span></a>
-    <a href="inbox.html"><span>💬</span>Inbox</a>
-    <a href="profile.html"><span>👤</span>Profile</a>
+    <a href="index.html"><span>⌂</span>Home</a>
+    <a href="explore.html"><span>🧭</span>Discover</a>
+    <a href="post.html" class="post-plus"><span>＋</span></a>
+    <a href="inbox.html"><span>🔔</span>Activity</a>
+    <a href="profile.html"><span>◎</span>Profile</a>
 </nav>
 
 <script type="module">
 import { auth, database } from "./firebase.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { ref, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
 let currentUserData = null;
@@ -189,28 +149,24 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     currentUser = user;
-
     await loadProfile();
     loadUserPosts();
     loadSavedProperties();
+    loadFollowCounts();
 });
 
 async function loadProfile() {
     const snap = await get(ref(database, "users/" + currentUser.uid));
 
-    if (snap.exists()) {
-        currentUserData = snap.val();
-    } else {
-        currentUserData = {
-            fullName: "qeja User",
-            email: currentUser.email,
-            bio: "",
-            handle: "qeja.user",
-            photoURL: ""
-        };
-    }
+    currentUserData = snap.exists() ? snap.val() : {
+        fullName: "QEJA User",
+        email: currentUser.email,
+        bio: "",
+        handle: "qeja.user",
+        photoURL: ""
+    };
 
-    document.getElementById("profileName").textContent = currentUserData.fullName || "qeja User";
+    document.getElementById("profileName").textContent = currentUserData.fullName || "QEJA User";
     document.getElementById("profileHandle").textContent = "@" + (currentUserData.handle || currentUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
     document.getElementById("profileBio").textContent = currentUserData.bio || "No bio added yet.";
 
@@ -224,6 +180,22 @@ async function loadProfile() {
     document.getElementById("editBio").value = currentUserData.bio || "";
 }
 
+function countChildren(snapshot) {
+    let count = 0;
+    if (snapshot.exists()) snapshot.forEach(() => count++);
+    return count;
+}
+
+function loadFollowCounts() {
+    onValue(ref(database, "followers/" + currentUser.uid), (snapshot) => {
+        document.getElementById("followersCount").textContent = countChildren(snapshot);
+    });
+
+    onValue(ref(database, "following/" + currentUser.uid), (snapshot) => {
+        document.getElementById("followingCount").textContent = countChildren(snapshot);
+    });
+}
+
 function loadUserPosts() {
     onValue(ref(database, "posts"), (snapshot) => {
         userPosts = [];
@@ -231,15 +203,11 @@ function loadUserPosts() {
         if (snapshot.exists()) {
             snapshot.forEach(child => {
                 const post = child.val();
-
-                if (post.ownerId === currentUser.uid) {
-                    userPosts.push(post);
-                }
+                if (post.ownerId === currentUser.uid) userPosts.push(post);
             });
         }
 
         userPosts.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-
         renderStats();
         renderPosts();
         renderReels();
@@ -249,43 +217,45 @@ function loadUserPosts() {
 function renderStats() {
     let likes = 0;
     let views = 0;
+    let listings = 0;
 
     userPosts.forEach(post => {
         likes += post.likesCount || post.likes || 0;
         views += post.views || 0;
+        if (post.type !== "Reel") listings++;
     });
 
-    document.getElementById("listingsCount").textContent = userPosts.length;
+    document.getElementById("listingsCount").textContent = listings;
     document.getElementById("totalLikes").textContent = likes;
     document.getElementById("totalViews").textContent = views;
-    document.getElementById("followersCount").textContent = currentUserData.followers || 0;
 }
 
 function renderPosts() {
     const grid = document.getElementById("userPostsGrid");
     grid.innerHTML = "";
 
-    if (userPosts.length === 0) {
+    const posts = userPosts.filter(post => post.type !== "Reel");
+
+    if (posts.length === 0) {
         grid.innerHTML = "<p style='padding:20px;'>No listings yet. Tap + to post your first property.</p>";
         return;
     }
 
-    userPosts.forEach(post => {
+    posts.forEach(post => {
         const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-
         const card = document.createElement("div");
         card.className = "grid-card";
 
         card.innerHTML = `
             <button class="edit-post-btn" onclick="openEditPost('${post.postId}')">Edit</button>
             <button class="delete-btn" onclick="deletePost('${post.postId}')">Delete</button>
-
-            <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
-
+            <a href="details.html?id=${post.postId}">
+                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            </a>
             <div class="grid-info">
                 <h4>${post.title || "Property"}</h4>
                 <p>${post.price || ""}</p>
-                <p>❤️ ${post.likesCount || post.likes || 0} | 👁 ${post.views || 0}</p>
+                <p>♥ ${post.likesCount || post.likes || 0} | ◉ ${post.views || 0}</p>
             </div>
         `;
 
@@ -297,7 +267,7 @@ function renderReels() {
     const grid = document.getElementById("userReelsGrid");
     grid.innerHTML = "";
 
-    const reels = userPosts.filter(post => post.videoURL);
+    const reels = userPosts.filter(post => post.type === "Reel" || post.videoURL);
 
     if (reels.length === 0) {
         grid.innerHTML = "<p style='padding:20px;'>No reels yet.</p>";
@@ -306,15 +276,16 @@ function renderReels() {
 
     reels.forEach(post => {
         const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-
         const card = document.createElement("div");
         card.className = "grid-card";
 
         card.innerHTML = `
-            <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            <a href="details.html?id=${post.postId}">
+                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            </a>
             <div class="grid-info">
                 <h4>${post.title || "Reel"}</h4>
-                <a href="${post.videoURL}" target="_blank" style="color:#ff7a18;font-weight:bold;">Watch Reel</a>
+                <p>🎬 Reel</p>
             </div>
         `;
 
@@ -395,6 +366,7 @@ window.deletePost = async function(postId) {
     await remove(ref(database, "posts/" + postId));
     await remove(ref(database, "comments/" + postId));
     await remove(ref(database, "postLikes/" + postId));
+    await remove(ref(database, "postViews/" + postId));
 
     alert("Listing deleted");
 };
@@ -426,7 +398,8 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
     await signOut(auth);
     window.location.href = "login.html";
 });
-    function loadSavedProperties() {
+
+function loadSavedProperties() {
     const savedGrid = document.getElementById("savedGrid");
 
     onValue(ref(database, "savedProperties/" + currentUser.uid), (snapshot) => {
@@ -440,7 +413,6 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
         snapshot.forEach(child => {
             const post = child.val();
             const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-
             const card = document.createElement("div");
             card.className = "grid-card";
 
@@ -448,7 +420,6 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
                 <a href="details.html?id=${post.postId}">
                     <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
                 </a>
-
                 <div class="grid-info">
                     <h4>${post.title || "Property"}</h4>
                     <p>${post.price || ""}</p>
