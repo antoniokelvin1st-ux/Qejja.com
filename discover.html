@@ -136,12 +136,14 @@ import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 let allPosts = [];
 let quickFilter = "all";
 
+let currentUser = null;
+
 onAuthStateChanged(auth, (user) => {
     if (!user) {
         window.location.href = "login.html";
         return;
     }
-
+    currentUser = user;
     loadDiscoverPosts();
 });
 
@@ -232,7 +234,9 @@ function renderResults() {
         const ownerId = post.ownerId || "";
         const image = post.imageURL || (post.imageURLs && post.imageURLs[0]) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
         const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (ownerId || "qeja");
-        const ownerLink = ownerId ? `user.html?id=${ownerId}` : "#";
+        const ownerLink = ownerId
+    ? (currentUser && ownerId === currentUser.uid ? "profile.html" : `user.html?id=${ownerId}`)
+    : "#";
 
         const card = document.createElement("div");
         card.className = "result-card";
