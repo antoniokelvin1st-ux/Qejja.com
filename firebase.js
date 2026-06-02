@@ -19,7 +19,7 @@ export const database = getDatabase(app);
 
 // Cloudinary Config
 export const CLOUDINARY_CLOUD = "dbyeox0j8";
-export const CLOUDINARY_PRESET = "qeja-com";
+export const CLOUDINARY_PRESET = "qejja-com";
 
 export async function uploadToCloudinary(file, resourceType = "image") {
     const formData = new FormData();
