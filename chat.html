@@ -1,54 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Chat - QEJA</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
-body{padding-bottom:90px;background:#f4f4f4;}
-.top-appbar{background:#111;color:white;padding:16px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-.logo{font-size:30px;font-weight:900;color:#ff7a18;}
-.chat-wrap{max-width:800px;margin:auto;padding:25px 7% 100px;}
-.chat-header{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px;margin-bottom:15px;}
-.chat-header img{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #ff7a18;}
-.chat-header h2{font-size:20px;}
-.chat-box{background:white;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(0,0,0,.08);min-height:420px;max-height:60vh;overflow-y:auto;}
-.message{padding:10px 14px;border-radius:18px;margin:8px 0;max-width:75%;word-wrap:break-word;}
-.mine{background:#ff7a18;color:white;margin-left:auto;border-bottom-right-radius:4px;}
-.theirs{background:#eee;color:#111;margin-right:auto;border-bottom-left-radius:4px;}
-.msg-time{font-size:11px;opacity:.7;margin-top:4px;}
-.input-row{display:flex;gap:8px;margin-top:12px;background:white;border-radius:20px;padding:10px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
-.input-row input{flex:1;border:1px solid #ddd;border-radius:25px;padding:13px;outline:none;}
-.input-row button{border:none;background:#ff7a18;color:white;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
+body{background:#f4f4f4;padding-bottom:90px;}
+.chat-app{max-width:900px;margin:auto;min-height:100vh;display:flex;flex-direction:column;background:white;}
+.chat-header{background:#111;color:white;padding:16px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.back-link{color:white;text-decoration:none;font-weight:bold;font-size:20px;}
+.chat-avatar-wrap{position:relative;}
+.chat-avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid #ff7a18;background:#eee;}
+.online-dot{position:absolute;right:1px;bottom:2px;width:13px;height:13px;border-radius:50%;background:#999;border:2px solid #111;}
+.online-dot.online{background:#16c784;}
+.chat-user-info{flex:1;}
+.chat-user-info h2{font-size:18px;margin:0;}
+.chat-user-info p{font-size:13px;margin-top:3px;color:#ddd;}
+.messages-box{flex:1;padding:18px;overflow-y:auto;min-height:calc(100vh - 190px);}
+.message-row{display:flex;margin-bottom:12px;}
+.message-row.mine{justify-content:flex-end;}
+.message-bubble{max-width:75%;padding:12px 14px;border-radius:18px;background:#eee;color:#111;line-height:1.45;}
+.message-row.mine .message-bubble{background:#ff7a18;color:white;border-bottom-right-radius:4px;}
+.message-row.other .message-bubble{background:#f1f1f1;border-bottom-left-radius:4px;}
+.message-time{display:block;font-size:11px;margin-top:6px;opacity:.75;}
+.chat-input-bar{position:sticky;bottom:74px;background:white;padding:12px;display:flex;gap:8px;border-top:1px solid #eee;}
+.chat-input-bar input{flex:1;padding:13px;border-radius:25px;border:1px solid #ddd;outline:none;}
+.send-btn{background:#ff7a18;color:white;border:none;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
+.empty-chat{text-align:center;color:#777;padding:30px;}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
-.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;position:relative;}
 .bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
 .bottom-nav a:hover{color:#ff7a18;}
-.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+
+@media(max-width:700px){
+    .chat-app{max-width:100%;}
+    .message-bubble{max-width:85%;}
+}
 </style>
 </head>
 
 <body>
 
-<header class="top-appbar">
-    <div class="logo">QEJA</div>
-    <a href="inbox.html" style="color:white;text-decoration:none;font-weight:bold;">Activity</a>
-</header>
+<div class="chat-app">
 
-<main class="chat-wrap">
-    <div id="chatHeader" class="chat-header">Loading chat...</div>
-    <div id="chatBox" class="chat-box">Loading messages...</div>
+    <header class="chat-header">
+        <a href="javascript:history.back()" class="back-link">‹</a>
 
-    <div class="input-row">
+        <div class="chat-avatar-wrap">
+            <img id="chatAvatar" class="chat-avatar" src="https://i.pravatar.cc/150" alt="User">
+            <span id="onlineDot" class="online-dot"></span>
+        </div>
+
+        <div class="chat-user-info">
+            <h2 id="chatUserName">Loading...</h2>
+            <p id="chatStatus">Checking status...</p>
+        </div>
+    </header>
+
+    <main id="messagesBox" class="messages-box">
+        <div class="empty-chat">Loading messages...</div>
+    </main>
+
+    <div class="chat-input-bar">
         <input id="messageInput" type="text" placeholder="Write a message...">
-        <button onclick="sendMessage()">Send</button>
+        <button id="sendBtn" class="send-btn" type="button">Send</button>
     </div>
-</main>
+
+</div>
 
 <nav class="bottom-nav">
     <a href="index.html"><span>⌂</span>Home</a>
@@ -61,16 +87,22 @@ body{padding-bottom:90px;background:#f4f4f4;}
 <script type="module">
 import { auth, database } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { ref, get, push, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import {
+    ref,
+    get,
+    set,
+    update,
+    push,
+    onValue,
+    onDisconnect,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
 let currentUserData = null;
-let otherUserId = null;
+let otherUserId = new URLSearchParams(window.location.search).get("user");
 let otherUserData = null;
 let chatId = null;
-
-const params = new URLSearchParams(window.location.search);
-otherUserId = params.get("user");
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -80,9 +112,15 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    if (!otherUserId || otherUserId === currentUser.uid) {
-        alert("Invalid chat user.");
+    if (!otherUserId || otherUserId === "undefined" || otherUserId === "null") {
+        alert("No user selected for chat.");
         window.location.href = "inbox.html";
+        return;
+    }
+
+    if (otherUserId === currentUser.uid) {
+        alert("You cannot chat with yourself.");
+        window.location.href = "profile.html";
         return;
     }
 
@@ -93,130 +131,263 @@ onAuthStateChanged(auth, async (user) => {
         photoURL: ""
     };
 
-    const otherSnap = await get(ref(database, "users/" + otherUserId));
+    await loadOtherUser();
+    chatId = createChatId(currentUser.uid, otherUserId);
 
-    if (!otherSnap.exists()) {
-        alert("User not found.");
-        window.location.href = "inbox.html";
-        return;
-    }
-
-    otherUserData = otherSnap.val();
-
-    chatId = makeChatId(currentUser.uid, otherUserId);
-
-    renderChatHeader();
+    await createOrUpdateChat();
+    setupPresence();
+    watchOtherPresence();
     loadMessages();
-    markChatRead();
 });
 
-function makeChatId(uid1, uid2) {
+function createChatId(uid1, uid2) {
     return [uid1, uid2].sort().join("_");
 }
 
-function renderChatHeader() {
-    const header = document.getElementById("chatHeader");
+function formatTime(value) {
+    if (!value) return "";
 
-    header.innerHTML = `
-        <img src="${otherUserData.photoURL || 'https://i.pravatar.cc/100'}" onerror="this.src='https://i.pravatar.cc/100'">
-        <div>
-            <h2>${otherUserData.fullName || "QEJA User"}</h2>
-            <small>@${(otherUserData.handle || otherUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase()}</small>
-        </div>
-    `;
+    const date = typeof value === "number" ? new Date(value) : new Date(value);
+
+    if (isNaN(date.getTime())) return "";
+
+    return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
 }
 
-function formatTime(dateString) {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleString();
+function formatLastSeen(value) {
+    if (!value) return "Offline";
+
+    const date = typeof value === "number" ? new Date(value) : new Date(value);
+    if (isNaN(date.getTime())) return "Offline";
+
+    const diff = Date.now() - date.getTime();
+    const mins = Math.floor(diff / 60000);
+
+    if (mins < 1) return "Last seen just now";
+    if (mins < 60) return `Last seen ${mins} min ago`;
+
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `Last seen ${hours} hr ago`;
+
+    const days = Math.floor(hours / 24);
+    return `Last seen ${days} day${days > 1 ? "s" : ""} ago`;
+}
+
+async function loadOtherUser() {
+    const userSnap = await get(ref(database, "users/" + otherUserId));
+
+    if (userSnap.exists()) {
+        otherUserData = userSnap.val();
+    } else {
+        otherUserData = await findUserFromPosts(otherUserId);
+    }
+
+    if (!otherUserData) {
+        otherUserData = {
+            fullName: "QEJA User",
+            email: "",
+            photoURL: ""
+        };
+    }
+
+    document.getElementById("chatUserName").textContent = otherUserData.fullName || "QEJA User";
+
+    if (otherUserData.photoURL) {
+        document.getElementById("chatAvatar").src = otherUserData.photoURL;
+    }
+}
+
+async function findUserFromPosts(uid) {
+    const postsSnap = await get(ref(database, "posts"));
+    let found = null;
+
+    if (postsSnap.exists()) {
+        postsSnap.forEach(child => {
+            const post = child.val() || {};
+
+            if (post.ownerId === uid && !found) {
+                found = {
+                    fullName: post.ownerName || post.contactName || "QEJA User",
+                    email: post.ownerEmail || post.contactEmail || "",
+                    photoURL: post.ownerPhoto || ""
+                };
+            }
+        });
+    }
+
+    return found;
+}
+
+async function createOrUpdateChat() {
+    const chatRef = ref(database, `chats/${chatId}`);
+
+    await update(chatRef, {
+        chatId,
+        updatedAt: new Date().toISOString(),
+        [`participants/${currentUser.uid}`]: true,
+        [`participants/${otherUserId}`]: true,
+        [`participantInfo/${currentUser.uid}`]: {
+            userId: currentUser.uid,
+            fullName: currentUserData.fullName || "QEJA User",
+            photoURL: currentUserData.photoURL || "",
+            email: currentUser.email || ""
+        },
+        [`participantInfo/${otherUserId}`]: {
+            userId: otherUserId,
+            fullName: otherUserData.fullName || "QEJA User",
+            photoURL: otherUserData.photoURL || "",
+            email: otherUserData.email || ""
+        }
+    });
+}
+
+function setupPresence() {
+    const statusRef = ref(database, `status/${currentUser.uid}`);
+
+    set(statusRef, {
+        online: true,
+        lastSeen: Date.now()
+    });
+
+    onDisconnect(statusRef).set({
+        online: false,
+        lastSeen: Date.now()
+    });
+}
+
+function watchOtherPresence() {
+    const dot = document.getElementById("onlineDot");
+    const statusText = document.getElementById("chatStatus");
+
+    onValue(ref(database, `status/${otherUserId}`), (snapshot) => {
+        const status = snapshot.exists() ? snapshot.val() : null;
+
+        if (status && status.online) {
+            dot.classList.add("online");
+            statusText.textContent = "Online";
+        } else {
+            dot.classList.remove("online");
+            statusText.textContent = formatLastSeen(status?.lastSeen);
+        }
+    });
 }
 
 function loadMessages() {
-    const box = document.getElementById("chatBox");
+    const box = document.getElementById("messagesBox");
 
-    onValue(ref(database, "chats/" + chatId + "/messages"), (snapshot) => {
+    onValue(ref(database, `chats/${chatId}/messages`), async (snapshot) => {
         box.innerHTML = "";
 
         if (!snapshot.exists()) {
-            box.innerHTML = "<p style='color:#777;'>No messages yet. Start the conversation.</p>";
+            box.innerHTML = "<div class='empty-chat'>No messages yet. Start the conversation.</div>";
             return;
         }
 
         const messages = [];
-        snapshot.forEach(child => messages.push(child.val()));
+        snapshot.forEach(child => {
+            const msg = child.val() || {};
+            msg.messageId = msg.messageId || child.key;
+            messages.push(msg);
+        });
 
-        messages.sort((a,b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+        messages.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
         messages.forEach(msg => {
-            const div = document.createElement("div");
-            div.className = "message " + (msg.senderId === currentUser.uid ? "mine" : "theirs");
+            const mine = msg.senderId === currentUser.uid;
 
-            div.innerHTML = `
-                <div>${msg.text || ""}</div>
-                <div class="msg-time">${formatTime(msg.createdAt)}</div>
+            const row = document.createElement("div");
+            row.className = mine ? "message-row mine" : "message-row other";
+
+            row.innerHTML = `
+                <div class="message-bubble">
+                    ${escapeHtml(msg.text || "")}
+                    <span class="message-time">${formatTime(msg.createdAt)}</span>
+                </div>
             `;
 
-            box.appendChild(div);
+            box.appendChild(row);
         });
 
         box.scrollTop = box.scrollHeight;
+
+        await markMessagesRead();
     });
 }
 
-window.sendMessage = async function() {
+async function markMessagesRead() {
+    const chatRef = ref(database, `chats/${chatId}`);
+
+    await update(chatRef, {
+        [`unread/${currentUser.uid}`]: 0
+    });
+}
+
+function escapeHtml(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+async function sendMessage() {
     const input = document.getElementById("messageInput");
     const text = input.value.trim();
 
     if (!text) return;
 
-    const messageRef = push(ref(database, "chats/" + chatId + "/messages"));
+    input.value = "";
+
+    const messageRef = push(ref(database, `chats/${chatId}/messages`));
     const now = new Date().toISOString();
 
     await set(messageRef, {
         messageId: messageRef.key,
-        chatId,
         senderId: currentUser.uid,
+        senderName: currentUserData.fullName || "QEJA User",
         receiverId: otherUserId,
         text,
         createdAt: now,
         read: false
     });
 
-    await update(ref(database, "userChats/" + currentUser.uid + "/" + chatId), {
-        chatId,
-        otherUserId,
-        otherUserName: otherUserData.fullName || "QEJA User",
-        otherUserPhoto: otherUserData.photoURL || "",
+    const chatRef = ref(database, `chats/${chatId}`);
+    const chatSnap = await get(chatRef);
+    const chatData = chatSnap.exists() ? chatSnap.val() : {};
+    const oldUnread = chatData.unread?.[otherUserId] || 0;
+
+    await update(chatRef, {
         lastMessage: text,
+        lastMessageAt: now,
+        lastSenderId: currentUser.uid,
         updatedAt: now,
-        unread: false
+        [`unread/${otherUserId}`]: oldUnread + 1,
+        [`unread/${currentUser.uid}`]: 0
     });
 
-    await update(ref(database, "userChats/" + otherUserId + "/" + chatId), {
+    const notificationRef = push(ref(database, `notifications/${otherUserId}`));
+    await set(notificationRef, {
+        notificationId: notificationRef.key,
+        type: "message",
+        fromUserId: currentUser.uid,
+        fromUserName: currentUserData.fullName || "QEJA User",
+        message: text,
         chatId,
-        otherUserId: currentUser.uid,
-        otherUserName: currentUserData.fullName || "QEJA User",
-        otherUserPhoto: currentUserData.photoURL || "",
-        lastMessage: text,
-        updatedAt: now,
-        unread: true
-    });
-
-    input.value = "";
-};
-
-async function markChatRead() {
-    if (!chatId || !currentUser) return;
-
-    await update(ref(database, "userChats/" + currentUser.uid + "/" + chatId), {
-        unread: false
+        createdAt: now,
+        read: false
     });
 }
 
+document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
 document.getElementById("messageInput").addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-        window.sendMessage();
+        e.preventDefault();
+        sendMessage();
     }
 });
 </script>
