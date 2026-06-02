@@ -12,83 +12,34 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
 .feed-wrap{padding:30px 7%;max-width:760px;margin:auto;}
 .post-card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.08);margin-bottom:30px;}
-.post-card img{width:100%;height:360px;object-fit:cover;display:block;background:#eee;}
+.post-main-img{width:100%;height:360px;object-fit:cover;display:block;background:#eee;}
 .post-body{padding:20px;}
+.owner-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#111;font-weight:bold;margin-bottom:8px;}
+.owner-avatar{width:32px!important;height:32px!important;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;display:inline-block!important;}
 .post-title{font-size:24px;font-weight:bold;margin-top:6px;}
 .post-price{color:#ff7a18;font-weight:bold;margin:8px 0;}
+.stat-row{display:flex;gap:18px;align-items:center;margin:12px 0;color:#555;font-weight:bold;flex-wrap:wrap;}
 .post-actions button,.small-btn{border:none;padding:9px 14px;border-radius:22px;cursor:pointer;font-weight:bold;margin:4px;}
 .orange-btn{background:#ff7a18;color:white;}
 .dark-btn{background:#111;color:white;}
 .danger-btn{background:#cc0000;color:white;}
-.comment-box{display:none;margin-top:15px;}
+.comment-box{display:none;margin-top:15px;border-top:1px solid #eee;padding-top:12px;}
 .comment-item{background:#f3f3f3;padding:10px;border-radius:10px;margin-top:10px;}
-.comment-input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:8px 0;}
-.stat-row{display:flex;gap:18px;align-items:center;margin:12px 0;color:#555;font-weight:bold;flex-wrap:wrap;}
+.comment-input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:8px 0;box-sizing:border-box;}
 .icon-heart{color:#e63946;}
 .icon-like{color:#ff7a18;}
 .icon-dislike{color:#444;}
 .icon-eye{color:#333;}
-.owner-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#111;font-weight:bold;margin-bottom:6px;}
-.owner-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;}
 .heart-pop{animation:popHeart .35s ease;}
-@keyframes popHeart{
-    0%{transform:scale(1);}
-    40%{transform:scale(1.8);}
-    100%{transform:scale(1);}
-}
+@keyframes popHeart{0%{transform:scale(1);}40%{transform:scale(1.8);}100%{transform:scale(1);}}
 
-/* QEJA Bottom Navigation */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:#111;
-    border-top:1px solid rgba(255,255,255,.08);
-    height:74px;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    z-index:200;
-    box-shadow:0 -8px 25px rgba(0,0,0,.25);
-}
-.bottom-nav a{
-    text-decoration:none;
-    color:#ddd;
-    font-size:12px;
-    font-weight:bold;
-    text-align:center;
-}
-.bottom-nav span{
-    display:block;
-    font-size:24px;
-    margin-bottom:2px;
-}
-.bottom-nav a:hover{
-    color:#ff7a18;
-}
-.post-plus{
-    background:#ff7a18;
-    color:white!important;
-    width:62px;
-    height:62px;
-    border-radius:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:-34px;
-    border:5px solid #111;
-    box-shadow:0 0 18px rgba(255,122,24,.7);
-    animation:qejaPulse 1.8s infinite;
-}
-.post-plus span{
-    font-size:34px;
-}
-@keyframes qejaPulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.08);}
-    100%{transform:scale(1);}
-}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
+.bottom-nav a:hover{color:#ff7a18;}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
+.post-plus span{font-size:34px;}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
 </style>
 </head>
 
@@ -139,6 +90,15 @@ onAuthStateChanged(auth, async (user) => {
     loadPosts();
 });
 
+function safeText(value, fallback = "") {
+    return value ? String(value) : fallback;
+}
+
+function isWithin20Minutes(item) {
+    if (!item.createdAt) return false;
+    return Date.now() - new Date(item.createdAt).getTime() <= EDIT_LIMIT;
+}
+
 function playLikeSound() {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -154,7 +114,6 @@ function playLikeSound() {
 
         oscillator.connect(gain);
         gain.connect(audioCtx.destination);
-
         oscillator.start();
         oscillator.stop(audioCtx.currentTime + 0.12);
     } catch (e) {}
@@ -163,15 +122,9 @@ function playLikeSound() {
 function popHeart(id) {
     const heart = document.getElementById(id);
     if (!heart) return;
-
     heart.classList.remove("heart-pop");
     void heart.offsetWidth;
     heart.classList.add("heart-pop");
-}
-
-function isWithin20Minutes(item) {
-    if (!item.createdAt) return false;
-    return Date.now() - new Date(item.createdAt).getTime() <= EDIT_LIMIT;
 }
 
 function loadPosts() {
@@ -202,52 +155,54 @@ function loadPosts() {
 
             const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
             const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (post.ownerId || "qeja");
+            const ownerId = post.ownerId || "";
+            const postId = post.postId || "";
 
             const card = document.createElement("div");
             card.className = "post-card";
 
             card.innerHTML = `
-                <a href="details.html?id=${post.postId}">
-                    <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+                <a href="details.html?id=${postId}">
+                    <img class="post-main-img" src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
                 </a>
 
                 <div class="post-body">
-                    <a href="user.html?id=${post.ownerId}" class="owner-link">
+                    <a href="user.html?id=${ownerId}" class="owner-link">
                         <img src="${ownerPhoto}" class="owner-avatar" onerror="this.src='https://i.pravatar.cc/100'">
-                        <span>@${post.ownerName || "QEJA User"}</span>
+                        <span>@${safeText(post.ownerName, "QEJA User")}</span>
                     </a>
 
-                    <a href="details.html?id=${post.postId}" style="text-decoration:none;color:inherit;">
-                        <div class="post-title">${post.title || "Property Listing"}</div>
+                    <a href="details.html?id=${postId}" style="text-decoration:none;color:inherit;">
+                        <div class="post-title">${safeText(post.title, "Property Listing")}</div>
                     </a>
 
-                    <p>${post.location || "Location not added"}</p>
-                    <div class="post-price">${post.price || ""}</div>
-                    <p>${post.description || ""}</p>
+                    <p>${safeText(post.location, "Location not added")}</p>
+                    <div class="post-price">${safeText(post.price, "")}</div>
+                    <p>${safeText(post.description, "")}</p>
 
                     <div class="stat-row">
                         <span><span class="icon-eye">◉</span> ${post.views || 0} views</span>
-                        <span><span id="postHeart-${post.postId}" class="icon-heart">♥</span> ${post.likesCount || post.likes || 0} likes</span>
+                        <span><span id="postHeart-${postId}" class="icon-heart">♥</span> ${post.likesCount || post.likes || 0} likes</span>
                     </div>
 
                     <div class="post-actions">
-                        <button class="orange-btn" onclick="togglePostLike('${post.postId}')">
+                        <button class="orange-btn" onclick="togglePostLike('${postId}')">
                             <span class="icon-heart">♥</span> Like
                         </button>
 
-                        <button class="dark-btn" onclick="openComments('${post.postId}', '${post.ownerId}')">
+                        <button class="dark-btn" onclick="openComments('${postId}', '${ownerId}')">
                             Comment
                         </button>
 
-                        <button class="dark-btn" onclick="sendInquiry('${post.postId}', '${post.ownerId}')">
+                        <button class="dark-btn" onclick="sendInquiry('${postId}', '${ownerId}')">
                             Inquiry
                         </button>
                     </div>
 
-                    <div id="comments-${post.postId}" class="comment-box">
-                        <input id="commentInput-${post.postId}" class="comment-input" placeholder="Write a public comment...">
-                        <button class="orange-btn small-btn" onclick="addRootComment('${post.postId}')">Post Comment</button>
-                        <div id="commentList-${post.postId}"></div>
+                    <div id="comments-${postId}" class="comment-box">
+                        <input id="commentInput-${postId}" class="comment-input" placeholder="Write a public comment...">
+                        <button class="orange-btn small-btn" onclick="addRootComment('${postId}')">Post Comment</button>
+                        <div id="commentList-${postId}"></div>
                     </div>
                 </div>
             `;
@@ -269,6 +224,8 @@ function loadPosts() {
 }
 
 window.togglePostLike = async function(postId) {
+    if (!postId) return;
+
     const likeRef = ref(database, `postLikes/${postId}/${currentUser.uid}`);
     const likeSnap = await get(likeRef);
     const postRef = ref(database, `posts/${postId}`);
@@ -310,33 +267,44 @@ window.openComments = function(postId, postOwnerId) {
 };
 
 window.addRootComment = async function(postId) {
-    const input = document.getElementById("commentInput-" + postId);
-    const text = input.value.trim();
+    try {
+        const input = document.getElementById("commentInput-" + postId);
+        if (!input) {
+            alert("Comment input not found. Refresh and try again.");
+            return;
+        }
 
-    if (!text) {
-        alert("Write a comment first");
-        return;
+        const text = input.value.trim();
+
+        if (!text) {
+            alert("Write a comment first.");
+            return;
+        }
+
+        const commentRef = push(ref(database, `comments/${postId}`));
+
+        await set(commentRef, {
+            id: commentRef.key,
+            postId,
+            parentId: "",
+            userId: currentUser.uid,
+            userName: currentUserData.fullName || "QEJA User",
+            text,
+            likesCount: 0,
+            dislikesCount: 0,
+            createdAt: new Date().toISOString()
+        });
+
+        input.value = "";
+    } catch (error) {
+        alert("Failed to add comment: " + error.message);
     }
-
-    const commentRef = push(ref(database, `comments/${postId}`));
-
-    await set(commentRef, {
-        id: commentRef.key,
-        postId,
-        parentId: null,
-        userId: currentUser.uid,
-        userName: currentUserData.fullName || "QEJA User",
-        text,
-        likesCount: 0,
-        dislikesCount: 0,
-        createdAt: new Date().toISOString()
-    });
-
-    input.value = "";
 };
 
 function loadNestedComments(postId, postOwnerId) {
     const list = document.getElementById("commentList-" + postId);
+
+    if (!list) return;
 
     onValue(ref(database, `comments/${postId}`), (snapshot) => {
         list.innerHTML = "";
@@ -358,6 +326,11 @@ function loadNestedComments(postId, postOwnerId) {
                 return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
             });
 
+        if (roots.length === 0) {
+            list.innerHTML = "<p>No comments yet.</p>";
+            return;
+        }
+
         roots.forEach(comment => {
             list.appendChild(renderComment(postId, postOwnerId, comment, comments, 0));
         });
@@ -365,22 +338,22 @@ function loadNestedComments(postId, postOwnerId) {
 }
 
 function renderComment(postId, postOwnerId, comment, allComments, level) {
-    const currentUserId = currentUser.uid;
-    const isCommentOwner = comment.userId === currentUserId;
-    const isOwnerOfPost = postOwnerId === currentUserId;
+    const isCommentOwner = comment.userId === currentUser.uid;
+    const isOwnerOfPost = postOwnerId === currentUser.uid;
 
     const userCanEdit = isCommentOwner && isWithin20Minutes(comment);
     const userCanDeleteOwn = isCommentOwner && isWithin20Minutes(comment);
-    const postOwnerCanDelete = isOwnerOfPost;
-    const canDelete = userCanDeleteOwn || postOwnerCanDelete;
+    const canDelete = userCanDeleteOwn || isOwnerOfPost;
 
     const wrapper = document.createElement("div");
     wrapper.className = "comment-item";
-    wrapper.style.marginLeft = `${Math.min(level * 22, 90)}px`;
+    wrapper.style.marginLeft = `${Math.min(level * 20, 90)}px`;
+
+    const safeCommentId = comment.id;
 
     wrapper.innerHTML = `
-        <strong>${comment.userName || "QEJA User"}</strong>
-        <p>${comment.text}</p>
+        <strong>${safeText(comment.userName, "QEJA User")}</strong>
+        <p>${safeText(comment.text, "")}</p>
 
         <small>
             <span class="icon-like">▲</span> ${comment.likesCount || 0}
@@ -388,19 +361,19 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
             <span class="icon-dislike">▼</span> ${comment.dislikesCount || 0}
         </small><br>
 
-        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${comment.id}', 'like')">▲ Like</button>
-        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${comment.id}', 'dislike')">▼ Dislike</button>
-        <button class="small-btn dark-btn" onclick="showReplyInput('${postId}', '${comment.id}')">Reply</button>
+        <button class="small-btn orange-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'like')">▲ Like</button>
+        <button class="small-btn dark-btn" onclick="reactToComment('${postId}', '${safeCommentId}', 'dislike')">▼ Dislike</button>
+        <button class="small-btn dark-btn" onclick="showReplyInput('${safeCommentId}')">Reply</button>
 
-        ${userCanEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${comment.id}')">Edit</button>` : ""}
-        ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${comment.id}')">Delete</button>` : ""}
+        ${userCanEdit ? `<button class="small-btn dark-btn" onclick="editNestedComment('${postId}', '${safeCommentId}')">Edit</button>` : ""}
+        ${canDelete ? `<button class="small-btn danger-btn" onclick="deleteNestedComment('${postId}', '${safeCommentId}')">Delete</button>` : ""}
 
-        <div id="replyBox-${comment.id}" style="display:none;margin-top:8px;">
-            <input id="replyInput-${comment.id}" class="comment-input" placeholder="Write a reply...">
-            <button class="small-btn orange-btn" onclick="addNestedReply('${postId}', '${comment.id}')">Post Reply</button>
+        <div id="replyBox-${safeCommentId}" style="display:none;margin-top:8px;">
+            <input id="replyInput-${safeCommentId}" class="comment-input" placeholder="Write a reply...">
+            <button class="small-btn orange-btn" onclick="addNestedReply('${postId}', '${safeCommentId}')">Post Reply</button>
         </div>
 
-        <div id="children-${comment.id}"></div>
+        <div id="children-${safeCommentId}"></div>
     `;
 
     const children = allComments
@@ -412,7 +385,7 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
             return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
         });
 
-    const childBox = wrapper.querySelector(`#children-${comment.id}`);
+    const childBox = wrapper.querySelector(`[id="children-${safeCommentId}"]`);
 
     children.forEach(child => {
         childBox.appendChild(renderComment(postId, postOwnerId, child, allComments, level + 1));
@@ -421,7 +394,7 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
     return wrapper;
 }
 
-window.showReplyInput = function(postId, commentId) {
+window.showReplyInput = function(commentId) {
     const box = document.getElementById("replyBox-" + commentId);
 
     if (!box) {
@@ -433,35 +406,39 @@ window.showReplyInput = function(postId, commentId) {
 };
 
 window.addNestedReply = async function(postId, parentId) {
-    const input = document.getElementById("replyInput-" + parentId);
+    try {
+        const input = document.getElementById("replyInput-" + parentId);
 
-    if (!input) {
-        alert("Reply input not found. Refresh and try again.");
-        return;
+        if (!input) {
+            alert("Reply input not found. Refresh and try again.");
+            return;
+        }
+
+        const text = input.value.trim();
+
+        if (!text) {
+            alert("Write a reply first.");
+            return;
+        }
+
+        const replyRef = push(ref(database, `comments/${postId}`));
+
+        await set(replyRef, {
+            id: replyRef.key,
+            postId,
+            parentId,
+            userId: currentUser.uid,
+            userName: currentUserData.fullName || "QEJA User",
+            text,
+            likesCount: 0,
+            dislikesCount: 0,
+            createdAt: new Date().toISOString()
+        });
+
+        input.value = "";
+    } catch (error) {
+        alert("Failed to add reply: " + error.message);
     }
-
-    const text = input.value.trim();
-
-    if (!text) {
-        alert("Write a reply first");
-        return;
-    }
-
-    const replyRef = push(ref(database, `comments/${postId}`));
-
-    await set(replyRef, {
-        id: replyRef.key,
-        postId,
-        parentId,
-        userId: currentUser.uid,
-        userName: currentUserData.fullName || "QEJA User",
-        text,
-        likesCount: 0,
-        dislikesCount: 0,
-        createdAt: new Date().toISOString()
-    });
-
-    input.value = "";
 };
 
 window.editNestedComment = async function(postId, commentId) {
