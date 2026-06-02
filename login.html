@@ -3,66 +3,73 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - qeja</title>
+<title>Login - QEJA</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+body{background:#f4f4f4;min-height:100vh;}
+.auth-header{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;}
+.logo{font-size:30px;font-weight:900;color:#ff7a18;}
+.auth-wrap{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:40px 7%;}
+.auth-card{background:white;width:100%;max-width:440px;border-radius:24px;padding:26px;box-shadow:0 10px 25px rgba(0,0,0,.1);}
+.auth-card h1{text-align:center;margin-bottom:8px;}
+.auth-card p{text-align:center;color:#666;margin-bottom:22px;}
+.auth-card input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #ddd;box-sizing:border-box;}
+.auth-btn{width:100%;background:#ff7a18;color:white;border:none;padding:14px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:12px;}
+.auth-btn:disabled{background:#ccc;cursor:not-allowed;}
+.auth-link{text-align:center;margin-top:18px;}
+.auth-link a{color:#ff7a18;font-weight:bold;text-decoration:none;}
+</style>
 </head>
+
 <body>
 
-<nav class="navbar">
-    <div class="logo">qeja</div>
-    <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="property.html">Properties</a></li>
-        <li><a href="reels.html">Reels</a></li>
-        <li><a href="messages.html">Messages</a></li>
-        <li><a href="profile.html">Profile</a></li>
-    </ul>
-    <a href="signup.html" class="login-btn">Sign Up</a>
-</nav>
+<header class="auth-header">
+    <div class="logo">QEJA</div>
+    <a href="signup.html" style="color:white;text-decoration:none;font-weight:bold;">Sign Up</a>
+</header>
 
-<section style="padding:130px 7% 70px; min-height:80vh;">
-    <div class="property-card" style="max-width:450px;margin:auto;">
-        <div class="property-info">
-            <h2 style="text-align:center;margin-bottom:20px;">Login</h2>
+<main class="auth-wrap">
+    <div class="auth-card">
+        <h1>Welcome Back</h1>
+        <p>Login to continue to QEJA.</p>
 
-            <input id="email" type="email" placeholder="Email address" style="width:100%;padding:14px;margin-bottom:15px;border-radius:8px;border:1px solid #ddd;">
-            <input id="password" type="password" placeholder="Password" style="width:100%;padding:14px;margin-bottom:20px;border-radius:8px;border:1px solid #ddd;">
+        <input id="email" type="email" placeholder="Email address">
+        <input id="password" type="password" placeholder="Password">
 
-            <button id="loginBtn" style="width:100%;background:#ff7a18;color:white;border:none;padding:14px;border-radius:30px;cursor:pointer;">
-                Login
-            </button>
+        <button id="loginBtn" class="auth-btn">Login</button>
 
-            <p style="text-align:center;margin-top:20px;">
-                Don't have an account?
-                <a href="signup.html" style="color:#ff7a18;">Create one</a>
-            </p>
+        <div class="auth-link">
+            Don't have an account?
+            <a href="signup.html">Create one</a>
         </div>
     </div>
-</section>
-
-<footer>
-    <p>&copy; 2026 qeja.com. All rights reserved.</p>
-</footer>
+</main>
 
 <script type="module">
 import { auth } from "./firebase.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 document.getElementById("loginBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("loginBtn");
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     if (!email || !password) {
-        alert("Please enter email and password");
+        alert("Please enter email and password.");
         return;
     }
 
+    btn.disabled = true;
+    btn.textContent = "Logging in...";
+
     try {
         await signInWithEmailAndPassword(auth, email, password);
-        alert("Login successful!");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
     } catch (error) {
         alert(error.message);
+        btn.disabled = false;
+        btn.textContent = "Login";
     }
 });
 </script>
