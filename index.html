@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <title>QEJA - Discover Properties, Rentals, Land & Real Estate</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<title>QEJA - Discover Properties, Rentals, Land & Real Estate</title>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="QEJA helps you discover rentals, houses, land, hostels, Airbnb listings and real estate opportunities across Africa.">
-
 <meta name="keywords" content="QEJA, property listings, rentals, houses, land, real estate, apartments, hostels, Kenya">
-
 <meta name="robots" content="index, follow">
-
 <link rel="canonical" href="https://qeja.com.ng/">
-    <meta property="og:title" content="QEJA">
+
+<meta property="og:title" content="QEJA">
 <meta property="og:description" content="Discover Properties, Rentals & Opportunities">
 <meta property="og:url" content="https://qeja.com.ng/">
 <meta property="og:type" content="website">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="style.css">
 
 <style>
@@ -28,7 +27,7 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .post-main-img{width:100%;height:360px;object-fit:cover;display:block;background:#eee;}
 .post-body{padding:20px;}
 .owner-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#111;font-weight:bold;margin-bottom:8px;}
-.owner-avatar{width:32px!important;height:32px!important;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;display:inline-block!important;}
+.owner-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:#eee;border:2px solid #ff7a18;}
 .post-title{font-size:24px;font-weight:bold;margin-top:6px;}
 .post-price{color:#ff7a18;font-weight:bold;margin:8px 0;}
 .stat-row{display:flex;gap:18px;align-items:center;margin:12px 0;color:#555;font-weight:bold;flex-wrap:wrap;}
@@ -141,7 +140,12 @@ function popHeart(id) {
 }
 
 function loadPosts() {
-    const feed = document.getElementById("feedContainer") || document.getElementById("homeFeed");
+    const feed = document.getElementById("feedContainer");
+
+    if (!feed) {
+        alert("Home feed container not found.");
+        return;
+    }
 
     onValue(ref(database, "posts"), (snapshot) => {
         feed.innerHTML = "";
@@ -159,17 +163,25 @@ function loadPosts() {
         }
 
         const posts = [];
-        snapshot.forEach(child => posts.push(child.val()));
+
+        snapshot.forEach(child => {
+            const post = child.val() || {};
+            post.realPostId = post.postId || child.key;
+            posts.push(post);
+        });
 
         posts.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
-        posts.forEach(post => {
-            if (post.status === "draft") return;
+        let shown = 0;
 
-            const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-            const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (post.ownerId || "qeja");
+        posts.forEach(post => {
+            if (post.status === "draft" || post.visibility === "draft") return;
+
+            const postId = post.realPostId;
             const ownerId = post.ownerId || "";
-            const postId = post.postId || "";
+            const image = post.imageURL || (post.imageURLs && post.imageURLs[0]) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+            const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (ownerId || "qeja");
+            const ownerLink = ownerId ? `user.html?id=${ownerId}` : "#";
 
             const card = document.createElement("div");
             card.className = "post-card";
@@ -180,7 +192,7 @@ function loadPosts() {
                 </a>
 
                 <div class="post-body">
-                    <a href="${post.ownerId ? 'user.html?id=' + post.ownerId : '#'}" class="owner-link">
+                    <a href="${ownerLink}" class="owner-link">
                         <img src="${ownerPhoto}" class="owner-avatar" onerror="this.src='https://i.pravatar.cc/100'">
                         <span>@${safeText(post.ownerName, "QEJA User")}</span>
                     </a>
@@ -221,9 +233,10 @@ function loadPosts() {
             `;
 
             feed.appendChild(card);
+            shown++;
         });
 
-        if (!feed.innerHTML.trim()) {
+        if (shown === 0) {
             feed.innerHTML = `
                 <div class="post-card">
                     <div class="post-body">
@@ -280,43 +293,35 @@ window.openComments = function(postId, postOwnerId) {
 };
 
 window.addRootComment = async function(postId) {
-    try {
-        const input = document.getElementById("commentInput-" + postId);
-        if (!input) {
-            alert("Comment input not found. Refresh and try again.");
-            return;
-        }
+    const input = document.getElementById("commentInput-" + postId);
+    if (!input) return;
 
-        const text = input.value.trim();
+    const text = input.value.trim();
 
-        if (!text) {
-            alert("Write a comment first.");
-            return;
-        }
-
-        const commentRef = push(ref(database, `comments/${postId}`));
-
-        await set(commentRef, {
-            id: commentRef.key,
-            postId,
-            parentId: "",
-            userId: currentUser.uid,
-            userName: currentUserData.fullName || "QEJA User",
-            text,
-            likesCount: 0,
-            dislikesCount: 0,
-            createdAt: new Date().toISOString()
-        });
-
-        input.value = "";
-    } catch (error) {
-        alert("Failed to add comment: " + error.message);
+    if (!text) {
+        alert("Write a comment first.");
+        return;
     }
+
+    const commentRef = push(ref(database, `comments/${postId}`));
+
+    await set(commentRef, {
+        id: commentRef.key,
+        postId,
+        parentId: "",
+        userId: currentUser.uid,
+        userName: currentUserData.fullName || "QEJA User",
+        text,
+        likesCount: 0,
+        dislikesCount: 0,
+        createdAt: new Date().toISOString()
+    });
+
+    input.value = "";
 };
 
 function loadNestedComments(postId, postOwnerId) {
     const list = document.getElementById("commentList-" + postId);
-
     if (!list) return;
 
     onValue(ref(database, `comments/${postId}`), (snapshot) => {
@@ -409,49 +414,36 @@ function renderComment(postId, postOwnerId, comment, allComments, level) {
 
 window.showReplyInput = function(commentId) {
     const box = document.getElementById("replyBox-" + commentId);
-
-    if (!box) {
-        alert("Reply box not found. Refresh and try again.");
-        return;
-    }
-
+    if (!box) return;
     box.style.display = box.style.display === "block" ? "none" : "block";
 };
 
 window.addNestedReply = async function(postId, parentId) {
-    try {
-        const input = document.getElementById("replyInput-" + parentId);
+    const input = document.getElementById("replyInput-" + parentId);
+    if (!input) return;
 
-        if (!input) {
-            alert("Reply input not found. Refresh and try again.");
-            return;
-        }
+    const text = input.value.trim();
 
-        const text = input.value.trim();
-
-        if (!text) {
-            alert("Write a reply first.");
-            return;
-        }
-
-        const replyRef = push(ref(database, `comments/${postId}`));
-
-        await set(replyRef, {
-            id: replyRef.key,
-            postId,
-            parentId,
-            userId: currentUser.uid,
-            userName: currentUserData.fullName || "QEJA User",
-            text,
-            likesCount: 0,
-            dislikesCount: 0,
-            createdAt: new Date().toISOString()
-        });
-
-        input.value = "";
-    } catch (error) {
-        alert("Failed to add reply: " + error.message);
+    if (!text) {
+        alert("Write a reply first.");
+        return;
     }
+
+    const replyRef = push(ref(database, `comments/${postId}`));
+
+    await set(replyRef, {
+        id: replyRef.key,
+        postId,
+        parentId,
+        userId: currentUser.uid,
+        userName: currentUserData.fullName || "QEJA User",
+        text,
+        likesCount: 0,
+        dislikesCount: 0,
+        createdAt: new Date().toISOString()
+    });
+
+    input.value = "";
 };
 
 window.editNestedComment = async function(postId, commentId) {
