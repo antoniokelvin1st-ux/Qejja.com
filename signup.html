@@ -99,10 +99,19 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
         alert("Account created successfully!");
         window.location.href = "profile.html";
 
-    } catch (error) {
-        alert(error.message);
-        btn.disabled = false;
-        btn.textContent = "Create Account";
+   catch (error) {
+    let message = "Signup failed. Please try again.";
+
+    if (error.code === "auth/email-already-in-use") {
+        message = "Email already exists. Sign in to continue.";
+    } else if (error.code === "auth/invalid-email") {
+        message = "Please enter a valid email address.";
+    } else if (error.code === "auth/weak-password") {
+        message = "Password should be at least 6 characters.";
+    }
+
+    alert(message);
+}
     }
 });
 </script>
