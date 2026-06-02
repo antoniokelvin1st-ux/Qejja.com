@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discover - QEJA</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{padding-bottom:90px;background:#f4f4f4;}
+.top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{font-size:30px;font-weight:900;color:#ff7a18;}
+.explore-wrap{padding:30px 7% 100px;max-width:1100px;margin:auto;}
+.hero-card{background:#111;color:white;border-radius:24px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.18);margin-bottom:22px;}
+.hero-card h1{font-size:36px;margin-bottom:8px;}
+.hero-card p{color:#ddd;}
+.quick-row{display:flex;gap:10px;overflow-x:auto;margin:18px 0 22px;padding-bottom:6px;}
+.quick-chip{border:none;background:white;color:#111;padding:11px 16px;border-radius:24px;font-weight:bold;white-space:nowrap;box-shadow:0 6px 16px rgba(0,0,0,.07);cursor:pointer;}
+.quick-chip.active{background:#ff7a18;color:white;}
+.search-panel{background:white;padding:20px;border-radius:22px;box-shadow:0 8px 20px rgba(0,0,0,.08);margin-bottom:25px;}
+.search-panel input,.search-panel select{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #ddd;box-sizing:border-box;}
+.filter-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:24px 0 14px;}
+.section-head h2{font-size:24px;}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.result-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.08);position:relative;}
+.result-card img{width:100%;height:220px;object-fit:cover;background:#eee;display:block;}
+.featured-badge{position:absolute;top:12px;left:12px;background:#ff7a18;color:white;padding:7px 12px;border-radius:18px;font-size:12px;font-weight:bold;}
+.result-info{padding:16px;}
+.result-info h3{margin-bottom:8px;font-size:18px;}
+.price{color:#ff7a18;font-weight:900;margin:8px 0;}
+.meta-row{display:flex;justify-content:space-between;gap:8px;color:#666;font-size:13px;margin:8px 0;flex-wrap:wrap;}
+.owner-line{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.owner-line img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #ff7a18;}
+.owner-line a{text-decoration:none;color:#111;font-weight:bold;font-size:13px;}
+.view-link{display:inline-block;margin-top:12px;color:#ff7a18;font-weight:bold;text-decoration:none;}
+.empty{background:white;padding:20px;border-radius:18px;box-shadow:0 8px 20px rgba(0,0,0,.08);color:#555;}
+
+/* QEJA Bottom Navigation */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#111;
+    border-top:1px solid rgba(255,255,255,.08);
+    height:74px;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    z-index:200;
+    box-shadow:0 -8px 25px rgba(0,0,0,.25);
+}
+.bottom-nav a{
+    text-decoration:none;
+    color:#ddd;
+    font-size:12px;
+    font-weight:bold;
+    text-align:center;
+}
+.bottom-nav span{
+    display:block;
+    font-size:24px;
+    margin-bottom:2px;
+}
+.bottom-nav a:hover{color:#ff7a18;}
+.post-plus{
+    background:#ff7a18;
+    color:white!important;
+    width:62px;
+    height:62px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:-34px;
+    border:5px solid #111;
+    box-shadow:0 0 18px rgba(255,122,24,.7);
+    animation:qejaPulse 1.8s infinite;
+}
+.post-plus span{font-size:34px;}
+@keyframes qejaPulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+}
+@media(max-width:760px){
+    .filter-row{grid-template-columns:1fr;}
+    .hero-card h1{font-size:30px;}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top-appbar">
+    <div class="logo">QEJA</div>
+    <a href="settings.html" style="color:white;text-decoration:none;font-weight:bold;">⚙ Settings</a>
+</header>
+
+<main class="explore-wrap">
+    <div class="hero-card">
+        <h1>Discover</h1>
+        <p>Find rentals, apartments, land, hostels, Airbnb stays, property reels, and trusted agents.</p>
+    </div>
+
+    <div class="quick-row">
+        <button class="quick-chip active" onclick="setQuickFilter('all', this)">All</button>
+        <button class="quick-chip" onclick="setQuickFilter('featured', this)">⭐ Featured</button>
+        <button class="quick-chip" onclick="setQuickFilter('trending', this)">🔥 Trending</button>
+        <button class="quick-chip" onclick="setQuickFilter('latest', this)">🆕 Latest</button>
+        <button class="quick-chip" onclick="setQuickFilter('reels', this)">🎬 Reels</button>
+    </div>
+
+    <div class="search-panel">
+        <input id="searchInput" type="text" placeholder="Search by title, location, price, owner...">
+
+        <div class="filter-row">
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Rental">Rental</option>
+                <option value="Apartment">Apartment</option>
+                <option value="House">House</option>
+                <option value="Land">Land / Plot</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Hostel">Hostel</option>
+                <option value="Airbnb">Airbnb</option>
+                <option value="Office">Office</option>
+            </select>
+
+            <select id="sortFilter">
+                <option value="latest">Latest</option>
+                <option value="likes">Most Liked</option>
+                <option value="views">Most Viewed</option>
+                <option value="inquiries">Most Inquired</option>
+            </select>
+
+            <select id="typeFilter">
+                <option value="">Posts & Reels</option>
+                <option value="Property">Posts Only</option>
+                <option value="Reel">Reels Only</option>
+                <option value="Featured">Featured Only</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-head">
+        <h2 id="sectionTitle">All Discoveries</h2>
+        <small id="resultCount">0 results</small>
+    </div>
+
+    <div id="resultsContainer" class="result-grid">Loading...</div>
+</main>
+
+<nav class="bottom-nav">
+    <a href="index.html"><span>⌂</span>Home</a>
+    <a href="explore.html"><span>🧭</span>Discover</a>
+    <a href="post.html" class="post-plus"><span>＋</span></a>
+    <a href="inbox.html"><span>🔔</span>Activity</a>
+    <a href="profile.html"><span>◎</span>Profile</a>
+</nav>
+
+<script type="module">
+import { auth, database } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+let allPosts = [];
+let quickMode = "all";
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    loadDiscoverPosts();
+});
+
+function loadDiscoverPosts() {
+    onValue(ref(database, "posts"), (snapshot) => {
+        allPosts = [];
+
+        if (snapshot.exists()) {
+            snapshot.forEach(child => {
+                const post = child.val();
+
+                if (!post.status || post.status === "public") {
+                    allPosts.push(post);
+                }
+            });
+        }
+
+        renderResults();
+    });
+}
+
+window.setQuickFilter = function(mode, button) {
+    quickMode = mode;
+
+    document.querySelectorAll(".quick-chip").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    if (mode === "reels") {
+        document.getElementById("typeFilter").value = "Reel";
+    } else if (mode === "featured") {
+        document.getElementById("typeFilter").value = "Featured";
+    } else {
+        document.getElementById("typeFilter").value = "";
+    }
+
+    renderResults();
+};
+
+function renderResults() {
+    const container = document.getElementById("resultsContainer");
+    const search = document.getElementById("searchInput").value.toLowerCase().trim();
+    const category = document.getElementById("categoryFilter").value;
+    const sort = document.getElementById("sortFilter").value;
+    const typeFilter = document.getElementById("typeFilter").value;
+
+    let filtered = allPosts.filter(post => {
+        const text = `
+            ${post.title || ""}
+            ${post.location || ""}
+            ${post.price || ""}
+            ${post.ownerName || ""}
+            ${post.description || ""}
+            ${post.category || ""}
+        `.toLowerCase();
+
+        const matchesSearch = !search || text.includes(search);
+        const matchesCategory = !category || post.category === category;
+        const matchesType = !typeFilter ||
+            post.type === typeFilter ||
+            (typeFilter === "Reel" && post.videoURL) ||
+            (typeFilter === "Featured" && (post.type === "Featured" || post.isFeatured));
+
+        return matchesSearch && matchesCategory && matchesType;
+    });
+
+    if (quickMode === "trending") {
+        filtered.sort((a,b) => {
+            const scoreA = (a.likesCount || a.likes || 0) + (a.views || 0) + ((a.inquiries || 0) * 3);
+            const scoreB = (b.likesCount || b.likes || 0) + (b.views || 0) + ((b.inquiries || 0) * 3);
+            return scoreB - scoreA;
+        });
+        document.getElementById("sectionTitle").textContent = "Trending Properties";
+    } else if (quickMode === "featured") {
+        document.getElementById("sectionTitle").textContent = "Featured Listings";
+    } else if (quickMode === "latest") {
+        filtered.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        document.getElementById("sectionTitle").textContent = "Latest Listings";
+    } else if (quickMode === "reels") {
+        document.getElementById("sectionTitle").textContent = "Property Reels";
+    } else {
+        document.getElementById("sectionTitle").textContent = "All Discoveries";
+    }
+
+    if (quickMode !== "trending" && quickMode !== "latest") {
+        if (sort === "likes") {
+            filtered.sort((a,b) => (b.likesCount || b.likes || 0) - (a.likesCount || a.likes || 0));
+        } else if (sort === "views") {
+            filtered.sort((a,b) => (b.views || 0) - (a.views || 0));
+        } else if (sort === "inquiries") {
+            filtered.sort((a,b) => (b.inquiries || 0) - (a.inquiries || 0));
+        } else {
+            filtered.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        }
+    }
+
+    document.getElementById("resultCount").textContent = filtered.length + " results";
+    container.innerHTML = "";
+
+    if (filtered.length === 0) {
+        container.innerHTML = "<div class='empty'>No matching properties found.</div>";
+        return;
+    }
+
+    filtered.forEach(post => {
+        const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+        const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/100?u=" + (post.ownerId || "qeja");
+        const isFeatured = post.type === "Featured" || post.isFeatured;
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        card.innerHTML = `
+            ${isFeatured ? `<div class="featured-badge">FEATURED</div>` : ""}
+
+            <a href="details.html?id=${post.postId}">
+                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            </a>
+
+            <div class="result-info">
+                <h3>${post.title || "Property Listing"}</h3>
+                <p>${post.location || "Location not added"}</p>
+                <div class="price">${post.price || ""}</div>
+                <p>${(post.description || "").substring(0, 90)}${(post.description || "").length > 90 ? "..." : ""}</p>
+
+                <div class="meta-row">
+                    <span>◉ ${post.views || 0} views</span>
+                    <span>♥ ${post.likesCount || post.likes || 0} likes</span>
+                    <span>📩 ${post.inquiries || 0}</span>
+                </div>
+
+                <div class="owner-line">
+                    <img src="${ownerPhoto}" onerror="this.src='https://i.pravatar.cc/100'">
+                    <a href="user.html?id=${post.ownerId}">@${post.ownerName || "QEJA User"}</a>
+                </div>
+
+                <a href="details.html?id=${post.postId}" class="view-link">View Property</a>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+document.getElementById("searchInput").addEventListener("input", renderResults);
+document.getElementById("categoryFilter").addEventListener("change", renderResults);
+document.getElementById("sortFilter").addEventListener("change", renderResults);
+document.getElementById("typeFilter").addEventListener("change", renderResults);
+</script>
+
+</body>
+</html>
