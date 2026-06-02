@@ -3,84 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Property Details - QEJA</title>
+<title>User Profile - QEJA</title>
 <link rel="stylesheet" href="style.css">
 
 <style>
 body{padding-bottom:90px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
-.details-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
-.details-card{background:white;border-radius:22px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.08);}
-.details-card img.main-img{width:100%;height:420px;object-fit:cover;background:#eee;}
-.details-info{padding:22px;}
-.price{color:#ff7a18;font-weight:900;font-size:24px;margin:10px 0;}
-.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;}
-.action-row a,.action-row button{border:none;text-decoration:none;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
-.orange{background:#ff7a18;color:white;}
-.dark{background:#111;color:white;}
-.green{background:#25D366;color:white;}
-.blue{background:#0077cc;color:white;}
+.user-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
+.user-card{text-align:center;background:white;border-radius:22px;padding:28px 18px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.profile-pic{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #ff7a18;background:#eee;}
+.username{font-size:28px;font-weight:900;margin-top:12px;}
+.handle{color:#777;font-weight:bold;margin-top:3px;}
+.bio{max-width:620px;margin:12px auto;color:#333;}
+.btn-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;}
+.follow-btn,.message-btn{border:none;padding:12px 28px;border-radius:30px;font-weight:bold;cursor:pointer;}
+.follow-btn{background:#ff7a18;color:white;}
+.message-btn{background:#111;color:white;}
+.stats{display:flex;justify-content:center;gap:30px;margin-top:22px;flex-wrap:wrap;}
+.stat strong{font-size:22px;display:block;}
+.stat span{color:#777;font-weight:bold;}
+.profile-tabs{display:flex;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap;}
+.tab-btn{border:none;background:white;padding:10px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
+.tab-btn.active{background:#ff7a18;color:white;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:20px;}
+.grid-card{background:white;overflow:hidden;}
+.grid-card img{width:100%;height:220px;object-fit:cover;background:#ddd;}
+.grid-info{padding:10px;background:white;}
+.grid-info h4{font-size:14px;margin-bottom:4px;}
+.grid-info p{font-size:13px;color:#555;}
 
-.owner-box{background:#f4f4f4;border-radius:18px;padding:16px;margin-top:18px;display:flex;gap:14px;align-items:center;}
-.owner-box img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid #ff7a18;background:#eee;}
-.owner-info{flex:1;}
-.owner-info a{text-decoration:none;color:#111;font-weight:900;}
-.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
-.owner-actions a,.owner-actions button{padding:8px 14px;border-radius:20px;border:none;text-decoration:none;font-weight:bold;cursor:pointer;font-size:13px;}
-
-.gallery-strip{display:flex;gap:8px;overflow-x:auto;padding:10px 0;}
-.gallery-strip img{width:80px;height:70px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent;}
-.gallery-strip img.active{border-color:#ff7a18;}
-
-/* QEJA Bottom Navigation */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:#111;
-    border-top:1px solid rgba(255,255,255,.08);
-    height:74px;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    z-index:200;
-    box-shadow:0 -8px 25px rgba(0,0,0,.25);
-}
-.bottom-nav a{
-    text-decoration:none;
-    color:#ddd;
-    font-size:12px;
-    font-weight:bold;
-    text-align:center;
-}
-.bottom-nav span{
-    display:block;
-    font-size:24px;
-    margin-bottom:2px;
-}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
+.bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
+.bottom-nav span{display:block;font-size:24px;margin-bottom:2px;}
 .bottom-nav a:hover{color:#ff7a18;}
-.post-plus{
-    background:#ff7a18;
-    color:white!important;
-    width:62px;
-    height:62px;
-    border-radius:22px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:-34px;
-    border:5px solid #111;
-    box-shadow:0 0 18px rgba(255,122,24,.7);
-    animation:qejaPulse 1.8s infinite;
-}
+.post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
-@keyframes qejaPulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.08);}
-    100%{transform:scale(1);}
-}
+@keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
+@media(max-width:700px){.grid-card img{height:150px;}.user-wrap{padding:18px 4% 95px;}}
 </style>
 </head>
 
@@ -91,8 +51,51 @@ body{padding-bottom:90px;background:#f4f4f4;}
     <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
 </header>
 
-<main class="details-wrap">
-    <div id="detailsContainer">Loading property...</div>
+<main class="user-wrap">
+    <section class="user-card">
+        <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
+
+        <div id="profileName" class="username">Loading...</div>
+        <div id="profileHandle" class="handle">@qeja.user</div>
+        <p id="profileBio" class="bio">Loading bio...</p>
+
+        <div class="btn-row">
+            <button id="followBtn" class="follow-btn">Follow</button>
+            <button id="messageBtn" class="message-btn">Message</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <strong id="listingsCount">0</strong>
+                <span>Listings</span>
+            </div>
+            <div class="stat">
+                <strong id="followersCount">0</strong>
+                <span>Followers</span>
+            </div>
+            <div class="stat">
+                <strong id="followingCount">0</strong>
+                <span>Following</span>
+            </div>
+            <div class="stat">
+                <strong id="likesCount">0</strong>
+                <span>Likes</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="profile-tabs">
+        <button class="tab-btn active" onclick="showTab('posts')">Posts</button>
+        <button class="tab-btn" onclick="showTab('reels')">Reels</button>
+    </div>
+
+    <section id="postsTab">
+        <div id="userPostsGrid" class="grid"></div>
+    </section>
+
+    <section id="reelsTab" style="display:none;">
+        <div id="userReelsGrid" class="grid"></div>
+    </section>
 </main>
 
 <nav class="bottom-nav">
@@ -106,15 +109,16 @@ body{padding-bottom:90px;background:#f4f4f4;}
 <script type="module">
 import { auth, database } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { ref, get, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { ref, get, set, remove, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
 let currentUserData = null;
-let currentPost = null;
-let displayViews = 0;
+let targetUserId = null;
+let targetUserData = null;
+let userPosts = [];
 
 const params = new URLSearchParams(window.location.search);
-const postId = params.get("id");
+targetUserId = params.get("id");
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -124,210 +128,260 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    const userSnap = await get(ref(database, "users/" + user.uid));
-    currentUserData = userSnap.exists() ? userSnap.val() : {
+    const mySnap = await get(ref(database, "users/" + currentUser.uid));
+    currentUserData = mySnap.exists() ? mySnap.val() : {
         fullName: "QEJA User",
-        email: user.email
+        email: currentUser.email
     };
 
-    loadDetails();
+    if (!targetUserId || targetUserId === "undefined" || targetUserId === "null") {
+        alert("No user selected.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    if (targetUserId === currentUser.uid) {
+        window.location.href = "profile.html";
+        return;
+    }
+
+    await loadUserProfile();
+    loadFollowStatus();
+    loadFollowerCounts();
+    loadUserPosts();
 });
 
-function cleanPhone(phone) {
-    if (!phone) return "";
-    let cleaned = phone.replace(/\D/g, "");
-
-    if (cleaned.startsWith("0")) {
-        cleaned = "254" + cleaned.substring(1);
-    }
-
-    if (!cleaned.startsWith("254")) {
-        cleaned = "254" + cleaned;
-    }
-
-    return cleaned;
-}
-
-async function countUniqueView(post) {
-    const viewRef = ref(database, `postViews/${postId}/${currentUser.uid}`);
-    const viewSnap = await get(viewRef);
-
-    displayViews = post.views || 0;
-
-    if (!viewSnap.exists()) {
-        await set(viewRef, {
-            userId: currentUser.uid,
-            viewedAt: new Date().toISOString()
-        });
-
-        displayViews = displayViews + 1;
-
-        await update(ref(database, "posts/" + postId), {
-            views: displayViews
-        });
-    }
-}
-
-async function loadDetails() {
-    const container = document.getElementById("detailsContainer");
-
-    if (!postId) {
-        container.innerHTML = "<p>No property selected.</p>";
-        return;
-    }
-
-    const snap = await get(ref(database, "posts/" + postId));
+async function loadUserProfile() {
+    const snap = await get(ref(database, "users/" + targetUserId));
 
     if (!snap.exists()) {
-        container.innerHTML = "<p>Property not found.</p>";
+        alert("User not found.");
+        window.location.href = "index.html";
         return;
     }
 
-    const post = snap.val();
-    currentPost = post;
+    targetUserData = snap.val();
 
-    await countUniqueView(post);
+    document.getElementById("profileName").textContent = targetUserData.fullName || "QEJA User";
+    document.getElementById("profileHandle").textContent = "@" + (targetUserData.handle || targetUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
+    document.getElementById("profileBio").textContent = targetUserData.bio || "No bio added yet.";
 
-    const images = Array.isArray(post.imageURLs) && post.imageURLs.length > 0
-        ? post.imageURLs
-        : [post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6"];
-
-    const mainImage = images[0];
-    const phone = cleanPhone(post.contactPhone || "");
-    const whatsapp = cleanPhone(post.whatsappNumber || post.contactPhone || "");
-    const email = post.contactEmail || post.ownerEmail || "";
-    const locationQuery = encodeURIComponent(post.location || "");
-    const mapsLink = "https://www.google.com/maps/search/?api=1&query=" + locationQuery;
-
-    const whatsappText = encodeURIComponent(`Hello, I saw your property on QEJA: ${post.title}. Is it still available?`);
-    const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}?text=${whatsappText}` : "#";
-    const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/150?u=" + (post.ownerId || "qeja");
-
-    container.innerHTML = `
-        <div class="details-card">
-            <img id="mainPropertyImage" class="main-img" src="${mainImage}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
-
-            <div class="details-info">
-                ${images.length > 1 ? `
-                    <div class="gallery-strip">
-                        ${images.map((img, index) => `
-                            <img src="${img}" class="${index === 0 ? "active" : ""}" onclick="changeMainImage('${img}', this)">
-                        `).join("")}
-                    </div>
-                ` : ""}
-
-                <h1>${post.title || "Property Listing"}</h1>
-                <div class="price">${post.price || ""}</div>
-
-                <p><strong>Location:</strong> ${post.location || "Not added"}</p>
-                <p><strong>Category:</strong> ${post.category || "Property"}</p>
-                <p><strong>Type:</strong> ${post.type || "Property Post"}</p>
-                <p>${post.description || ""}</p>
-
-                <p>
-                    Views: ${displayViews} |
-                    Likes: ${post.likesCount || post.likes || 0} |
-                    Inquiries: ${post.inquiries || 0}
-                </p>
-
-                <div class="action-row">
-                    <a class="green" href="${whatsappLink}" target="_blank">WhatsApp</a>
-                    <a class="orange" href="${phone ? "tel:+" + phone : "#"}">Call</a>
-                    <a class="blue" href="${email ? "mailto:" + email : "#"}">Email</a>
-                    <a class="dark" href="${mapsLink}" target="_blank">Open Location</a>
-                    <button class="dark" onclick="toggleSaveProperty('${post.postId}')">Save Property</button>
-                    <button class="orange" onclick="sendInquiry('${post.postId}', '${post.ownerId}')">Send Inquiry</button>
-                </div>
-
-                <div class="owner-box">
-                    <img src="${ownerPhoto}" onerror="this.src='https://i.pravatar.cc/150'">
-
-                    <div class="owner-info">
-                        <h3>Owner / Agent</h3>
-                        <a href="user.html?id=${post.ownerId}">
-                            ${post.contactName || post.ownerName || "QEJA User"}
-                        </a>
-                        <p>${post.contactPhone || "Phone not added"} · ${email || "Email not added"}</p>
-
-                        <div class="owner-actions">
-                            <a class="dark" href="user.html?id=${post.ownerId}">View Profile</a>
-                            <button class="orange" onclick="startMessage('${post.ownerId}')">Message</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+    if (targetUserData.photoURL) {
+        document.getElementById("profileImage").src = targetUserData.photoURL;
+    }
 }
 
-window.changeMainImage = function(imageUrl, el) {
-    document.getElementById("mainPropertyImage").src = imageUrl;
+async function loadFollowStatus() {
+    const btn = document.getElementById("followBtn");
+    const followSnap = await get(ref(database, `followers/${targetUserId}/${currentUser.uid}`));
 
-    document.querySelectorAll(".gallery-strip img").forEach(img => {
-        img.classList.remove("active");
-    });
+    if (followSnap.exists()) {
+        btn.textContent = "Following";
+        btn.style.background = "#111";
+    } else {
+        btn.textContent = "Follow";
+        btn.style.background = "#ff7a18";
+    }
+}
 
-    el.classList.add("active");
-};
-
-window.sendInquiry = async function(postId, ownerId) {
-    if (!ownerId) {
-        alert("Owner not found.");
+document.getElementById("followBtn").addEventListener("click", async () => {
+    if (!currentUser || !targetUserId) {
+        alert("User not ready. Refresh and try again.");
         return;
     }
 
-    const leadRef = push(ref(database, "leads/" + ownerId));
+    if (currentUser.uid === targetUserId) {
+        alert("You cannot follow yourself.");
+        return;
+    }
 
-    await set(leadRef, {
-        leadId: leadRef.key,
-        postId,
-        interestedUserId: currentUser.uid,
-        interestedUserName: currentUserData.fullName || "QEJA User",
-        interestedUserEmail: currentUser.email,
-        createdAt: new Date().toISOString(),
-        status: "new"
-    });
+    const followerRef = ref(database, `followers/${targetUserId}/${currentUser.uid}`);
+    const followingRef = ref(database, `following/${currentUser.uid}/${targetUserId}`);
 
-    const postSnap = await get(ref(database, "posts/" + postId));
-    if (postSnap.exists()) {
-        const post = postSnap.val();
-        await update(ref(database, "posts/" + postId), {
-            inquiries: (post.inquiries || 0) + 1
+    const followSnap = await get(followerRef);
+
+    if (followSnap.exists()) {
+        await remove(followerRef);
+        await remove(followingRef);
+    } else {
+        await set(followerRef, {
+            userId: currentUser.uid,
+            userName: currentUserData.fullName || "QEJA User",
+            userPhoto: currentUserData.photoURL || "",
+            followedAt: new Date().toISOString()
+        });
+
+        await set(followingRef, {
+            userId: targetUserId,
+            userName: targetUserData.fullName || "QEJA User",
+            userPhoto: targetUserData.photoURL || "",
+            followedAt: new Date().toISOString()
+        });
+
+        const notificationRef = push(ref(database, `notifications/${targetUserId}`));
+        await set(notificationRef, {
+            notificationId: notificationRef.key,
+            type: "follow",
+            fromUserId: currentUser.uid,
+            fromUserName: currentUserData.fullName || "QEJA User",
+            fromUserPhoto: currentUserData.photoURL || "",
+            message: "started following you",
+            createdAt: new Date().toISOString(),
+            read: false
         });
     }
 
-    alert("Inquiry sent successfully.");
-};
+    await loadFollowStatus();
+    loadFollowerCounts();
+});
 
-window.toggleSaveProperty = async function(postId) {
-    const saveRef = ref(database, `savedProperties/${currentUser.uid}/${postId}`);
-    const snap = await get(saveRef);
-
-    if (snap.exists()) {
-        await remove(saveRef);
-        alert("Property removed from saved.");
-    } else {
-        const postSnap = await get(ref(database, "posts/" + postId));
-
-        if (postSnap.exists()) {
-            await set(saveRef, postSnap.val());
-            alert("Property saved successfully.");
-        }
-    }
-};
-
-window.startMessage = function(ownerId) {
-    if (!ownerId) {
-        alert("Owner not found.");
+document.getElementById("messageBtn").addEventListener("click", () => {
+    if (!targetUserId) {
+        alert("User not found.");
         return;
     }
 
-    if (ownerId === currentUser.uid) {
+    if (targetUserId === currentUser.uid) {
         alert("You cannot message yourself.");
         return;
     }
 
-    window.location.href = `chat.html?user=${ownerId}`;
+    window.location.href = `chat.html?user=${targetUserId}`;
+});
+
+function countSnapshotChildren(snapshot) {
+    let count = 0;
+    if (snapshot.exists()) {
+        snapshot.forEach(() => count++);
+    }
+    return count;
+}
+
+function loadFollowerCounts() {
+    onValue(ref(database, `followers/${targetUserId}`), (snapshot) => {
+        document.getElementById("followersCount").textContent = countSnapshotChildren(snapshot);
+    });
+
+    onValue(ref(database, `following/${targetUserId}`), (snapshot) => {
+        document.getElementById("followingCount").textContent = countSnapshotChildren(snapshot);
+    });
+}
+
+function loadUserPosts() {
+    onValue(ref(database, "posts"), (snapshot) => {
+        userPosts = [];
+
+        if (snapshot.exists()) {
+            snapshot.forEach(child => {
+                const post = child.val();
+
+                if (post.ownerId === targetUserId && (!post.status || post.status === "public")) {
+                    userPosts.push(post);
+                }
+            });
+        }
+
+        userPosts.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+        renderPosts();
+        renderReels();
+        renderPostStats();
+    });
+}
+
+function renderPostStats() {
+    let likes = 0;
+    let listings = 0;
+
+    userPosts.forEach(post => {
+        likes += post.likesCount || post.likes || 0;
+
+        if (!post.videoURL || post.type !== "Reel") {
+            listings++;
+        }
+    });
+
+    document.getElementById("listingsCount").textContent = listings;
+    document.getElementById("likesCount").textContent = likes;
+}
+
+function renderPosts() {
+    const grid = document.getElementById("userPostsGrid");
+    grid.innerHTML = "";
+
+    const posts = userPosts.filter(post => post.type !== "Reel");
+
+    if (posts.length === 0) {
+        grid.innerHTML = "<p style='padding:20px;'>No posts yet.</p>";
+        return;
+    }
+
+    posts.forEach(post => {
+        const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+
+        const card = document.createElement("div");
+        card.className = "grid-card";
+
+        card.innerHTML = `
+            <a href="details.html?id=${post.postId}">
+                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            </a>
+            <div class="grid-info">
+                <h4>${post.title || "Property"}</h4>
+                <p>${post.price || ""}</p>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function renderReels() {
+    const grid = document.getElementById("userReelsGrid");
+    grid.innerHTML = "";
+
+    const reels = userPosts.filter(post => post.type === "Reel" || post.videoURL);
+
+    if (reels.length === 0) {
+        grid.innerHTML = "<p style='padding:20px;'>No reels yet.</p>";
+        return;
+    }
+
+    reels.forEach(post => {
+        const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
+
+        const card = document.createElement("div");
+        card.className = "grid-card";
+
+        card.innerHTML = `
+            <a href="details.html?id=${post.postId}">
+                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+            </a>
+            <div class="grid-info">
+                <h4>${post.title || "Reel"}</h4>
+                <p>🎬 Reel</p>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+window.showTab = function(tab) {
+    document.getElementById("postsTab").style.display = "none";
+    document.getElementById("reelsTab").style.display = "none";
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+
+    if (tab === "posts") {
+        document.getElementById("postsTab").style.display = "block";
+        document.querySelectorAll(".tab-btn")[0].classList.add("active");
+    }
+
+    if (tab === "reels") {
+        document.getElementById("reelsTab").style.display = "block";
+        document.querySelectorAll(".tab-btn")[1].classList.add("active");
+    }
 };
 </script>
 
