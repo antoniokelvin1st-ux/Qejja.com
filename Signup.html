@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - QEJA</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+body{background:#f4f4f4;min-height:100vh;}
+.auth-header{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;}
+.logo{font-size:30px;font-weight:900;color:#ff7a18;}
+.auth-wrap{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:40px 7%;}
+.auth-card{background:white;width:100%;max-width:460px;border-radius:24px;padding:26px;box-shadow:0 10px 25px rgba(0,0,0,.1);}
+.auth-card h1{text-align:center;margin-bottom:8px;}
+.auth-card p{text-align:center;color:#666;margin-bottom:22px;}
+.auth-card input{width:100%;padding:14px;margin:8px 0;border-radius:12px;border:1px solid #ddd;box-sizing:border-box;}
+.auth-btn{width:100%;background:#ff7a18;color:white;border:none;padding:14px;border-radius:30px;font-weight:bold;cursor:pointer;margin-top:12px;}
+.auth-btn:disabled{background:#ccc;cursor:not-allowed;}
+.auth-link{text-align:center;margin-top:18px;}
+.auth-link a{color:#ff7a18;font-weight:bold;text-decoration:none;}
+</style>
+</head>
+
+<body>
+
+<header class="auth-header">
+    <div class="logo">QEJA</div>
+    <a href="login.html" style="color:white;text-decoration:none;font-weight:bold;">Login</a>
+</header>
+
+<main class="auth-wrap">
+    <div class="auth-card">
+        <h1>Create Account</h1>
+        <p>Join QEJA and start discovering spaces.</p>
+
+        <input id="fullName" type="text" placeholder="Full name">
+        <input id="handle" type="text" placeholder="Username / handle e.g kelvin.agent">
+        <input id="phone" type="tel" placeholder="Phone number">
+        <input id="email" type="email" placeholder="Email address">
+        <input id="password" type="password" placeholder="Password">
+
+        <button id="signupBtn" class="auth-btn">Create Account</button>
+
+        <div class="auth-link">
+            Already have an account?
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+</main>
+
+<script type="module">
+import { auth, database } from "./firebase.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { ref, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+document.getElementById("signupBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("signupBtn");
+
+    const fullName = document.getElementById("fullName").value.trim();
+    const handle = document.getElementById("handle").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!fullName || !handle || !phone || !email || !password) {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    if (password.length < 6) {
+        alert("Password should be at least 6 characters.");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = "Creating account...";
+
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await set(ref(database, "users/" + user.uid), {
+            uid: user.uid,
+            fullName,
+            handle,
+            phone,
+            email,
+            bio: "",
+            location: "",
+            photoURL: "",
+            role: "user",
+            messagePrivacy: "everyone",
+            notificationPreference: "all",
+            createdAt: new Date().toISOString()
+        });
+
+        alert("Account created successfully!");
+        window.location.href = "profile.html";
+
+    } catch (error) {
+        alert(error.message);
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+    }
+});
+</script>
+
+</body>
+</html>
