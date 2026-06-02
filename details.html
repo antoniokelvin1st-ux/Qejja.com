@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Profile - QEJA</title>
+
+<title>Property Details - QEJA</title>
+<meta name="description" content="View property details, photos, location, owner profile and contact options on QEJA.">
+<link rel="canonical" href="https://qeja.com.ng/details.html">
 <link rel="stylesheet" href="style.css">
 
 <style>
 body{padding-bottom:90px;background:#f4f4f4;}
 .top-appbar{background:#111;color:white;padding:18px 7%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
 .logo{font-size:30px;font-weight:900;color:#ff7a18;}
-.user-wrap{max-width:900px;margin:auto;padding:25px 7% 100px;}
-.user-card{text-align:center;background:white;border-radius:22px;padding:28px 18px;box-shadow:0 8px 20px rgba(0,0,0,.08);}
-.profile-pic{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #ff7a18;background:#eee;}
-.username{font-size:28px;font-weight:900;margin-top:12px;}
-.handle{color:#777;font-weight:bold;margin-top:3px;}
-.bio{max-width:620px;margin:12px auto;color:#333;}
-.btn-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px;}
-.follow-btn,.message-btn{border:none;padding:12px 28px;border-radius:30px;font-weight:bold;cursor:pointer;}
-.follow-btn{background:#ff7a18;color:white;}
-.message-btn{background:#111;color:white;}
-.stats{display:flex;justify-content:center;gap:30px;margin-top:22px;flex-wrap:wrap;}
-.stat strong{font-size:22px;display:block;}
-.stat span{color:#777;font-weight:bold;}
-.profile-tabs{display:flex;justify-content:center;gap:12px;margin:24px 0;flex-wrap:wrap;}
-.tab-btn{border:none;background:white;padding:10px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
-.tab-btn.active{background:#ff7a18;color:white;}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:20px;}
-.grid-card{background:white;overflow:hidden;}
-.grid-card img{width:100%;height:220px;object-fit:cover;background:#ddd;}
-.grid-info{padding:10px;background:white;}
-.grid-info h4{font-size:14px;margin-bottom:4px;}
-.grid-info p{font-size:13px;color:#555;}
+.details-wrap{max-width:1050px;margin:auto;padding:25px 7% 110px;}
+.details-card{background:white;border-radius:24px;overflow:hidden;box-shadow:0 10px 25px rgba(0,0,0,.08);}
+.main-image{width:100%;height:460px;object-fit:cover;background:#eee;display:block;}
+.gallery-strip{display:flex;gap:10px;overflow-x:auto;padding:12px;background:white;}
+.gallery-strip img{width:90px;height:75px;border-radius:12px;object-fit:cover;cursor:pointer;border:3px solid transparent;}
+.gallery-strip img.active{border-color:#ff7a18;}
+.details-info{padding:24px;}
+.category-badge{display:inline-block;background:#fff1e8;color:#ff7a18;padding:6px 12px;border-radius:20px;font-weight:bold;font-size:13px;margin-bottom:10px;}
+.details-info h1{font-size:34px;margin-bottom:8px;}
+.price{font-size:28px;font-weight:900;color:#ff7a18;margin:12px 0;}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0;}
+.meta-box{background:#f4f4f4;padding:14px;border-radius:14px;}
+.meta-box strong{display:block;color:#111;margin-bottom:4px;}
+.description-box{margin-top:18px;line-height:1.7;color:#333;}
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0;}
+.action-row a,.action-row button{border:none;text-decoration:none;padding:12px 18px;border-radius:25px;font-weight:bold;cursor:pointer;}
+.orange{background:#ff7a18;color:white;}
+.dark{background:#111;color:white;}
+.green{background:#25D366;color:white;}
+.blue{background:#0077cc;color:white;}
+.owner-card{background:#111;color:white;border-radius:20px;padding:18px;margin-top:22px;display:flex;gap:14px;align-items:center;}
+.owner-card img{width:70px;height:70px;border-radius:50%;object-fit:cover;border:3px solid #ff7a18;background:#eee;}
+.owner-info{flex:1;}
+.owner-info a{color:white;text-decoration:none;font-weight:900;font-size:20px;}
+.owner-info p{color:#ddd;margin-top:5px;}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.owner-actions a,.owner-actions button{padding:9px 14px;border-radius:20px;border:none;text-decoration:none;font-weight:bold;cursor:pointer;}
+.related-title{font-size:26px;margin:28px 0 15px;}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+.related-card{background:white;border-radius:18px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.08);}
+.related-card img{width:100%;height:180px;object-fit:cover;background:#eee;display:block;}
+.related-info{padding:14px;}
+.related-info h3{font-size:18px;margin-bottom:6px;}
+.related-info p{color:#555;margin:4px 0;}
+.related-info a{color:#ff7a18;text-decoration:none;font-weight:bold;}
+.empty-box{background:white;border-radius:18px;padding:25px;text-align:center;color:#555;}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid rgba(255,255,255,.08);height:74px;display:flex;justify-content:space-around;align-items:center;z-index:200;box-shadow:0 -8px 25px rgba(0,0,0,.25);}
 .bottom-nav a{text-decoration:none;color:#ddd;font-size:12px;font-weight:bold;text-align:center;}
@@ -41,7 +58,13 @@ body{padding-bottom:90px;background:#f4f4f4;}
 .post-plus{background:#ff7a18;color:white!important;width:62px;height:62px;border-radius:22px;display:flex;align-items:center;justify-content:center;margin-top:-34px;border:5px solid #111;box-shadow:0 0 18px rgba(255,122,24,.7);animation:qejaPulse 1.8s infinite;}
 .post-plus span{font-size:34px;}
 @keyframes qejaPulse{0%{transform:scale(1);}50%{transform:scale(1.08);}100%{transform:scale(1);}}
-@media(max-width:700px){.grid-card img{height:150px;}.user-wrap{padding:18px 4% 95px;}}
+
+@media(max-width:700px){
+    .details-wrap{padding:18px 4% 100px;}
+    .main-image{height:320px;}
+    .details-info h1{font-size:26px;}
+    .owner-card{align-items:flex-start;}
+}
 </style>
 </head>
 
@@ -49,54 +72,14 @@ body{padding-bottom:90px;background:#f4f4f4;}
 
 <header class="top-appbar">
     <div class="logo">QEJA</div>
-    <a href="index.html" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
+    <a href="javascript:history.back()" style="color:white;text-decoration:none;font-weight:bold;">Back</a>
 </header>
 
-<main class="user-wrap">
-    <section class="user-card">
-        <img id="profileImage" class="profile-pic" src="https://i.pravatar.cc/200" alt="Profile">
+<main class="details-wrap">
+    <div id="detailsContainer">Loading property...</div>
 
-        <div id="profileName" class="username">Loading...</div>
-        <div id="profileHandle" class="handle">@qeja.user</div>
-        <p id="profileBio" class="bio">Loading bio...</p>
-
-        <div class="btn-row">
-            <button id="followBtn" class="follow-btn">Follow</button>
-            <button id="messageBtn" class="message-btn">Message</button>
-        </div>
-
-        <div class="stats">
-            <div class="stat">
-                <strong id="listingsCount">0</strong>
-                <span>Listings</span>
-            </div>
-            <div class="stat">
-                <strong id="followersCount">0</strong>
-                <span>Followers</span>
-            </div>
-            <div class="stat">
-                <strong id="followingCount">0</strong>
-                <span>Following</span>
-            </div>
-            <div class="stat">
-                <strong id="likesCount">0</strong>
-                <span>Likes</span>
-            </div>
-        </div>
-    </section>
-
-    <div class="profile-tabs">
-        <button class="tab-btn active" onclick="showTab('posts')">Posts</button>
-        <button class="tab-btn" onclick="showTab('reels')">Reels</button>
-    </div>
-
-    <section id="postsTab">
-        <div id="userPostsGrid" class="grid"></div>
-    </section>
-
-    <section id="reelsTab" style="display:none;">
-        <div id="userReelsGrid" class="grid"></div>
-    </section>
+    <h2 class="related-title">You Might Also Like</h2>
+    <div id="relatedContainer" class="related-grid">Loading related properties...</div>
 </main>
 
 <nav class="bottom-nav">
@@ -110,16 +93,15 @@ body{padding-bottom:90px;background:#f4f4f4;}
 <script type="module">
 import { auth, database } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { ref, get, set, remove, onValue, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { ref, get, set, update, remove, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 let currentUser = null;
 let currentUserData = null;
-let targetUserId = null;
-let targetUserData = null;
-let userPosts = [];
+let currentPost = null;
+let displayViews = 0;
 
 const params = new URLSearchParams(window.location.search);
-targetUserId = params.get("id");
+const postId = params.get("id");
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
@@ -129,261 +111,345 @@ onAuthStateChanged(auth, async (user) => {
 
     currentUser = user;
 
-    const mySnap = await get(ref(database, "users/" + currentUser.uid));
-    currentUserData = mySnap.exists() ? mySnap.val() : {
+    const userSnap = await get(ref(database, "users/" + currentUser.uid));
+    currentUserData = userSnap.exists() ? userSnap.val() : {
         fullName: "QEJA User",
         email: currentUser.email
     };
 
-    if (!targetUserId || targetUserId === "undefined" || targetUserId === "null") {
-        alert("No user selected.");
-        window.location.href = "index.html";
-        return;
-    }
-
-    if (targetUserId === currentUser.uid) {
-        window.location.href = "profile.html";
-        return;
-    }
-
-    await loadUserProfile();
-    loadFollowStatus();
-    loadFollowerCounts();
-    loadUserPosts();
+    await loadDetails();
 });
 
-async function loadUserProfile() {
-    const snap = await get(ref(database, "users/" + targetUserId));
+function cleanPhone(phone) {
+    if (!phone) return "";
+    let cleaned = String(phone).replace(/\D/g, "");
 
-    if (!snap.exists()) {
-        alert("User not found.");
-        window.location.href = "index.html";
-        return;
+    if (cleaned.startsWith("0")) {
+        cleaned = "254" + cleaned.substring(1);
     }
 
-    targetUserData = snap.val();
-
-    document.getElementById("profileName").textContent = targetUserData.fullName || "QEJA User";
-    document.getElementById("profileHandle").textContent = "@" + (targetUserData.handle || targetUserData.fullName || "qeja.user").toString().replace(/\s+/g, ".").toLowerCase();
-    document.getElementById("profileBio").textContent = targetUserData.bio || "No bio added yet.";
-
-    if (targetUserData.photoURL) {
-        document.getElementById("profileImage").src = targetUserData.photoURL;
+    if (!cleaned.startsWith("254")) {
+        cleaned = "254" + cleaned;
     }
+
+    return cleaned;
 }
 
-async function loadFollowStatus() {
-    const btn = document.getElementById("followBtn");
-    const followSnap = await get(ref(database, `followers/${targetUserId}/${currentUser.uid}`));
-
-    if (followSnap.exists()) {
-        btn.textContent = "Following";
-        btn.style.background = "#111";
-    } else {
-        btn.textContent = "Follow";
-        btn.style.background = "#ff7a18";
-    }
+function safeText(value, fallback = "") {
+    return value ? String(value) : fallback;
 }
 
-document.getElementById("followBtn").addEventListener("click", async () => {
-    if (!currentUser || !targetUserId) {
-        alert("User not ready. Refresh and try again.");
-        return;
+async function findPostById(id) {
+    const directSnap = await get(ref(database, "posts/" + id));
+
+    if (directSnap.exists()) {
+        const post = directSnap.val();
+        post.realPostId = post.postId || id;
+        return post;
     }
 
-    if (currentUser.uid === targetUserId) {
-        alert("You cannot follow yourself.");
-        return;
-    }
+    const postsSnap = await get(ref(database, "posts"));
 
-    const followerRef = ref(database, `followers/${targetUserId}/${currentUser.uid}`);
-    const followingRef = ref(database, `following/${currentUser.uid}/${targetUserId}`);
+    if (!postsSnap.exists()) return null;
 
-    const followSnap = await get(followerRef);
+    let found = null;
 
-    if (followSnap.exists()) {
-        await remove(followerRef);
-        await remove(followingRef);
-    } else {
-        await set(followerRef, {
+    postsSnap.forEach(child => {
+        const post = child.val() || {};
+
+        if (post.postId === id || child.key === id) {
+            post.realPostId = post.postId || child.key;
+            found = post;
+        }
+    });
+
+    return found;
+}
+
+async function countUniqueView(post) {
+    const realId = post.realPostId || postId;
+    const viewRef = ref(database, `postViews/${realId}/${currentUser.uid}`);
+    const viewSnap = await get(viewRef);
+
+    displayViews = post.views || 0;
+
+    if (!viewSnap.exists()) {
+        await set(viewRef, {
             userId: currentUser.uid,
-            userName: currentUserData.fullName || "QEJA User",
-            userPhoto: currentUserData.photoURL || "",
-            followedAt: new Date().toISOString()
+            viewedAt: new Date().toISOString()
         });
 
-        await set(followingRef, {
-            userId: targetUserId,
-            userName: targetUserData.fullName || "QEJA User",
-            userPhoto: targetUserData.photoURL || "",
-            followedAt: new Date().toISOString()
-        });
+        displayViews += 1;
 
-        const notificationRef = push(ref(database, `notifications/${targetUserId}`));
-        await set(notificationRef, {
-            notificationId: notificationRef.key,
-            type: "follow",
-            fromUserId: currentUser.uid,
-            fromUserName: currentUserData.fullName || "QEJA User",
-            fromUserPhoto: currentUserData.photoURL || "",
-            message: "started following you",
-            createdAt: new Date().toISOString(),
-            read: false
+        await update(ref(database, "posts/" + realId), {
+            views: displayViews
         });
     }
+}
 
-    await loadFollowStatus();
-    loadFollowerCounts();
-});
+async function loadDetails() {
+    const container = document.getElementById("detailsContainer");
 
-document.getElementById("messageBtn").addEventListener("click", () => {
-    if (!targetUserId) {
-        alert("User not found.");
+    if (!postId) {
+        container.innerHTML = "<div class='empty-box'>No property selected.</div>";
+        document.getElementById("relatedContainer").innerHTML = "";
         return;
     }
 
-    if (targetUserId === currentUser.uid) {
+    const post = await findPostById(postId);
+
+    if (!post) {
+        container.innerHTML = "<div class='empty-box'>Property not found.</div>";
+        document.getElementById("relatedContainer").innerHTML = "";
+        return;
+    }
+
+    currentPost = post;
+
+    await countUniqueView(post);
+    renderDetails(post);
+    loadRelatedPosts(post);
+}
+
+function renderDetails(post) {
+    const container = document.getElementById("detailsContainer");
+
+    const images = Array.isArray(post.imageURLs) && post.imageURLs.length > 0
+        ? post.imageURLs
+        : [post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6"];
+
+    const mainImage = images[0];
+    const phone = cleanPhone(post.contactPhone || "");
+    const whatsapp = cleanPhone(post.whatsappNumber || post.contactPhone || "");
+    const email = post.contactEmail || post.ownerEmail || "";
+
+    const locationQuery = encodeURIComponent(post.location || "");
+    const mapsLink = locationQuery ? "https://www.google.com/maps/search/?api=1&query=" + locationQuery : "#";
+
+    const whatsappText = encodeURIComponent(`Hello, I saw your property on QEJA: ${post.title || "Property"}. Is it still available?`);
+    const whatsappLink = whatsapp ? `https://wa.me/${whatsapp}?text=${whatsappText}` : "#";
+
+    const ownerId = post.ownerId || "";
+    const ownerLink = ownerId
+        ? (ownerId === currentUser.uid ? "profile.html" : `user.html?id=${ownerId}`)
+        : "#";
+
+    const ownerPhoto = post.ownerPhoto || "https://i.pravatar.cc/150?u=" + (ownerId || "qeja");
+
+    container.innerHTML = `
+        <div class="details-card">
+            <img id="mainPropertyImage" class="main-image" src="${mainImage}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+
+            ${images.length > 1 ? `
+                <div class="gallery-strip">
+                    ${images.map((img, index) => `
+                        <img src="${img}" class="${index === 0 ? "active" : ""}" onclick="changeMainImage('${img}', this)">
+                    `).join("")}
+                </div>
+            ` : ""}
+
+            <div class="details-info">
+                <span class="category-badge">${safeText(post.category, "Property")}</span>
+
+                <h1>${safeText(post.title, "Property Listing")}</h1>
+                <div class="price">${safeText(post.price, "Price not added")}</div>
+
+                <div class="meta-grid">
+                    <div class="meta-box">
+                        <strong>Location</strong>
+                        ${safeText(post.location, "Not added")}
+                    </div>
+                    <div class="meta-box">
+                        <strong>Type</strong>
+                        ${safeText(post.type, "Property Post")}
+                    </div>
+                    <div class="meta-box">
+                        <strong>Views</strong>
+                        ${displayViews}
+                    </div>
+                    <div class="meta-box">
+                        <strong>Likes</strong>
+                        ${post.likesCount || post.likes || 0}
+                    </div>
+                </div>
+
+                <div class="description-box">
+                    <h3>Description</h3>
+                    <p>${safeText(post.description, "No description added.")}</p>
+                </div>
+
+                ${post.videoURL ? `
+                    <div class="description-box">
+                        <h3>Property Reel</h3>
+                        <video src="${post.videoURL}" controls style="width:100%;max-height:480px;border-radius:18px;background:#111;margin-top:10px;"></video>
+                    </div>
+                ` : ""}
+
+                <div class="action-row">
+                    <a class="green" href="${whatsappLink}" target="_blank">WhatsApp</a>
+                    <a class="orange" href="${phone ? "tel:+" + phone : "#"}">Call</a>
+                    <a class="blue" href="${email ? "mailto:" + email : "#"}">Email</a>
+                    <a class="dark" href="${mapsLink}" target="_blank">Open Location</a>
+                    <button class="dark" onclick="toggleSaveProperty('${post.realPostId}')">Save Property</button>
+                    <button class="orange" onclick="sendInquiry('${post.realPostId}', '${ownerId}')">Send Inquiry</button>
+                </div>
+
+                <div class="owner-card">
+                    <img src="${ownerPhoto}" onerror="this.src='https://i.pravatar.cc/150'">
+
+                    <div class="owner-info">
+                        <a href="${ownerLink}">
+                            ${safeText(post.contactName || post.ownerName, "QEJA User")}
+                        </a>
+                        <p>${safeText(post.contactPhone, "Phone not added")} · ${safeText(email, "Email not added")}</p>
+
+                        <div class="owner-actions">
+                            <a class="orange" href="${ownerLink}">View Profile</a>
+                            <button class="dark" onclick="startMessage('${ownerId}')">Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+window.changeMainImage = function(imageUrl, el) {
+    const main = document.getElementById("mainPropertyImage");
+    if (main) main.src = imageUrl;
+
+    document.querySelectorAll(".gallery-strip img").forEach(img => {
+        img.classList.remove("active");
+    });
+
+    el.classList.add("active");
+};
+
+window.toggleSaveProperty = async function(realPostId) {
+    const saveRef = ref(database, `savedProperties/${currentUser.uid}/${realPostId}`);
+    const snap = await get(saveRef);
+
+    if (snap.exists()) {
+        await remove(saveRef);
+        alert("Property removed from saved.");
+    } else {
+        await set(saveRef, currentPost);
+        alert("Property saved successfully.");
+    }
+};
+
+window.sendInquiry = async function(realPostId, ownerId) {
+    if (!ownerId) {
+        alert("Owner not found.");
+        return;
+    }
+
+    const leadRef = push(ref(database, "leads/" + ownerId));
+
+    await set(leadRef, {
+        leadId: leadRef.key,
+        postId: realPostId,
+        interestedUserId: currentUser.uid,
+        interestedUserName: currentUserData.fullName || "QEJA User",
+        interestedUserEmail: currentUser.email,
+        createdAt: new Date().toISOString(),
+        status: "new"
+    });
+
+    const postSnap = await get(ref(database, "posts/" + realPostId));
+    if (postSnap.exists()) {
+        const post = postSnap.val();
+        await update(ref(database, "posts/" + realPostId), {
+            inquiries: (post.inquiries || 0) + 1
+        });
+    }
+
+    alert("Inquiry sent successfully.");
+};
+
+window.startMessage = function(ownerId) {
+    if (!ownerId) {
+        alert("Owner not found.");
+        return;
+    }
+
+    if (ownerId === currentUser.uid) {
         alert("You cannot message yourself.");
         return;
     }
 
-    window.location.href = `chat.html?user=${targetUserId}`;
-});
+    window.location.href = `chat.html?user=${ownerId}`;
+};
 
-function countSnapshotChildren(snapshot) {
-    let count = 0;
-    if (snapshot.exists()) {
-        snapshot.forEach(() => count++);
-    }
-    return count;
-}
+function loadRelatedPosts(post) {
+    const relatedContainer = document.getElementById("relatedContainer");
 
-function loadFollowerCounts() {
-    onValue(ref(database, `followers/${targetUserId}`), (snapshot) => {
-        document.getElementById("followersCount").textContent = countSnapshotChildren(snapshot);
-    });
-
-    onValue(ref(database, `following/${targetUserId}`), (snapshot) => {
-        document.getElementById("followingCount").textContent = countSnapshotChildren(snapshot);
-    });
-}
-
-function loadUserPosts() {
     onValue(ref(database, "posts"), (snapshot) => {
-        userPosts = [];
+        relatedContainer.innerHTML = "";
 
-        if (snapshot.exists()) {
+        if (!snapshot.exists()) {
+            relatedContainer.innerHTML = "<div class='empty-box'>No related properties yet.</div>";
+            return;
+        }
+
+        const related = [];
+
+        snapshot.forEach(child => {
+            const item = child.val() || {};
+            item.realPostId = item.postId || child.key;
+
+            if (item.realPostId === post.realPostId) return;
+            if (item.status === "draft" || item.visibility === "draft") return;
+
+            const sameCategory = item.category && post.category && item.category === post.category;
+            const sameLocation = item.location && post.location && item.location.toLowerCase().includes(post.location.toLowerCase().split(" ")[0]);
+
+            if (sameCategory || sameLocation) {
+                related.push(item);
+            }
+        });
+
+        if (related.length === 0) {
             snapshot.forEach(child => {
-                const post = child.val();
+                const item = child.val() || {};
+                item.realPostId = item.postId || child.key;
 
-                if (post.ownerId === targetUserId && (!post.status || post.status === "public")) {
-                    userPosts.push(post);
+                if (item.realPostId !== post.realPostId && item.status !== "draft" && item.visibility !== "draft") {
+                    related.push(item);
                 }
             });
         }
 
-        userPosts.sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        related
+            .sort((a,b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+            .slice(0, 6)
+            .forEach(item => {
+                const image = item.imageURL || (item.imageURLs && item.imageURLs[0]) || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
 
-        renderPosts();
-        renderReels();
-        renderPostStats();
-    });
-}
+                const card = document.createElement("div");
+                card.className = "related-card";
 
-function renderPostStats() {
-    let likes = 0;
-    let listings = 0;
+                card.innerHTML = `
+                    <a href="details.html?id=${item.realPostId}">
+                        <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
+                    </a>
 
-    userPosts.forEach(post => {
-        likes += post.likesCount || post.likes || 0;
+                    <div class="related-info">
+                        <h3>${safeText(item.title, "Property")}</h3>
+                        <p>${safeText(item.location, "")}</p>
+                        <p style="color:#ff7a18;font-weight:bold;">${safeText(item.price, "")}</p>
+                        <a href="details.html?id=${item.realPostId}">View Property</a>
+                    </div>
+                `;
 
-        if (!post.videoURL || post.type !== "Reel") {
-            listings++;
+                relatedContainer.appendChild(card);
+            });
+
+        if (!relatedContainer.innerHTML.trim()) {
+            relatedContainer.innerHTML = "<div class='empty-box'>No related properties yet.</div>";
         }
     });
-
-    document.getElementById("listingsCount").textContent = listings;
-    document.getElementById("likesCount").textContent = likes;
 }
-
-function renderPosts() {
-    const grid = document.getElementById("userPostsGrid");
-    grid.innerHTML = "";
-
-    const posts = userPosts.filter(post => post.type !== "Reel");
-
-    if (posts.length === 0) {
-        grid.innerHTML = "<p style='padding:20px;'>No posts yet.</p>";
-        return;
-    }
-
-    posts.forEach(post => {
-        const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-
-        const card = document.createElement("div");
-        card.className = "grid-card";
-
-        card.innerHTML = `
-            <a href="details.html?id=${post.postId}">
-                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
-            </a>
-            <div class="grid-info">
-                <h4>${post.title || "Property"}</h4>
-                <p>${post.price || ""}</p>
-            </div>
-        `;
-
-        grid.appendChild(card);
-    });
-}
-
-function renderReels() {
-    const grid = document.getElementById("userReelsGrid");
-    grid.innerHTML = "";
-
-    const reels = userPosts.filter(post => post.type === "Reel" || post.videoURL);
-
-    if (reels.length === 0) {
-        grid.innerHTML = "<p style='padding:20px;'>No reels yet.</p>";
-        return;
-    }
-
-    reels.forEach(post => {
-        const image = post.imageURL || "https://images.unsplash.com/photo-1564013799919-ab600027ffc6";
-
-        const card = document.createElement("div");
-        card.className = "grid-card";
-
-        card.innerHTML = `
-            <a href="details.html?id=${post.postId}">
-                <img src="${image}" onerror="this.src='https://images.unsplash.com/photo-1564013799919-ab600027ffc6'">
-            </a>
-            <div class="grid-info">
-                <h4>${post.title || "Reel"}</h4>
-                <p>🎬 Reel</p>
-            </div>
-        `;
-
-        grid.appendChild(card);
-    });
-}
-
-window.showTab = function(tab) {
-    document.getElementById("postsTab").style.display = "none";
-    document.getElementById("reelsTab").style.display = "none";
-
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-
-    if (tab === "posts") {
-        document.getElementById("postsTab").style.display = "block";
-        document.querySelectorAll(".tab-btn")[0].classList.add("active");
-    }
-
-    if (tab === "reels") {
-        document.getElementById("reelsTab").style.display = "block";
-        document.querySelectorAll(".tab-btn")[1].classList.add("active");
-    }
-};
 </script>
 
 </body>
