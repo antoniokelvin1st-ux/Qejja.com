@@ -180,7 +180,7 @@ function loadPosts() {
                 </a>
 
                 <div class="post-body">
-                    <a href="user.html?id=${ownerId}" class="owner-link">
+                    <a href="${post.ownerId ? 'user.html?id=' + post.ownerId : '#'}" class="owner-link">
                         <img src="${ownerPhoto}" class="owner-avatar" onerror="this.src='https://i.pravatar.cc/100'">
                         <span>@${safeText(post.ownerName, "QEJA User")}</span>
                     </a>
